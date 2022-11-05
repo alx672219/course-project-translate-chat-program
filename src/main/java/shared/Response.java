@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class Response {
     protected Exception e;
+    protected boolean success;
     protected LocalDateTime time = LocalDateTime.now();
 
     public abstract Exception getException();

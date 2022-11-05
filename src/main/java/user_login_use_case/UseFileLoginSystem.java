@@ -5,6 +5,6 @@ class UseFileLoginSystem implements UserLoginGateway{
 
     @Override
     public LoginResponse login(LoginData data) {
-        return new LoginResponse(data.getUsername(), data.getPassword(), null);
+        return new LoginResponse(data, false, null);
     }
 }

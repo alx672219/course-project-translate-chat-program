@@ -3,24 +3,19 @@ package user_login_use_case;
 import shared.Response;
 
 public class LoginResponse extends Response {
-    private String username;
-    private String password;
+    private LoginData data;
 
     public Exception getException() {
         return super.e;
     }
 
-    public String getUsername() {
-        return username;
+    public LoginData getData() {
+        return data;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public LoginResponse(String username, String password, Exception e) {
-        this.username = username;
-        this.password = password;
+    public LoginResponse(LoginData data, boolean success, Exception e) {
+        this.data = data;
+        this.success = success;
         this.e = e;
     }
 
