@@ -6,29 +6,29 @@ public class User {
     private String email;
     private String password;
 
-    String getName() {
+    public String getName() {
         return this.name;
     }
-    String getPassword() {
+    public String getPassword() {
         return this.password;
     }
-    String getEmail() {
+    public String getEmail() {
         return this.email;
     }
-    String getDefaultLang() {
+    public String getDefaultLang() {
         return this.default_lang;
     }
 
-    void setName(String s) {
+    public void setName(String s) {
         this.name = s;
     }
-    void setEmail(String s) {
+    public void setEmail(String s) {
         this.email = s;
     }
-    void setPassword(String s) {
-        this.password = password;
+    public void setPassword(String s) {
+        this.password = s;
     }
-    void setDefaultLang(String s) {
+    public void setDefaultLang(String s) {
         this.default_lang = s;
     }
     // TODO: Add remaining User attributes as needed.
