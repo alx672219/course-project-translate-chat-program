@@ -3,6 +3,8 @@ package entities;
 import java.util.Date;
 
 public class Message {
+    private int id;
+
     private String message;
 
     private User receiver;

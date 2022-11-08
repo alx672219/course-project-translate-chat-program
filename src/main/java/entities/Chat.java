@@ -1,6 +1,7 @@
 package entities;
 
 public class Chat {
+    private int id;
     private Message[] messages;
 
     public Chat(Message[] messages) {
