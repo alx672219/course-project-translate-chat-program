@@ -11,7 +11,14 @@ public class Message {
 
     private Date timestamp;
 
+    public Message(String message, User receiver, User recipient, Date timestamp) {
+        this.message = message;
+        this.receiver = receiver;
+        this.recipient = recipient;
+        this.timestamp = timestamp;
+    }
 
+    // Getter & Setter Methods
     public String getMessage() {
         return message;
     }
