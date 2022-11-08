@@ -1,4 +1,8 @@
-package message_search_use_case;
+package views;
+
+import message_search_use_case.MessageSearchData;
+import message_search_use_case.MessageSearchInputBoundary;
+import message_search_use_case.MessageSearchResponse;
 
 public class MessageSearchController {
     final MessageSearchInputBoundary messageSearchInput;
