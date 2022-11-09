@@ -9,8 +9,7 @@ public class MessageSearchPresenter implements MessageSearchOutputBoundary {
      */
     @Override
     public MessageSearchResponse prepareSuccessView(MessageSearchResponse response) {
-        //TODO: Implement
-        return null;
+        return response;
     }
 
     /**
@@ -20,7 +19,6 @@ public class MessageSearchPresenter implements MessageSearchOutputBoundary {
      */
     @Override
     public MessageSearchResponse prepareFailView(String error) {
-        //TODO: Implement
-        return null;
+        throw new MessageSearchFailed(error);
     }
 }
