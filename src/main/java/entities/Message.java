@@ -13,7 +13,8 @@ public class Message {
 
     private Date timestamp;
 
-    public Message(String message, User receiver, User recipient, Date timestamp) {
+    public Message(int id, String message, User receiver, User recipient, Date timestamp) {
+        this.id = id;
         this.message = message;
         this.receiver = receiver;
         this.recipient = recipient;
@@ -21,6 +22,13 @@ public class Message {
     }
 
     // Getter & Setter Methods
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getMessage() {
         return message;
     }

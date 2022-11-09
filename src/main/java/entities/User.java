@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 public class User {
     private String name;
     private String default_lang;
@@ -29,7 +31,7 @@ public class User {
     public int getUser_id() {
         return this.user_id;
     }
-    public int getContacts() {
+    public ArrayList<Integer> getContacts() {
         return this.contacts;
     }
 
