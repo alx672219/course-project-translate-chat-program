@@ -13,14 +13,14 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, ExecutionException, InterruptedException {
         DBInitializer dbInitializer = new DBInitializer();
         dbInitializer.init();
-        System.out.println("s");
-        System.out.println(Main.getUser("Danny"));
+//        System.out.println("s");
+//        System.out.println(Main.getUser(1));
 
     }
 
-    public static User getUser(String name) throws ExecutionException, InterruptedException {
+    public static User getUser(int userID) throws ExecutionException, InterruptedException {
         try {
-            return dbService.getUserDetails(name);
+            return dbService.getUserDetails(userID);
         } catch (Exception e) {
             System.err.println("error");
         }

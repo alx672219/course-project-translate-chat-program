@@ -1,11 +1,13 @@
 package entities;
 
 public class User {
+    private int id;
     private String name;
     private String default_lang;
     private String email;
     private String password;
 
+    public int getId() { return this.id; }
     public String getName() {
         return this.name;
     }
@@ -19,6 +21,7 @@ public class User {
         return this.default_lang;
     }
 
+    public void setId(int id) { this.id = id; }
     public void setName(String s) {
         this.name = s;
     }

@@ -17,11 +17,11 @@ public class DBService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
-    public User getUserDetails(String name) throws ExecutionException, InterruptedException {
+    public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         // First get document reference from specified collection and document
         // Then get the APIFuture of that document
-        DocumentReference documentReference = dbFirestore.collection("users").document(name);
+        DocumentReference documentReference = dbFirestore.collection("users").document(String.valueOf(userID));
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
         // Extract DocumentSnapShot from ApiFuture object
