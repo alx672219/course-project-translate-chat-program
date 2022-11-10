@@ -1,13 +1,22 @@
 package entities;
 
+import java.util.ArrayList;
+
 public class User {
-    private int id;
     private String name;
     private String default_lang;
     private String email;
     private String password;
+    private int user_id;
+    private ArrayList<Integer> contacts = new ArrayList<Integer>();
 
-    public int getId() { return this.id; }
+    public User(String name, String default_lang, String email, String password) {
+        this.name = name;
+        this.default_lang = default_lang;
+        this.email = email;
+        this.password = password;
+    }
+   
     public String getName() {
         return this.name;
     }
@@ -20,8 +29,13 @@ public class User {
     public String getDefaultLang() {
         return this.default_lang;
     }
+    public int getUser_id() {
+        return this.user_id;
+    }
+    public ArrayList<Integer> getContacts() {
+        return this.contacts;
+    }
 
-    public void setId(int id) { this.id = id; }
     public void setName(String s) {
         this.name = s;
     }
@@ -33,6 +47,12 @@ public class User {
     }
     public void setDefaultLang(String s) {
         this.default_lang = s;
+    }
+    public void setUser_id(int s) {
+        this.user_id = s;
+    }
+    public void setContacts(int s) {
+        this.contacts.add(s);
     }
     // TODO: Add remaining User attributes as needed.
 }
