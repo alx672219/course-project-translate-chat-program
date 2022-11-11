@@ -1,5 +1,8 @@
 package views;
 
+import user_register_use_case.CreationData;
+import user_register_use_case.RegisterResponse;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,14 +34,19 @@ public class RegisterScreen extends JPanel implements ActionListener {
     /**
      * A dropdown with any possible language as a choice
      */
-    JComboBox default_lang;
+    JComboBox<String> default_lang;
+    /**
+     * The controller
+     */
+    UserRegisterController controller;
 
 
     /**
      * A window with a title and a JButton
      */
-    public RegisterScreen(String[] languages) {
+    public RegisterScreen(String[] languages, UserRegisterController controller) {
         this.default_lang = new AutoFillDropdown(languages);
+        this.controller = controller;
 
         JLabel title = new JLabel("Register");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -75,6 +83,35 @@ public class RegisterScreen extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: Implement actionPerformed
+        String source = e.getActionCommand();
+        String username = this.username.getText();
+        String password1 = new String(this.password.getPassword());
+        String password2 = new String(this.repeatPassword.getPassword());
+        String email = this.email.getText();
+        String default_lang = (String) this.default_lang.getSelectedItem();
+
+        if (!password1.equals(password2)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match.");
+            return;
+        }
+        if (username.isBlank() || password1.isBlank() || password2.isBlank() || email.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Must fill in all required fields.");
+            return;
+        }
+        System.out.println(source);
+        if (source.equals("Sign up")) {
+            try {
+                RegisterResponse resp = controller.register(username, password1, email, default_lang);
+                // TODO: Navigate to next page
+                CreationData data = resp.getData();
+                JOptionPane.showMessageDialog(this, "Creating account with paramters: \n" +
+                        data.getUsername() + "\n" + data.getPassword() + "\n" + data.getEmail() + "\n" + data.getDefault_lang()+ "\n"  + resp.getTime());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+        } else if (source.equals("Login")) {
+            // TODO: Navigate to Login Page
+            JOptionPane.showMessageDialog(this, "Not yet implemented!");
+        }
     }
 }
