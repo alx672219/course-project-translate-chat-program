@@ -1,5 +1,7 @@
 package message_search_use_case;
 
+import entities.Message;
+
 import java.util.List;
 
 public class MessageSearchInteractor implements MessageSearchInputBoundary {
@@ -30,7 +32,7 @@ public class MessageSearchInteractor implements MessageSearchInputBoundary {
         } else if (data.getText().length() <= 5) {
             return presenter.prepareFailView("Search query must be more than 5 characters.");
         }
-        List<String> messages = gateway.search(data); //TODO: change to List<Message>
+        List<Message> messages = gateway.search(data);
 
         if (messages.isEmpty()) {
             return presenter.prepareFailView("No messages match that search query.");

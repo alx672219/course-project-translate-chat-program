@@ -1,4 +1,4 @@
-package AudioUseCase;
+package audio_use_case;
 
 public class AudioMessage {
 }

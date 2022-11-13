@@ -1,12 +1,13 @@
 package message_search_use_case;
 
+import entities.Message;
 import shared.Response;
 
 import java.util.List;
 
 public class MessageSearchResponse extends Response {
     private String text;
-    private List<String> messages; //TODO: change to List<Message>
+    private List<Message> messages;
 
     /**
      * Constructor for MessageSearchResponse.
@@ -14,8 +15,7 @@ public class MessageSearchResponse extends Response {
      * @param success whether message search was successful
      * @param e exception that was thrown if success is false, null otherwise
      */
-    public MessageSearchResponse(String text, List<String> messages, boolean success, Exception e) {
-        //TODO: Change List<String> to List<Message>
+    public MessageSearchResponse(String text, List<Message> messages, boolean success, Exception e) {
         this.text = text;
         this.messages = messages;
         this.success = success;
@@ -42,7 +42,7 @@ public class MessageSearchResponse extends Response {
      * Getter method for messages.
      * @return the messages attribute of this MessageSearchResponse object\
      */
-    public List<String> getMessages() {
+    public List<Message> getMessages() {
         //TODO: Change to List<Message>
         return messages;
     }

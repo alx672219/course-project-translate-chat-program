@@ -1,5 +1,7 @@
 package message_search_use_case;
 
+import entities.Message;
+
 import java.util.List;
 
 public interface MessageSearchGateway {
@@ -8,5 +10,5 @@ public interface MessageSearchGateway {
      * @param data MessageSearchData object that tells method which messages to look for
      * @return list of Message objects that match data
      */
-    List<String> search(MessageSearchData data);
+    List<Message> search(MessageSearchData data);
 }
