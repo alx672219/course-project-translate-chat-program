@@ -43,7 +43,6 @@ public class MessageSearchResponse extends Response {
      * @return the messages attribute of this MessageSearchResponse object\
      */
     public List<Message> getMessages() {
-        //TODO: Change to List<Message>
         return messages;
     }
 }

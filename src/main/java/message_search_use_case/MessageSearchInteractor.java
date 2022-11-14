@@ -26,7 +26,6 @@ public class MessageSearchInteractor implements MessageSearchInputBoundary {
      */
     @Override
     public MessageSearchResponse search(MessageSearchData data) {
-        //TODO: Implement method (perform checks, etc.)
         if (data.getText().isBlank()) {
             return presenter.prepareFailView("Search query can't be blank.");
         } else if (data.getText().length() <= 5) {

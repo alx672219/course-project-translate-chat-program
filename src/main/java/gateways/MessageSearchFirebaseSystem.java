@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 
 public class MessageSearchFirebaseSystem implements MessageSearchGateway {
 
-
     /**
      * Searches for messages in Google Cloud database that match text in data
      * @param data MessageSearchData object that tells method which messages to look for
@@ -25,10 +24,10 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
     @Override
     public List<Message> search(MessageSearchData data) {
         String chatId = "id" + data.getChatId(); // to know which chat Document to search in
-        String query = data.getText(); // to know what to search for
+        String query = data.getText().toLowerCase(); // to know what to search for
 
         Firestore dbFirestore = FirestoreClient.getFirestore(); // getting Firestore instance
-        // Getting the document reference of the chat associated withh chatId
+        // Getting the document reference of the chat associated with chatId
         DocumentReference chatDocumentReference = dbFirestore.collection("chats").document(chatId);
 
         try {
@@ -41,7 +40,7 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
             for (DocumentReference ref : references) {
                 DocumentSnapshot msgDoc = ref.get().get(); // getting the message Document
                 String msgText = (String) msgDoc.getData().get("message"); // getting the text of the message
-                if (msgText.contains(query)) { // if query is a substring of message
+                if (msgText.toLowerCase().contains(query)) { // if query is a substring of message
                     // CREATING USER ENTITY THAT IS THE RECEIVER OF THE MESSAGE
                     DocumentReference receiverRef = (DocumentReference) msgDoc.getData().get("receiver");
                     DocumentSnapshot receiverDoc = receiverRef.get().get();
