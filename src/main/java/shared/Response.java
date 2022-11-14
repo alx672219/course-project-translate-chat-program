@@ -9,7 +9,6 @@ public abstract class Response {
     protected LocalDateTime time = LocalDateTime.now();
 
     public abstract Exception getException();
-
     public String getTime() {
         return time.format(DateTimeFormatter.ofPattern("yyyy MM dd : HH mm ss"));
     }
