@@ -1,5 +1,7 @@
 package user_login_use_case;
 
+import java.io.IOException;
+
 class UserLoginInteractor implements LoginInputBoundary {
     private final UserLoginGateway auth;
     private final LoginOutputBoundary presenter;
@@ -15,6 +17,8 @@ class UserLoginInteractor implements LoginInputBoundary {
             return auth.login(data);
         } catch (RuntimeException e) {
             return presenter.prepareFailView(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

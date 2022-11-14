@@ -34,7 +34,7 @@ class UserTest {
 
     @Test
     void getDefaultLang() {
-        String expected = user.getDefaultLang();
+        String expected = user.getDefault_lang();
         assertEquals(expected, "English");
     }
 
@@ -61,9 +61,9 @@ class UserTest {
 
     @Test
     void setDefaultLang() {
-        assertEquals(user.getDefaultLang(), "English");
-        user.setDefaultLang("Arabic");
-        assertEquals(user.getDefaultLang(), "Arabic");
+        assertEquals(user.getDefault_lang(), "English");
+        user.setDefault_lang("Arabic");
+        assertEquals(user.getDefault_lang(), "Arabic");
     }
 
 }

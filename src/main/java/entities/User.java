@@ -16,7 +16,9 @@ public class User {
         this.email = email;
         this.password = password;
     }
-   
+
+    public User() {};
+
     public String getName() {
         return this.name;
     }
@@ -26,7 +28,7 @@ public class User {
     public String getEmail() {
         return this.email;
     }
-    public String getDefaultLang() {
+    public String getDefault_lang() {
         return this.default_lang;
     }
     public int getUser_id() {
@@ -45,14 +47,14 @@ public class User {
     public void setPassword(String s) {
         this.password = s;
     }
-    public void setDefaultLang(String s) {
+    public void setDefault_lang(String s) {
         this.default_lang = s;
     }
     public void setUser_id(int s) {
         this.user_id = s;
     }
-    public void setContacts(int s) {
-        this.contacts.add(s);
+    public void setContacts(ArrayList<Integer> c) {
+        this.contacts = c;
     }
     // TODO: Add remaining User attributes as needed.
 }
