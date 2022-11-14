@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Message {
@@ -11,9 +12,9 @@ public class Message {
 
     private User recipient;
 
-    private Date timestamp;
+    private LocalDate timestamp;
 
-    public Message(int id, String message, User receiver, User recipient, Date timestamp) {
+    public Message(int id, String message, User receiver, User recipient, LocalDate timestamp) {
         this.id = id;
         this.message = message;
         this.receiver = receiver;
@@ -53,11 +54,11 @@ public class Message {
         this.recipient = recipient;
     }
 
-    public Date getTimestamp() {
+    public LocalDate getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(LocalDate timestamp) {
         this.timestamp = timestamp;
     }
 }

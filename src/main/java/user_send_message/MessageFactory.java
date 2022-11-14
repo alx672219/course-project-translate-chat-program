@@ -5,12 +5,12 @@ import entities.Message;
 //import entities.TextMessage;
 import entities.User;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class MessageFactory  {
-    public Message createMessage(Chat chat, int id, String message, User receiver, User recipient, Date timestamp) {
+    public Message createMessage(int chatID, int id, String message, User receiver, User recipient, LocalDate timestamp) {
         Message newMessage = new Message(id, message, receiver, recipient, timestamp);
-        chat.addMessage(newMessage);
         return newMessage;
     }
 }

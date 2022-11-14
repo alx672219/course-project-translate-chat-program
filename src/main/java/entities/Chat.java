@@ -11,6 +11,8 @@ public class Chat {
         this.messages = new ArrayList<>();
     }
 
+    public Chat() { }
+
     public void addMessage(Message message) {
         this.messages.add(message);
     }

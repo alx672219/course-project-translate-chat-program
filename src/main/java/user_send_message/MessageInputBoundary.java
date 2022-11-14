@@ -4,6 +4,7 @@ import entities.Chat;
 //import entities.TextMessage;
 import entities.User;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public interface MessageInputBoundary {
@@ -14,5 +15,5 @@ public interface MessageInputBoundary {
      * @return the message created
      */
 
-    void sendMessage(Chat chat, int id, String message, User receiver, User recipient, Date timestamp);
+    void sendMessage(int chatID, int id, String message, User receiver, User recipient, LocalDate timestamp);
 }
