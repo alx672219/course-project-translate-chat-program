@@ -1,7 +1,7 @@
 package user_send_message;
 
-import entities.Message;
-import entities.TextMessage;
+import entities.Chat;
+//import entities.TextMessage;
 import entities.User;
 
 import java.util.Date;
@@ -14,5 +14,5 @@ public interface MessageInputBoundary {
      * @return the message created
      */
 
-    TextMessage createMessage(int id, String message, User receiver, User recipient, Date timestamp);
+    void sendMessage(Chat chat, int id, String message, User receiver, User recipient, Date timestamp);
 }

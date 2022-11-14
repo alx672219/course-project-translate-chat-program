@@ -1,2 +1,4 @@
-package gateways;public class SendMessageGateway {
+package gateways;
+
+public class SendMessageGateway {
 }

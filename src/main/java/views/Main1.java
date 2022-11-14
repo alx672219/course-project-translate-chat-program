@@ -1,19 +1,11 @@
-package tutorial;
+package views;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import entities.User;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import services.DBInitializer;
 import services.DBService;
 
@@ -28,7 +20,7 @@ public class Main1 extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ChatScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../views/ChatScreen.fxml"));
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
