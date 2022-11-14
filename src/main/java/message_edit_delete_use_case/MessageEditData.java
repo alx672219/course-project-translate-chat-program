@@ -4,7 +4,7 @@ import entities.Message;
 
 public class MessageEditData {
     private final String editText;
-    private final Message wantedMessage;
+    private final int messageID;
 
     /**
      * Constructor for MessageEditData
@@ -12,9 +12,9 @@ public class MessageEditData {
      * @param edittext the edited text that the user wants to replace by
      */
 
-    public MessageEditData(String edittext, Message wantedMessage){
+    public MessageEditData(String edittext, int messageID){
         this.editText = edittext;
-        this.wantedMessage = wantedMessage;
+        this.messageID = messageID;
     }
     /**
      * Getter method for edited text.
@@ -23,7 +23,7 @@ public class MessageEditData {
     public String getEditText(){
         return this.editText;
     }
-    public Message getOriginalMessage() {return this.wantedMessage;
+    public int getID() {return this.messageID;
     }
 
 
