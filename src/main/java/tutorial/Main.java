@@ -28,8 +28,8 @@ public class Main {
         Message message = new Message(3, "hi", receiver, recipient, new Date(2022, Calendar.DECEMBER, 15));
         Chat chat1 = new Chat(1);
         chat1.addMessage(message);
-        dbService.saveUserDetails(recipient);
-        dbService.addMessage(message);
+//        dbService.saveUserDetails(recipient);
+//        dbService.addMessage(message);
 //        dbService.saveChat(chat1, message);
 
 //        dbService.saveUserDetails(receiver);
