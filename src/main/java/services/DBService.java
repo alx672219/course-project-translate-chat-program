@@ -20,6 +20,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
+    /**
+     *
+     * @param user
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public String saveUserDetails(User user) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docName = "id" + String.valueOf(user.getUser_id());
@@ -71,17 +78,22 @@ public class DBService {
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", String.valueOf(message.getId()));
 
-        String receiverID = String.valueOf(message.getReceiver().getUser_id());
-        String recipientID = String.valueOf(message.getRecipient().getUser_id());
+        String receiverID = "id" + String.valueOf(message.getReceiver().getUser_id());
+        String recipientID = "id" + String.valueOf(message.getRecipient().getUser_id());
 
         DocumentReference receiverRef = dbFirestore.collection("users").document(receiverID);
         DocumentReference recipientRef = dbFirestore.collection("users").document(recipientID);
 
+        docData.put("message", message.getMessage());
         docData.put("receiver", receiverRef);
         docData.put("recipient", recipientRef);
+        docData.put("timestamp", message.getTimestamp());
 
         String docName = "id" + String.valueOf(message.getId());
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("messages").document(docName).set(docData);
+        DocumentReference docRef = dbFirestore.collection("messages").document(docName);
+
+        ApiFuture<WriteResult> collectionsApiFuture = docRef.set(docData);
+        collectionsApiFuture.get();
     }
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
@@ -99,5 +111,6 @@ public class DBService {
         docData.put("messages", listMessagePaths);
         String docName = "id" + String.valueOf(chat.getId());
         ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
+        collectionsApiFuture.get();
     }
 }

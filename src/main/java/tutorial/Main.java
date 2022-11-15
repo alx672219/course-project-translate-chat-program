@@ -25,12 +25,11 @@ public class Main {
         User recipient = new User("bobby", "fr", "bobby@gmail.com", "bob");
         recipient.setUser_id(4);
 
-        Message message = new Message(3, "hi", receiver, recipient, new Date(2022, Calendar.DECEMBER, 15));
-        Chat chat1 = new Chat(1);
+        Message message = new Message(4, "hiiiii", receiver, recipient, new Date(2022, Calendar.DECEMBER, 15));
+        dbService.addMessage(message);
+        Chat chat1 = new Chat(2);
         chat1.addMessage(message);
-//        dbService.saveUserDetails(recipient);
-//        dbService.addMessage(message);
-//        dbService.saveChat(chat1, message);
+        dbService.addChat(chat1);
 
 //        dbService.saveUserDetails(receiver);
 //        System.out.println(dbService.saveChat(chat1));
