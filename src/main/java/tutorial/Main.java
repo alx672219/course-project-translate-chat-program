@@ -13,7 +13,11 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, ExecutionException, InterruptedException {
         DBInitializer dbInitializer = new DBInitializer();
         dbInitializer.init();
-//        System.out.println("s");
+        User danny = new User("danny", "en", "danny@gmail.com", "123");
+        danny.setUser_id(0);
+        dbService.addContact(danny, 1);
+
+        //        System.out.println("s");
 //        System.out.println(Main.getUser(1));
 
     }

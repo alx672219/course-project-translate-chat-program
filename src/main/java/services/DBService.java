@@ -6,14 +6,19 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.storage.v2.Object;
 import entities.User;
 
+import javax.swing.text.Document;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
     public String saveUserDetails(User user) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("users").document(user.getName()).set(user);
+        String docName = "id" + String.valueOf(user.getUser_id());
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("users").document(docName).set(user);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
@@ -34,6 +39,16 @@ public class DBService {
         } else {
             return null;
         }
+
+    }
+
+    public void addContact(User user, Integer contactID) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        System.out.println(user.getContacts());
+        String docName = "id" + user.getUser_id();
+        System.out.println(docName);
+        user.getContacts().add(contactID);
+        System.out.println(user.getContacts());
 
     }
 
