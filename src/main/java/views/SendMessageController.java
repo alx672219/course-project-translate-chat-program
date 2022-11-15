@@ -8,6 +8,7 @@ import user_send_message.MessageOutputBoundary;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class SendMessageController {
     private final MessageInputBoundary messageInputBoundary;
@@ -26,7 +27,7 @@ public class SendMessageController {
      * @param recipient
      * @param timestamp
      */
-    public void sendMessage(int chatID, int id, String message, User receiver, User recipient, LocalDate timestamp) {
+    public void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException {
         this.messageInputBoundary.sendMessage(chatID, id, message, receiver, recipient, timestamp);
     }
 

@@ -12,9 +12,9 @@ public class Message {
 
     private User recipient;
 
-    private LocalDate timestamp;
+    private Date timestamp;
 
-    public Message(int id, String message, User receiver, User recipient, LocalDate timestamp) {
+    public Message(int id, String message, User receiver, User recipient, Date timestamp) {
         this.id = id;
         this.message = message;
         this.receiver = receiver;
@@ -54,11 +54,11 @@ public class Message {
         this.recipient = recipient;
     }
 
-    public LocalDate getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 }

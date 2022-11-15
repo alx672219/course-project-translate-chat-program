@@ -6,6 +6,7 @@ import entities.User;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public interface MessageInputBoundary {
     /**
@@ -15,5 +16,5 @@ public interface MessageInputBoundary {
      * @return the message created
      */
 
-    void sendMessage(int chatID, int id, String message, User receiver, User recipient, LocalDate timestamp);
+    void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException;
 }

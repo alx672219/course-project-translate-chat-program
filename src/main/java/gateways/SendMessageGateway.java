@@ -25,12 +25,11 @@ public class SendMessageGateway {
      * @param chatID
      * @param message
      */
-    public Chat sendMessage(int chatID) throws ExecutionException, InterruptedException {
+    public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException {
         DBService dbService = new DBService();
         Chat targetChat = dbService.getChatDetails(chatID);
-        return targetChat;
-        // Accesses database to
-
+        targetChat.addMessage(message);
+        dbService.addMessage(message);
     }
 
 }
