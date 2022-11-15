@@ -49,7 +49,10 @@ public class DBService {
         System.out.println(docName);
         user.getContacts().add(contactID);
         System.out.println(user.getContacts());
-
+        DocumentReference docRef = dbFireStore.collection("users").document(docName);
+        System.out.println(docRef);
+        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
+        WriteResult result = future.get();
     }
 
 }
