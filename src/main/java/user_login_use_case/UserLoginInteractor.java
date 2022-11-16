@@ -2,7 +2,7 @@ package user_login_use_case;
 
 import java.io.IOException;
 
-class UserLoginInteractor implements LoginInputBoundary {
+public class UserLoginInteractor implements LoginInputBoundary {
     private final UserLoginGateway auth;
     private final LoginOutputBoundary presenter;
 
