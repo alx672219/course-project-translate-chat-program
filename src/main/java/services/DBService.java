@@ -22,11 +22,13 @@ public class DBService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
+
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         // First get document reference from specified collection and document
         // Then get the APIFuture of that document
-        DocumentReference documentReference = dbFirestore.collection("users").document(String.valueOf(userID));
+        String documentName = "id" + String.valueOf(userID);
+        DocumentReference documentReference = dbFirestore.collection("users").document(documentName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
         // Extract DocumentSnapShot from ApiFuture object
@@ -42,17 +44,36 @@ public class DBService {
 
     }
 
-    public void addContact(User user, Integer contactID) throws ExecutionException, InterruptedException {
+    public void addContact(User user, Long contactID) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
-        System.out.println(user.getContacts());
+        //System.out.println(user.getContacts());
         String docName = "id" + user.getUser_id();
-        System.out.println(docName);
+        //System.out.println(docName);
         user.getContacts().add(contactID);
-        System.out.println(user.getContacts());
+        //System.out.println(user.getContacts());
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        System.out.println(docRef);
+        //System.out.println(docRef);
+        //System.out.println(user.getContacts());
         ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
         WriteResult result = future.get();
     }
+
+
+    public void deleteContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        //System.out.println(user.getContacts());
+        String docName = "id" + user.getUser_id();
+        //System.out.println(docName);
+        //System.out.println(user.getContacts().getClass().getName());
+        //System.out.println(user.getContacts());
+        user.getContacts().remove(contactID);
+        //System.out.println(user.getContacts());
+        DocumentReference docRef = dbFireStore.collection("users").document(docName);
+        //System.out.println(docRef);
+        //System.out.println(user.getContacts());
+        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
+        WriteResult result = future.get();
+    }
+
 
 }

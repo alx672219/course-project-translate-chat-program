@@ -14,8 +14,9 @@ public class Main {
         DBInitializer dbInitializer = new DBInitializer();
         dbInitializer.init();
         User danny = new User("danny", "en", "danny@gmail.com", "123");
+        danny.getContacts().add(123L);
         danny.setUser_id(0);
-        dbService.addContact(danny, 1);
+        dbService.deleteContact(danny,123L);
 
         //        System.out.println("s");
 //        System.out.println(Main.getUser(1));
