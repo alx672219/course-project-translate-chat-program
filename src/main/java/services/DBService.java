@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
+
     /**
      *
      * @param user
@@ -72,6 +73,24 @@ public class DBService {
         }
     }
 
+    public void addChat(Chat chat) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("id", String.valueOf(chat.getId()));
+        ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
+
+        for (Message message: chat.getMessages()) {
+            String messageID = "id" + String.valueOf(message.getId());
+            DocumentReference messageRef = dbFireStore.collection("messages").document(messageID);
+            listMessagePaths.add(messageRef);
+        }
+
+        docData.put("messages", listMessagePaths);
+        String docName = "id" + String.valueOf(chat.getId());
+        ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
+        collectionsApiFuture.get();
+    }
 
     public void addMessage(Message message) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -93,24 +112,6 @@ public class DBService {
         DocumentReference docRef = dbFirestore.collection("messages").document(docName);
 
         ApiFuture<WriteResult> collectionsApiFuture = docRef.set(docData);
-        collectionsApiFuture.get();
-    }
-    public void addChat(Chat chat) throws ExecutionException, InterruptedException {
-        Firestore dbFireStore = FirestoreClient.getFirestore();
-
-        Map<String, Object> docData = new HashMap<>();
-        docData.put("id", String.valueOf(chat.getId()));
-        ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
-
-        for (Message message: chat.getMessages()) {
-            String messageID = "id" + String.valueOf(message.getId());
-            DocumentReference messageRef = dbFireStore.collection("messages").document(messageID);
-            listMessagePaths.add(messageRef);
-        }
-
-        docData.put("messages", listMessagePaths);
-        String docName = "id" + String.valueOf(chat.getId());
-        ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
         collectionsApiFuture.get();
     }
 }

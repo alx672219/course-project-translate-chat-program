@@ -18,6 +18,15 @@ public class SendMessageGateway {
      * @param chatID
      * @return Chat with id of the passed parameter chatID
      */
+    DBService dbService;
+
+    public SendMessageGateway() {
+        dbService = new DBService();
+    }
+
+    public void addChat(Chat chat) throws ExecutionException, InterruptedException {
+        dbService.addChat(chat);
+    }
 
 
     /** Stores the message to the database
@@ -26,7 +35,6 @@ public class SendMessageGateway {
      * @param message
      */
     public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException {
-        DBService dbService = new DBService();
         Chat targetChat = dbService.getChatDetails(chatID);
         targetChat.addMessage(message);
         dbService.addMessage(message);

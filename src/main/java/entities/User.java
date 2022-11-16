@@ -8,7 +8,7 @@ public class User {
     private String email;
     private String password;
     private int user_id;
-    private ArrayList<Integer> contacts = new ArrayList<Integer>();
+    private ArrayList<Long> contacts = new ArrayList<Long>();
 
     public User(String name, String default_lang, String email, String password) {
         this.name = name;
@@ -34,7 +34,7 @@ public class User {
     public int getUser_id() {
         return this.user_id;
     }
-    public ArrayList<Integer> getContacts() {
+    public ArrayList<Long> getContacts() {
         return this.contacts;
     }
 
@@ -53,8 +53,8 @@ public class User {
     public void setUser_id(int s) {
         this.user_id = s;
     }
-    public void setContacts(int s) {
-        this.contacts.add(s);
-    }
+//    public void setContacts(Long s) {
+//        this.contacts.add(s);
+//    }
     // TODO: Add remaining User attributes as needed.
 }

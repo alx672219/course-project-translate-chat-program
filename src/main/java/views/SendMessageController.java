@@ -19,6 +19,10 @@ public class SendMessageController {
         this.messageOutputBoundary = messageOutputBoundary;
     }
 
+    public void createChat(int chatID) throws ExecutionException, InterruptedException {
+        this.messageInputBoundary.createChat(chatID);
+    }
+
     /** Sends the created message
      *
      * @param id
