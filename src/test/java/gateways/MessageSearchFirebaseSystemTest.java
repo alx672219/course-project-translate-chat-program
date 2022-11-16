@@ -22,8 +22,8 @@ class MessageSearchFirebaseSystemTest {
     @Test
     void searchFoundMatch() throws FileNotFoundException {
         dbInitializer.init();
-        List<Message> listMsg = gateway.search(new MessageSearchData("Bonjour", 1));
-        assertEquals(1, listMsg.size());
+        List<Message> listMsg = gateway.search(new MessageSearchData("He", 0));
+        assertEquals(2, listMsg.size());
     }
 
     @Test

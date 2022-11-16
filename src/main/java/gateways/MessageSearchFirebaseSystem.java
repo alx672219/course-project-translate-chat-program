@@ -41,31 +41,8 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
                 DocumentSnapshot msgDoc = ref.get().get(); // getting the message Document
                 String msgText = (String) msgDoc.getData().get("message"); // getting the text of the message
                 if (msgText.toLowerCase().contains(query)) { // if query is a substring of message
-                    // CREATING USER ENTITY THAT IS THE RECEIVER OF THE MESSAGE
-                    DocumentReference receiverRef = (DocumentReference) msgDoc.getData().get("receiver");
-                    DocumentSnapshot receiverDoc = receiverRef.get().get();
-                    User receiver = new User((String) receiverDoc.getData().get("name"),
-                            (String) receiverDoc.getData().get("default_lang"),
-                            (String) receiverDoc.getData().get("email"),
-                            (String) receiverDoc.getData().get("password"),
-                            ((Long) receiverDoc.getData().get("user_id")).intValue());
-
-                    //CREATING A USER ENTITY THAT IS THE RECIPIENT OF THE MESSAGE
-                    DocumentReference recipientRef = (DocumentReference) msgDoc.getData().get("recipient");
-                    DocumentSnapshot recipientDoc = recipientRef.get().get();
-                    User recipient = new User((String) recipientDoc.getData().get("name"),
-                            (String) receiverDoc.getData().get("default_lang"),
-                            (String) receiverDoc.getData().get("email"),
-                            (String) receiverDoc.getData().get("password"),
-                            ((Long) receiverDoc.getData().get("user_id")).intValue());
-
-                    //CREATING THE ACTUAL MESSAGE ENTITY
-                    Message msg = new Message(((Long) msgDoc.getData().get("id")).intValue(),
-                            msgText,
-                            receiver,
-                            recipient,
-                            msgDoc.getDate("timestamp"));
-
+                    // Creating the Message object based on the data from msgDoc
+                    Message msg = createMessageFromDoc(msgDoc);
                     listMsg.add(msg);
                 }
             }
@@ -73,5 +50,32 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Message createMessageFromDoc(DocumentSnapshot msgDoc) throws ExecutionException, InterruptedException {
+        // CREATING USER ENTITY THAT IS THE RECEIVER OF THE MESSAGE
+        DocumentReference receiverRef = (DocumentReference) msgDoc.getData().get("receiver");
+        DocumentSnapshot receiverDoc = receiverRef.get().get();
+        User receiver = new User((String) receiverDoc.getData().get("name"),
+                (String) receiverDoc.getData().get("default_lang"),
+                (String) receiverDoc.getData().get("email"),
+                (String) receiverDoc.getData().get("password"),
+                ((Long) receiverDoc.getData().get("user_id")).intValue());
+
+        //CREATING A USER ENTITY THAT IS THE RECIPIENT OF THE MESSAGE
+        DocumentReference recipientRef = (DocumentReference) msgDoc.getData().get("recipient");
+        DocumentSnapshot recipientDoc = recipientRef.get().get();
+        User recipient = new User((String) recipientDoc.getData().get("name"),
+                (String) receiverDoc.getData().get("default_lang"),
+                (String) receiverDoc.getData().get("email"),
+                (String) receiverDoc.getData().get("password"),
+                ((Long) receiverDoc.getData().get("user_id")).intValue());
+
+        //CREATING THE ACTUAL MESSAGE ENTITY
+        return new Message(((Long) msgDoc.getData().get("id")).intValue(),
+                (String) msgDoc.getData().get("message"),
+                receiver,
+                recipient,
+                msgDoc.getDate("timestamp"));
     }
 }
