@@ -39,14 +39,16 @@ public class RegisterScreen extends JPanel implements ActionListener {
      * The controller
      */
     UserRegisterController controller;
+    Navigator nav;
 
 
     /**
      * A window with a title and a JButton
      */
-    public RegisterScreen(String[] languages, UserRegisterController controller) {
+    public RegisterScreen(String[] languages, UserRegisterController controller, Navigator nav) {
         this.default_lang = new AutoFillDropdown(languages);
         this.controller = controller;
+        this.nav = nav;
 
         JLabel title = new JLabel("Register");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -90,15 +92,22 @@ public class RegisterScreen extends JPanel implements ActionListener {
         String email = this.email.getText();
         String default_lang = (String) this.default_lang.getSelectedItem();
 
+        // Move to login screen
+        if (source.equals("Login")) {
+            nav.showScreen("login");
+            return;
+        }
+        // Check if passwords match
         if (!password1.equals(password2)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match.");
             return;
         }
+        // Check if any of the fields are left blank
         if (username.isBlank() || password1.isBlank() || password2.isBlank() || email.isBlank()) {
             JOptionPane.showMessageDialog(this, "Must fill in all required fields.");
             return;
         }
-        System.out.println(source);
+        // Attempt to sign up
         if (source.equals("Sign up")) {
             try {
                 RegisterResponse resp = controller.register(username, password1, email, default_lang);
@@ -109,9 +118,6 @@ public class RegisterScreen extends JPanel implements ActionListener {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
-        } else if (source.equals("Login")) {
-            // TODO: Navigate to Login Page
-            JOptionPane.showMessageDialog(this, "Not yet implemented!");
         }
     }
 }

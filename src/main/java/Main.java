@@ -1,6 +1,10 @@
+import gateways.UserLoginFirebaseSystem;
 import gateways.UserRegistrationFirebaseSystem;
 import org.jetbrains.annotations.NotNull;
 import services.DBInitializer;
+import user_login_use_case.LoginInputBoundary;
+import user_login_use_case.UserLoginGateway;
+import user_login_use_case.UserLoginInteractor;
 import user_register_use_case.UserRegistrationGateway;
 import user_register_use_case.UserRegistrationInteractor;
 import views.*;
@@ -17,30 +21,43 @@ public class Main {
         } catch (Exception ignored) {
         }
 
-        // Build the main program window
-        JFrame registerScreen = initRegisterScreen();
-        registerScreen.setVisible(true);
-
-    }
-
-    @NotNull
-    private static JFrame initRegisterScreen() {
-        JFrame application = new JFrame("Register Screen");
         CardLayout cardLayout = new CardLayout();
         JPanel screens = new JPanel(cardLayout);
+        JFrame application = new JFrame("Translation App");
         application.add(screens);
 
+        Navigator nav = new CardLayoutNavigator(cardLayout, screens);
+
+        // Initialize screens
+        JPanel registerScreen = initRegisterScreen(nav);
+        JPanel loginSreen = initLoginScreen(nav);
+        // Add screens to the card layout
+        screens.add(registerScreen, "register");
+        screens.add(loginSreen, "login");
+
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        application.setSize(640, 640);
+        application.setVisible(true);
+        nav.showScreen("register");
+    }
+    @NotNull
+    private static JPanel initRegisterScreen(Navigator nav) {
         UserRegistrationGateway userFactory = new UserRegistrationFirebaseSystem();
         UserRegisterPresenter presenter = new UserRegisterPresenter();
         UserRegisterInputBoundary interactor = new UserRegistrationInteractor(userFactory, presenter);
         UserRegisterController userRegisterController = new UserRegisterController(interactor);
 
         String[] langs = {"english", "arabic", "chinese", "korean", "polish"};
-        RegisterScreen registerScreen = new RegisterScreen(langs, userRegisterController);
-        screens.add(registerScreen, "welcome");
-        cardLayout.show(screens, "register");
-        application.setSize(640, 640);
-        return application;
+        return new RegisterScreen(langs, userRegisterController, nav);
+    }
+    @NotNull
+    private static JPanel initLoginScreen(Navigator nav) {
+        UserLoginGateway auth = new UserLoginFirebaseSystem();
+        LoginPresenter presenter = new LoginPresenter();
+        LoginInputBoundary interactor = new UserLoginInteractor(auth, presenter);
+        LoginController userLoginController = new LoginController(interactor);
+
+        return new LoginScreen(userLoginController, nav);
     }
 
 }
