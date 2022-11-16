@@ -1,4 +1,4 @@
-package AudioUseCase;
+package audio_converter_use_case;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.ServiceAccountCredentials;

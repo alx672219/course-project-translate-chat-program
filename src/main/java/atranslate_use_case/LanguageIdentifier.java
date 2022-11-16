@@ -1,4 +1,4 @@
-package MessageUseCase;
+package atranslate_use_case;
 import com.google.cloud.translate.Detection;
 import com.google.cloud.translate.Translate;
 

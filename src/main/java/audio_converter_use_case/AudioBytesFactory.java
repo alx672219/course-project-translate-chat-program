@@ -1,4 +1,4 @@
-package AudioUseCase;
+package audio_converter_use_case;
 
 import com.google.protobuf.ByteString;
 

@@ -1,4 +1,4 @@
-package MessageUseCase;
+package atranslate_use_case;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.Translation;
@@ -10,6 +10,8 @@ public class Translator {
 
     public Translator(String keyPath){
         this.keyPath = keyPath;
+        this.translateClientFactory = new TranslateClientFactory();
+        this.languageIdentifier = new LanguageIdentifier();
         this.translate = translateClientFactory.createTranslate(keyPath);
     }
 

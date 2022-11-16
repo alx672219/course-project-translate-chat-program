@@ -1,13 +1,8 @@
-package AudioUseCase;
+package audio_converter_use_case;
 
-import com.google.api.gax.core.FixedCredentialsProvider;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.speech.v1.*;
-import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.protobuf.ByteString;
-import org.apache.commons.codec.language.bm.Lang;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,7 +17,11 @@ public class AudioConverter {
     //Constructor that creates a speechClient as well
     public AudioConverter(String keyPath) throws IOException {
         this.keyPath  = keyPath;
+        this.speechClientFactory = new SpeechClientFactory();
         this.speech = speechClientFactory.createSpeechClient(keyPath);
+        this.audioBytesFactory = new AudioBytesFactory();
+
+        this.recognitionConfigFactory = new RecognitionConfigFactory();
     }
 
     //setKey, which also sets the speechClient according to the key
@@ -53,7 +52,7 @@ public class AudioConverter {
                 translatedText.append(alternative.getTranscript());
             }
         }
-//        speech.close(); I am not 100% if you need this or not
+        speech.close();// I am not 100% if you need this or not
         return translatedText.toString();
     }
 
