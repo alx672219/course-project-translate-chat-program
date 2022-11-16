@@ -7,10 +7,14 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.DocumentSnapshot;
 import org.apache.arrow.flatbuf.Int;
+import services.DBInitializer;
 
+import java.io.FileNotFoundException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class MessageEditFirebaseSystem implements MessageEditGateway {
+
     @Override
     public void edit(MessageEditData data) {
         String messageID = "id" + data.getID();
@@ -18,10 +22,16 @@ public class MessageEditFirebaseSystem implements MessageEditGateway {
         Firestore dbFireStore = FirestoreClient.getFirestore();
         DocumentReference messageDocumentReference = dbFireStore.collection("messages").document(messageID);
         try {
-            DocumentSnapshot messageDocument = messageDocumentReference.get().get();
-
-        } catch (InterruptedException | ExecutionException e) {
+            DocumentSnapshot messageDoc = messageDocumentReference.get().get();
+            Map<String, Object> msgData = messageDoc.getData();
+            msgData.put("message", text);
+            messageDocumentReference.set(msgData);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+
     }
+
 }
