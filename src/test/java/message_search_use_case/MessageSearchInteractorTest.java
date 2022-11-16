@@ -41,17 +41,17 @@ class MessageSearchInteractorTest {
     @Test
     void searchFailedLessThanOrEqualToFive() {
         Exception e = assertThrows(MessageSearchFailed.class, () -> {
-            interactor.search(new MessageSearchData("Hel", 0));
+            interactor.search(new MessageSearchData("Bonj", 0));
         });
         assertEquals("Search query must be more than 5 characters.", e.getMessage());
     }
 
     @Test
     void searchSuccess() throws FileNotFoundException {
-        MessageSearchResponse actualResponse = interactor.search(new MessageSearchData("Bonjou", 1));
+        MessageSearchResponse actualResponse = interactor.search(new MessageSearchData("Hello!", 0));
         assertEquals(1, actualResponse.getMessages().size());
-        assertEquals("Bonjour", actualResponse.getMessages().get(0).getMessage());
-        assertEquals(2, actualResponse.getMessages().get(0).getId());
+        assertEquals("Hello!", actualResponse.getMessages().get(0).getMessage());
+        assertEquals(0, actualResponse.getMessages().get(0).getId());
     }
 
 

@@ -49,9 +49,9 @@ class MessageSearchControllerTest {
 
     @Test
     void searchSuccess() throws FileNotFoundException {
-        MessageSearchResponse actualResponse = controller.search(new MessageSearchData("Bonjou", 1));
+        MessageSearchResponse actualResponse = controller.search(new MessageSearchData("Hello!", 0));
         assertEquals(1, actualResponse.getMessages().size());
-        assertEquals("Bonjour", actualResponse.getMessages().get(0).getMessage());
-        assertEquals(2, actualResponse.getMessages().get(0).getId());
+        assertEquals("Hello!", actualResponse.getMessages().get(0).getMessage());
+        assertEquals(0, actualResponse.getMessages().get(0).getId());
     }
 }
