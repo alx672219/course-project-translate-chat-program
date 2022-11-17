@@ -37,7 +37,7 @@ public class SendMessageGateway {
     public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException {
         Chat targetChat = dbService.getChatDetails(chatID);
         targetChat.addMessage(message);
-        dbService.addMessage(message);
+        dbService.addMessage(message, targetChat);
     }
 
 }

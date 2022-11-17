@@ -1,10 +1,7 @@
 package services;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -92,7 +89,7 @@ public class DBService {
         collectionsApiFuture.get();
     }
 
-    public void addMessage(Message message) throws ExecutionException, InterruptedException {
+    public void addMessage(Message message, Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", String.valueOf(message.getId()));
@@ -109,9 +106,15 @@ public class DBService {
         docData.put("timestamp", message.getTimestamp());
 
         String docName = "id" + String.valueOf(message.getId());
-        DocumentReference docRef = dbFirestore.collection("messages").document(docName);
+        DocumentReference messageRef = dbFirestore.collection("messages").document(docName);
 
-        ApiFuture<WriteResult> collectionsApiFuture = docRef.set(docData);
+        ApiFuture<WriteResult> collectionsApiFuture = messageRef.set(docData);
         collectionsApiFuture.get();
+
+        // Add the message to the chat
+        String chatDocName = "id" + String.valueOf(chat.getId());
+        DocumentReference chatRef = dbFirestore.collection("chats").document(chatDocName);
+
+        ApiFuture<WriteResult> arrayUnion = chatRef.update("messages", FieldValue.arrayUnion(messageRef));
     }
 }

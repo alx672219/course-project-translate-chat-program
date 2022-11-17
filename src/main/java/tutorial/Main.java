@@ -16,9 +16,11 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
-        System.err.println("hi");
+        // Initialize the Database
         DBInitializer dbInitializer = new DBInitializer();
-//        new ChatScreen();
+
+        // UI
+        new ChatScreen();
         dbInitializer.init();
         DBService dbService = new DBService();
 //
@@ -26,12 +28,13 @@ public class Main {
 //        receiver.setUser_id(3);
 //        User recipient = new User("bobby", "fr", "bobby@gmail.com", "bob");
 //        recipient.setUser_id(4);
-//
-//        Message message = new Message(4, "hiiiii", receiver, recipient, new Date(2022, Calendar.DECEMBER, 15));
+////
+//        Message message = new Message(4, "hiiiii", receiver, recipient, new Date(122, Calendar.DECEMBER, 15));
 //        System.out.println(dbService.getUserDetails(0).getContacts());
-//        dbService.addMessage(message);
 //        Chat chat1 = new Chat(2);
 //        chat1.addMessage(message);
 //        dbService.addChat(chat1);
+//        dbService.addMessage(message, chat1);
+
     }
 }
