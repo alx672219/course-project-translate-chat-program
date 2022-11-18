@@ -2,6 +2,7 @@ import gateways.UserLoginFirebaseSystem;
 import gateways.UserRegistrationFirebaseSystem;
 import org.jetbrains.annotations.NotNull;
 import services.DBInitializer;
+import services.DBService;
 import user_login_use_case.LoginInputBoundary;
 import user_login_use_case.UserLoginGateway;
 import user_login_use_case.UserLoginInteractor;
@@ -27,10 +28,11 @@ public class Main {
         application.add(screens);
 
         Navigator nav = new CardLayoutNavigator(cardLayout, screens);
+        DBService dbs = new DBService();
 
         // Initialize screens
-        JPanel registerScreen = initRegisterScreen(nav);
-        JPanel loginSreen = initLoginScreen(nav);
+        JPanel registerScreen = initRegisterScreen(nav, dbs);
+        JPanel loginSreen = initLoginScreen(nav, dbs);
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.add(loginSreen, "login");
@@ -41,8 +43,8 @@ public class Main {
         nav.showScreen("register");
     }
     @NotNull
-    private static JPanel initRegisterScreen(Navigator nav) {
-        UserRegistrationGateway userFactory = new UserRegistrationFirebaseSystem();
+    private static JPanel initRegisterScreen(Navigator nav, DBService db) {
+        UserRegistrationGateway userFactory = new UserRegistrationFirebaseSystem(db);
         UserRegisterPresenter presenter = new UserRegisterPresenter();
         UserRegisterInputBoundary interactor = new UserRegistrationInteractor(userFactory, presenter);
         UserRegisterController userRegisterController = new UserRegisterController(interactor);
@@ -51,8 +53,8 @@ public class Main {
         return new RegisterScreen(langs, userRegisterController, nav);
     }
     @NotNull
-    private static JPanel initLoginScreen(Navigator nav) {
-        UserLoginGateway auth = new UserLoginFirebaseSystem();
+    private static JPanel initLoginScreen(Navigator nav, DBService db) {
+        UserLoginGateway auth = new UserLoginFirebaseSystem(db);
         LoginPresenter presenter = new LoginPresenter();
         LoginInputBoundary interactor = new UserLoginInteractor(auth, presenter);
         LoginController userLoginController = new LoginController(interactor);

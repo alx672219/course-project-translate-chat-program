@@ -11,6 +11,12 @@ import java.util.concurrent.ExecutionException;
 
 public class UserRegistrationFirebaseSystem implements UserRegistrationGateway {
 
+    private final DBService db;
+
+    public UserRegistrationFirebaseSystem(DBService db) {
+        this.db = db;
+    }
+
     /**
      * Creates a new user using the given data and adds them to Firebase.
      * @param data the data with which to create the new user
@@ -18,7 +24,16 @@ public class UserRegistrationFirebaseSystem implements UserRegistrationGateway {
      */
     @Override
     public boolean create(CreationData data) {
-        DBService db = new DBService();
+        // Check that this username is not already in use
+        try {
+            User user = db.getByUsername(data.getUsername());
+            if (user != null) {
+                return false;
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         List<Integer> ids;
         try {
             ids = db.getAllUserId();
@@ -30,7 +45,6 @@ public class UserRegistrationFirebaseSystem implements UserRegistrationGateway {
         // Create the new user
         User user = new User(data.getUsername(), data.getDefault_lang(), data.getEmail(), data.getPassword());
         user.setUser_id(id);
-        System.out.println(user);
         // Save the new user to database
         try {
             db.saveUserDetails(user);
