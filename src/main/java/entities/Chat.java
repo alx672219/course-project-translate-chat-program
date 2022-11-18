@@ -1,29 +1,37 @@
 package entities;
 
+import java.util.ArrayList;
+
 public class Chat {
     private int id;
-    private Message[] messages;
+    private ArrayList<Message> messages;
 
     public Chat(int id) {
         this.id = id;
-        this.messages = new Message[]{};
+        this.messages = new ArrayList<>();
+    }
+
+    public Chat() { }
+
+    public void addMessage(Message message) {
+        this.messages.add(message);
     }
 
     // Getter & Setter Methods
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public Message[] getMessages() {
+    public ArrayList<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(Message[] messages) {
+    public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
 }
