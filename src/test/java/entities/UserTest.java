@@ -11,7 +11,7 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        this.user = new User("Name", "English", "email.com", "123p");
+        this.user = new User("Name", "English", "email.com", "123p", 123);
     }
 
     @Test
@@ -36,6 +36,12 @@ class UserTest {
     void getDefaultLang() {
         String expected = user.getDefaultLang();
         assertEquals(expected, "English");
+    }
+
+    @Test
+    void getUser_id() {
+        int expected = user.getUser_id();
+        assertEquals(expected, 123);
     }
 
     @Test
@@ -64,6 +70,13 @@ class UserTest {
         assertEquals(user.getDefaultLang(), "English");
         user.setDefaultLang("Arabic");
         assertEquals(user.getDefaultLang(), "Arabic");
+    }
+
+    @Test
+    void setUser_id() {
+        assertEquals(user.getUser_id(), 123);
+        user.setUser_id(456);
+        assertEquals(user.getUser_id(), 456);
     }
 
 }
