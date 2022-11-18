@@ -10,25 +10,29 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
+    private final Firestore db;
+
+    public DBService() {
+        db = FirestoreClient.getFirestore();
+    }
+
     public String saveUserDetails(User user) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
         String docName = "id" + String.valueOf(user.getUser_id());
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("users").document(docName).set(user);
+        ApiFuture<WriteResult> collectionsApiFuture = db.collection("users").document(docName).set(user);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
         // First get document reference from specified collection and document
         // Then get the APIFuture of that document
         String docName = "id" + String.valueOf(userID);
-        DocumentReference documentReference = dbFirestore.collection("users").document(docName);
+        DocumentReference documentReference = db.collection("users").document(docName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
         // Extract DocumentSnapShot from ApiFuture object
         DocumentSnapshot document = future.get();
 
-        User user = null;
+        User user;
         if (document.exists()) {
             user = document.toObject(User.class);
             return user;
@@ -46,7 +50,7 @@ public class DBService {
      */
     public List<Integer> getAllUserId() throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
-        ArrayList<Integer> ret = new ArrayList<Integer>();
+        ArrayList<Integer> ret = new ArrayList<>();
         // asynchronously retrieve all documents
         ApiFuture<QuerySnapshot> future = db.collection("users").get();
         // future.get() blocks on response
@@ -56,5 +60,23 @@ public class DBService {
             ret.add(uid);
         }
         return ret;
+    }
+
+    /**
+     * Returns the User with a given username, or returns null if no User has this username.
+     */
+    public User getByUsername(String username) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference users = db.collection("users");
+        // Create a query against the collection.
+        Query query = users.whereEqualTo("name", username);
+        // retrieve  query results asynchronously using query.get()
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        // Usernames are unique so the querySnapshot should only contain 1 object
+        // Create a user object using that information and return the User
+        if (!querySnapshot.get().getDocuments().isEmpty()) {
+            return querySnapshot.get().getDocuments().get(0).toObject(User.class);
+        }
+        return null;
     }
 }
