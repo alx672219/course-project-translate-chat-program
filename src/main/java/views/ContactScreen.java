@@ -27,10 +27,16 @@ import javax.swing.table.DefaultTableModel;
 
 public class ContactScreen extends JFrame{
     ArrayList<MemberVO>members = new ArrayList<MemberVO>();
+    DBService dbService;
 
-    public ContactScreen(){
-
-
+    public ContactScreen() throws ExecutionException, InterruptedException {
+        this.dbService = new DBService();
+        DBInitializer dbInitializer = new DBInitializer();
+        try {
+            dbInitializer.init();
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
 
         setTitle("Contacts");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -67,7 +73,15 @@ public class ContactScreen extends JFrame{
         String[] rows = new String[2];
 
         // Fetch list of all users from database
-        // rows[0] = "12";
+        User targetUser = dbService.getUserDetails(1);
+        ArrayList<Long> contacts = targetUser.getContacts();
+        System.out.println(contacts);
+
+        for (int i = 0; i < contacts.size(); i++) {
+            rows[0] = String.valueOf(contacts.get(i));
+            model.addRow(rows);
+
+        }
 
         // contats is array of integers
         // but your row[1] which is showoing contacts is a string
@@ -102,21 +116,13 @@ public class ContactScreen extends JFrame{
 
                 tfUserid.setText("");
 
-                DBInitializer dbInitializer = new DBInitializer();
-                try {
-                    dbInitializer.init();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-
 
                 Long userid = Long.parseLong(rows[0]);
 
 
-                DBService dbService = new DBService();
                 User targetUser = null;
                 try {
-                    targetUser = dbService.getUserDetails(0); // 이게 모냐 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+                    targetUser = dbService.getUserDetails(1); // 이게 모냐 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
                 } catch (ExecutionException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -137,7 +143,7 @@ public class ContactScreen extends JFrame{
 
 
 
-                System.out.println("회원 숫자:"+members.size());
+                //System.out.println("회원 숫자:"+members.size());
             }
         });
         //선택한 줄 지우기
@@ -146,12 +152,12 @@ public class ContactScreen extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 //선택한 줄의 번호 알아내기
 
-                DBInitializer dbInitializer = new DBInitializer();
-                try {
-                    dbInitializer.init();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+//                DBInitializer dbInitializer = new DBInitializer();
+//                try {
+//                    dbInitializer.init();
+//                } catch (FileNotFoundException ex) {
+//                    throw new RuntimeException(ex);
+//                }
 
 
                 int rowIndex = table.getSelectedRow();
@@ -165,7 +171,7 @@ public class ContactScreen extends JFrame{
                 DBService dbService = new DBService();
                 User targetUser = null;
                 try {
-                    targetUser = dbService.getUserDetails(0);
+                    targetUser = dbService.getUserDetails(1);
                 } catch (ExecutionException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -175,9 +181,7 @@ public class ContactScreen extends JFrame{
 
                 try {
                     dbService.deleteContact(targetUser, userid);
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
+                } catch (ExecutionException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
 
@@ -202,7 +206,7 @@ public class ContactScreen extends JFrame{
 
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         new ContactScreen();
     }
 }
