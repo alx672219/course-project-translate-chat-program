@@ -11,9 +11,11 @@ public class MessageDeleteResponse extends Response {
         this.success = success;
         this.e = e;
     }
-    public int getMessageID(){
-        return this.messageID;
+
+    public int getMessageID() {
+        return messageID;
     }
+
     @Override
     public Exception getException(){
         return super.e;
