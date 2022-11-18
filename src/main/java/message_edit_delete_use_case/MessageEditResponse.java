@@ -4,8 +4,8 @@ import shared.Response;
 
 public class MessageEditResponse extends Response {
 
-    private String editedText;
-    private int id;
+    private final String editedText;
+    private final int id;
 
     public MessageEditResponse(String editedText, int id, boolean success, Exception e) {
         this.editedText = editedText;

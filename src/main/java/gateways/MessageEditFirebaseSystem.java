@@ -6,10 +6,7 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.DocumentSnapshot;
-import org.apache.arrow.flatbuf.Int;
-import services.DBInitializer;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 

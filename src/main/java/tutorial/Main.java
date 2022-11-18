@@ -10,13 +10,13 @@ import java.util.concurrent.ExecutionException;
 public class Main {
     public static DBService dbService = new DBService();
 
-    public static void main(String[] args) throws FileNotFoundException, ExecutionException, InterruptedException {
-        DBInitializer dbInitializer = new DBInitializer();
-        dbInitializer.init();
+    //public static void main(String[] args) throws FileNotFoundException, ExecutionException, InterruptedException {
+       // DBInitializer dbInitializer = new DBInitializer();
+        //dbInitializer.init();
 //        System.out.println("s");
 //        System.out.println(Main.getUser(1));
 
-    }
+   // }
 
     public static User getUser(int userID) throws ExecutionException, InterruptedException {
         try {
