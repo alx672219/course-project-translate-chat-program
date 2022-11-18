@@ -13,6 +13,8 @@ import user_register_use_case.UserRegisterInputBoundary;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
@@ -49,7 +51,22 @@ public class Main {
         UserRegisterInputBoundary interactor = new UserRegistrationInteractor(userFactory, presenter);
         UserRegisterController userRegisterController = new UserRegisterController(interactor);
 
-        String[] langs = {"english", "arabic", "chinese", "korean", "polish"};
+        HashMap<String, String> langs = new HashMap<>();
+
+        try(BufferedReader br = new BufferedReader(new FileReader("src/main/java/languages.txt"))) {
+            String line = br.readLine();
+
+            while (line != null) {
+                String[] langCode = line.split(" ");
+                langCode[0] = langCode[0].strip();
+                langCode[1] = langCode[1].strip();
+                langs.put(langCode[0], langCode[1]);
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return new RegisterScreen(langs, userRegisterController, nav);
     }
     @NotNull
