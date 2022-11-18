@@ -38,6 +38,7 @@ public class LoginScreen extends JPanel implements ActionListener {
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         username.setBorder(BorderFactory.createTitledBorder("Username"));
+        password.setBorder(BorderFactory.createTitledBorder("Password"));
 
         JButton signUp = new JButton("Sign up");
         JButton login = new JButton("Login");
