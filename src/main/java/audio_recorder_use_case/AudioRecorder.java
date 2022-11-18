@@ -7,7 +7,6 @@ public class AudioRecorder {
     File wavFile = new File("src/main/Others/RecordAudio2.wav"); //location
     AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE; //file type, .wav
     TargetDataLine line;
-
     AudioFormatFactory audioFormatFactory;
     public AudioRecorder(){
         AudioFormatFactory audioFormatFactory = new AudioFormatFactory();
