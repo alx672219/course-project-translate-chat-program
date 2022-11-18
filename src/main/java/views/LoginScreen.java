@@ -1,5 +1,8 @@
 package views;
 
+import user_login_use_case.LoginData;
+import user_login_use_case.LoginResponse;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,22 +18,11 @@ public class LoginScreen extends JPanel implements ActionListener {
     /**
      * The username chosen by the user
      */
-    HintTextField username = new HintTextField("LOGIN...");
-    /**
-     * The email chosen by the user
-     */
-    HintTextField email = new HintTextField("LOGIN...");
+    HintTextField username = new HintTextField("Enter Username...");
     /**
      * The password
      */
-    HintPasswordField password = new HintPasswordField("LOGIN...  ");
-    /**
-     * The second password to make sure the user understands
-     */
-    HintPasswordField repeatPassword = new HintPasswordField("LOGIN...");
-    /**
-     * A dropdown with any possible language as a choice
-     */
+    HintPasswordField password = new HintPasswordField("Enter Password...  ");
     LoginController controller;
     Navigator nav;
 
@@ -46,7 +38,6 @@ public class LoginScreen extends JPanel implements ActionListener {
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         username.setBorder(BorderFactory.createTitledBorder("Username"));
-        email.setBorder(BorderFactory.createTitledBorder("Email"));
 
         JButton signUp = new JButton("Sign up");
         JButton login = new JButton("Login");
@@ -62,23 +53,41 @@ public class LoginScreen extends JPanel implements ActionListener {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(username);
-        this.add(email);
         this.add(password);
-        this.add(repeatPassword);
 
         this.add(title);
         this.add(buttons);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String source = e.getActionCommand();
+        String username = this.username.getText();
+        String password = new String(this.password.getPassword());
+
         if (source.equals("Sign up")) {
             nav.showScreen("register");
-        } else if (source.equals("Login")) {
-            // TODO: Navigate to Login Page
-            JOptionPane.showMessageDialog(this, "Not yet implemented!");
+            return;
+        }
+        // Make sure text fields aren't empty
+        if (username.isBlank() || password.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Must fill in all required fields.");
+            return;
+        }
+
+        if (source.equals("Login")) {
+            try {
+                LoginResponse resp = controller.login(username, password);
+                LoginData data = resp.getData();
+                if (resp.isSuccess()) {
+                    JOptionPane.showMessageDialog(this, "Log into account with paramters: \n" +
+                            data.getUsername() + "\n" + data.getPassword() + "\n" + resp.getTime());
+                } else {
+                    JOptionPane.showMessageDialog(this, resp.getException().getMessage());
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
         }
     }
 }
