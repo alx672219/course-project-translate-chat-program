@@ -1,6 +1,8 @@
 package audio_recorder_use_case;
+
 import javax.sound.sampled.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class AudioRecorder {
     static final long RECORD_TIME = 15000; //15 second recording because google charges per 15 seconds
