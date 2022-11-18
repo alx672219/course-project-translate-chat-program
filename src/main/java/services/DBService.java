@@ -1,10 +1,7 @@
 package services;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import entities.User;
 
@@ -45,7 +42,7 @@ public class DBService {
         String docInfo = "id" + user.getUser_id();
         user.setDefaultLang(newDefaultLang);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture<WriteResult> future = docRef.update("users", user.getDefaultLang());
+        ApiFuture future = docRef.update("default_lang", user.getDefaultLang());
         // System.out.println(user.getDefaultLang());
     }
     public void updateName(User user, String name) {
@@ -54,7 +51,7 @@ public class DBService {
         String docInfo = "id" + user.getUser_id();
         user.setName(name);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture<WriteResult> future = docRef.update("users", user.getName());
+        ApiFuture future = docRef.update("name", user.getName());
         // System.out.println(user.getName());
     }
     public void updatePassword(User user, String password) {
@@ -63,7 +60,24 @@ public class DBService {
         String docInfo = "id" + user.getUser_id();
         user.setPassword(password);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture<WriteResult> future = docRef.update("users", user.getPassword());
+        ApiFuture future = docRef.update("password", user.getPassword());
         // System.out.println(user.getPassword());
+    }
+
+    public boolean existName(User user) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference usersReference = dbFirestore.collection("users");
+        String userID = "id" + user.getUser_id();
+
+        try {
+            for (DocumentReference ref : usersReference.listDocuments()) {
+                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

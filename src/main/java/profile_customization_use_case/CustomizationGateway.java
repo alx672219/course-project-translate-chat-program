@@ -1,25 +1,14 @@
 package profile_customization_use_case;
 
 import entities.User;
-import services.DBService;
 
-public class CustomizationGateway {
+public interface CustomizationGateway {
 
-    DBService dbService;
+    void updateDefaultLang(User user, String default_lang);
 
-    public CustomizationGateway() {
-        dbService = new DBService();
-    }
+    void updateName(User user, String name);
 
-    public void updateDefaultLang(User user, String default_lang) {
-        dbService.updateDefaultLang(user, default_lang);
-    }
+    void updatePassword(User user, String password);
 
-    public void updateName(User user, String name) {
-        dbService.updateName(user, name);
-    }
-
-    public void updatePassword(User user, String password) {
-        dbService.updatePassword(user, password);
-    }
+    boolean existName(User user);
 }
