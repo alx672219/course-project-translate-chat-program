@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class MessageTranslateInteractor implements MessageTranslateInputBoundary{
     final MessageTranslateGateway gateway;
-    final MessageTranslatePresenter presenter;
+    final MessageTranslateOutputBoundary presenter;
 
     public MessageTranslateInteractor(MessageTranslateGateway gateway, MessageTranslatePresenter presenter){
         this.gateway = gateway;
