@@ -14,7 +14,12 @@ public class UserLoginInteractor implements LoginInputBoundary {
     @Override
     public LoginResponse login(LoginData data) {
         try {
-            return auth.login(data);
+            LoginResponse resp = auth.login(data);
+            if (resp.isSuccess()) {
+                return presenter.prepareSuccessView(resp);
+            } else {
+                return presenter.prepareFailView(resp.getException().getMessage());
+            }
         } catch (RuntimeException e) {
             return presenter.prepareFailView(e.getMessage());
         } catch (IOException e) {
