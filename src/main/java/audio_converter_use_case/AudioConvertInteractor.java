@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class AudioConvertInteractor implements AudioConvertInputBoundary {
 final AudioConvertGateway gateway;
-final AudioConvertPresenter presenter;
+final AudioConvertOutputBoundary presenter;
 
 public AudioConvertInteractor(AudioConvertGateway gateway, AudioConvertPresenter presenter){
 this.gateway = gateway;
