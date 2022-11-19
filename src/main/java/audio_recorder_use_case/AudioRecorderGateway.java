@@ -1,4 +1,6 @@
 package audio_recorder_use_case;
 
-public class AudioRecorderGateway {
+public interface AudioRecorderGateway {
+
+    public void record();
 }
