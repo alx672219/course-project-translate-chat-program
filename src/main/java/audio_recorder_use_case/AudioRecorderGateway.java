@@ -1,6 +1,11 @@
 package audio_recorder_use_case;
 
-public interface AudioRecorderGateway {
+import atranslate_use_case.MessageTranslateData;
 
-    public void record();
+import java.io.IOException;
+
+public interface AudioRecorderGateway {
+    boolean isRecording();
+    void record();
+
 }
