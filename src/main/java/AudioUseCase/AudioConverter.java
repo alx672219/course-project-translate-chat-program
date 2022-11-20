@@ -1,8 +1,13 @@
-package audio_use_case;
+package AudioUseCase;
 
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.speech.v1.*;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.protobuf.ByteString;
+import org.apache.commons.codec.language.bm.Lang;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
