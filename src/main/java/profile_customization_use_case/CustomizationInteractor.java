@@ -12,7 +12,7 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
 
     @Override
     public CustomizationResponse changeLanguage(CustomizationData data) {
-        // Update the database to make it such that the user's, "default_lang" field is updated
+        // Update the database such that the user's "default_lang" field is updated
         if (data.getDefaultLang().isEmpty()) {
             return presenter.prepareFailView("Please enter a language");
         }
@@ -28,6 +28,7 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
 
     @Override
     public CustomizationResponse changeName(CustomizationData data) {
+        // Update the database such that the user's "name" field is updated
         if (data.getName().isEmpty()) {
             return presenter.prepareFailView("Please enter a name");
         } else if (gateway.existName(data.getUser())) {
@@ -45,6 +46,7 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
 
     @Override
     public CustomizationResponse changePassword(CustomizationData data) {
+        // Update the database such that the user's "password" field is updated
         if (data.getPassword().isEmpty()) {
             return presenter.prepareFailView("Please enter a password");
         } else if (data.getPassword().length() < 7) {
@@ -57,7 +59,7 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
         CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null);
 
 
-        gateway.updatePassword(data.getUser(), data.getName());
+        gateway.updatePassword(data.getUser(), data.getPassword());
         return presenter.prepareSuccessView(response);
     }
 }

@@ -3,6 +3,7 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firestore.v1.Write;
 import entities.User;
 
 import java.util.HashMap;
@@ -38,30 +39,24 @@ public class DBService {
 
     public void updateDefaultLang(User user, String newDefaultLang) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        // System.out.println(user.getDefaultLang());
         String docInfo = "id" + user.getUser_id();
         user.setDefaultLang(newDefaultLang);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
         ApiFuture future = docRef.update("default_lang", user.getDefaultLang());
-        // System.out.println(user.getDefaultLang());
     }
     public void updateName(User user, String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        // System.out.println(user.getName());
         String docInfo = "id" + user.getUser_id();
         user.setName(name);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
         ApiFuture future = docRef.update("name", user.getName());
-        // System.out.println(user.getName());
     }
     public void updatePassword(User user, String password) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        // System.out.println(user.getPassword());
         String docInfo = "id" + user.getUser_id();
         user.setPassword(password);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
         ApiFuture future = docRef.update("password", user.getPassword());
-        // System.out.println(user.getPassword());
     }
 
     public boolean existName(User user) {

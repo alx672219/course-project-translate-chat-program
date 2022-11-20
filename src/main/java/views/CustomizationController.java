@@ -4,24 +4,23 @@ import entities.User;
 import profile_customization_use_case.CustomizationData;
 import profile_customization_use_case.CustomizationInputBoundary;
 
-import java.util.concurrent.ExecutionException;
-
 public class CustomizationController {
     private final CustomizationInputBoundary cib;
-    private final CustomizationData data;
 
-    public CustomizationController(CustomizationInputBoundary cib, CustomizationData data) {
+    public CustomizationController(CustomizationInputBoundary cib) {
         this.cib = cib;
-        this.data = data;
     }
 
-    public void changeLanguage(CustomizationData data) throws ExecutionException, InterruptedException {
+    public void changeLanguage(String name, String default_lang, String password, User user) {
+        CustomizationData data = new CustomizationData(name, default_lang, password, user);
         this.cib.changeLanguage(data);
     }
-    public void changeName(CustomizationData data) throws ExecutionException, InterruptedException {
+    public void changeName(String name, String default_lang, String password, User user) {
+        CustomizationData data = new CustomizationData(name, default_lang, password, user);
         this.cib.changeName(data);
     }
-    public void changePassword(CustomizationData data) throws ExecutionException, InterruptedException {
+    public void changePassword(String name, String default_lang, String password, User user) {
+        CustomizationData data = new CustomizationData(name, default_lang, password, user);
         this.cib.changePassword(data);
     }
 }

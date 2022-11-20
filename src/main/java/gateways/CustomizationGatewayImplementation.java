@@ -17,12 +17,8 @@ public class CustomizationGatewayImplementation implements CustomizationGateway 
     }
 
     @Override
-    public void updatePassword(User user, String password) {
-        dbService.updatePassword(user, password);
-    }
+    public void updatePassword(User user, String password) { dbService.updatePassword(user, password); }
 
     @Override
-    public boolean existName(User user) {
-        return dbService.existName(user);
-    }
+    public boolean existName(User user) { return dbService.existName(user); }
 }
