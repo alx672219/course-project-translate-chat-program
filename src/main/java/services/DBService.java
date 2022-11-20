@@ -6,6 +6,19 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.google.storage.v2.Object;
 import entities.User;
 
+import javax.swing.text.Document;
+import java.util.HashMap;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import entities.Chat;
+import entities.Message;
+import entities.User;
+
+import javax.swing.text.Document;
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -127,11 +140,50 @@ public class DBService {
 
         Chat chat = null;
         if (document.exists()) {
-            chat = document.toObject(Chat.class);
-            return chat;
+            // Convert documentReference to class
+            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) document.getData().get("messages");
+            ArrayList<Message> messages = new ArrayList<>();
+            for (DocumentReference messageRef: messageRefs) {
+                // Get the document reference of the message's receiver object instance
+                DocumentReference receiverRef = (DocumentReference) messageRef.get().get().getData().get("receiver");
+                // Convert it into a User class
+                User receiver = receiverRef.get().get().toObject(User.class);
+
+                // Get the document reference of the message's receiver object instance
+                DocumentReference recipientRef = (DocumentReference) messageRef.get().get().getData().get("recipient");
+                // Convert it into a User class
+                User recipient = recipientRef.get().get().toObject(User.class);
+
+                Integer id = Integer.parseInt((String) messageRef.get().get().getData().get("id"));
+                String messageText = (String) messageRef.get().get().getData().get("message");
+
+                String timestamp = messageRef.get().get().getData().get("timestamp").toString();
+                Date date = new SimpleDateFormat("dd-MM-yyyy").parse(timestamp);
+
+                Message message = new Message(id, messageText, receiver, recipient, date);
+                messages.add(message);
+            }
+            Chat targetChat = new Chat(chatID);
+            targetChat.setMessages(messages);
+            return targetChat;
+
         } else {
             return null;
         }
+    }
+
+    public List<Integer> getAllMessageIDs() throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        ArrayList<Integer> ret = new ArrayList<>();
+        // asynchronously retrieve all documents
+        ApiFuture<QuerySnapshot> future = db.collection("messages").get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot query : documents) {
+            int uid = Integer.parseInt(Objects.requireNonNull(query.get("id")).toString());
+            ret.add(uid);
+        }
+        return ret;
     }
 
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
