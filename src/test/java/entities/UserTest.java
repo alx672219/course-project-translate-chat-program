@@ -11,7 +11,7 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        this.user = new User("Name", "English", "email.com", "123p", 1);
+        this.user = new User("Name", "English", "email.com", "123p", 123);
     }
 
     @Test
