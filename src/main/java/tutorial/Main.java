@@ -1,38 +1,40 @@
 package tutorial;
 
+import entities.Chat;
+import entities.Message;
 import entities.User;
+import gateways.SendMessageGateway;
 import services.DBInitializer;
 import services.DBService;
+import views.ChatScreen;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static DBService dbService = new DBService();
-
-    public static void main(String[] args) throws FileNotFoundException, ExecutionException, InterruptedException {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
+        // Initialize the Database
         DBInitializer dbInitializer = new DBInitializer();
+
+        // UI
+        new ChatScreen();
         dbInitializer.init();
-//        System.out.println("s");
-//        System.out.println(Main.getUser(1));
+        DBService dbService = new DBService();
+//
+//        User receiver = new User("danny", "en", "danny@gmail.com", " 123");
+//        receiver.setUser_id(3);
+//        User recipient = new User("bobby", "fr", "bobby@gmail.com", "bob");
+//        recipient.setUser_id(4);
+////
+//        Message message = new Message(4, "hiiiii", receiver, recipient, new Date(122, Calendar.DECEMBER, 15));
+//        System.out.println(dbService.getUserDetails(0).getContacts());
+//        Chat chat1 = new Chat(2);
+//        chat1.addMessage(message);
+//        dbService.addChat(chat1);
+//        dbService.addMessage(message, chat1);
 
-    }
-
-    public static User getUser(int userID) throws ExecutionException, InterruptedException {
-        try {
-            return dbService.getUserDetails(userID);
-        } catch (Exception e) {
-            System.err.println("error");
-        }
-        return null;
-    }
-
-    public static String addUser(User user) throws ExecutionException, InterruptedException {
-        try {
-            return dbService.saveUserDetails(user);
-        } catch (Exception e) {
-            System.err.println("error");
-        }
-        return null;
     }
 }
