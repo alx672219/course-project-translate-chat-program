@@ -34,8 +34,14 @@ class UserTest {
 
     @Test
     void getDefaultLang() {
-        String expected = user.getDefaultLang();
+        String expected = user.getDefault_lang();
         assertEquals(expected, "English");
+    }
+
+    @Test
+    void getUser_id() {
+        int expected = user.getUser_id();
+        assertEquals(expected, 123);
     }
 
     @Test
@@ -61,9 +67,16 @@ class UserTest {
 
     @Test
     void setDefaultLang() {
-        assertEquals(user.getDefaultLang(), "English");
-        user.setDefaultLang("Arabic");
-        assertEquals(user.getDefaultLang(), "Arabic");
+        assertEquals(user.getDefault_lang(), "English");
+        user.setDefault_lang("Arabic");
+        assertEquals(user.getDefault_lang(), "Arabic");
+    }
+
+    @Test
+    void setUser_id() {
+        assertEquals(user.getUser_id(), 123);
+        user.setUser_id(456);
+        assertEquals(user.getUser_id(), 456);
     }
 
 }
