@@ -8,13 +8,12 @@ import org.junit.jupiter.api.Test;
 import services.DBInitializer;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageEditFirebaseSystemTest {
-    private MessageEditFirebaseSystem gateway = new MessageEditFirebaseSystem();
+    private final MessageEditFirebaseSystem gateway = new MessageEditFirebaseSystem();
     DBInitializer dbInitializer = new DBInitializer();
 
 
@@ -23,7 +22,7 @@ class MessageEditFirebaseSystemTest {
         dbInitializer.init();
         Firestore dbFirestore = FirestoreClient.getFirestore();
         gateway.edit(new MessageEditData("bye", 3));
-        DocumentReference chatref = dbFirestore.collection("chats").document("id"+4);
-        assertEquals("bye", ( (List<DocumentReference>)chatref.get().get().getData().get("messages")).size());
+        DocumentReference messageref = dbFirestore.collection("messages").document("id"+3);
+        assertEquals("bye", (String) messageref.get().get().getData().get("message"));
     }
 }
