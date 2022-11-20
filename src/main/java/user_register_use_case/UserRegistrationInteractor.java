@@ -13,6 +13,9 @@ public class UserRegistrationInteractor implements UserRegisterInputBoundary{
     public RegisterResponse create(CreationData data) {
         try {
             boolean result = factory.create(data);
+            if (!result) {
+                return presenter.prepareFailView("Username is already in use");
+            }
             return presenter.prepareSuccessView(new RegisterResponse(data, result, null));
         } catch (Exception e) {
             return presenter.prepareFailView(e.getMessage());
