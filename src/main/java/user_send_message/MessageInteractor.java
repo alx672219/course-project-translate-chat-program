@@ -5,6 +5,7 @@ import entities.Message;
 import entities.User;
 import gateways.SendMessageGateway;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +25,7 @@ public class MessageInteractor implements MessageInputBoundary {
     }
 
     @Override
-    public void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException {
+    public void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
         MessageFactory messageFactory = new MessageFactory();
         Message messsageToSend = messageFactory.createMessage(chatID, id, message, receiver, recipient, timestamp);
         // Gateway

@@ -1,5 +1,11 @@
 package views;
 
+import entities.Chat;
+import entities.Message;
+import entities.User;
+import services.DBInitializer;
+import services.DBService;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -8,6 +14,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +43,16 @@ public class ChatScreen {
     JTextField  usernameChooser;
     JFrame      preFrame;
 
+    DBInitializer dbInitializer;
+
+    DBService dbService;
+
+    Chat currChat;
+
+    User sender;
+
+    User receiver;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -41,12 +64,24 @@ public class ChatScreen {
                     e.printStackTrace();
                 }
                 ChatScreen mainGUI = new ChatScreen();
-                mainGUI.preDisplay();
+                try {
+                    mainGUI.preDisplay();
+                } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
 
-    public void preDisplay() {
+    public void preDisplay() throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
+        this.dbInitializer = new DBInitializer();
+        this.dbInitializer.init();
+        this.dbService = new DBService();
+
+        this.currChat = dbService.getChatDetails(3);
+
+
+
         newFrame.setVisible(false);
         preFrame = new JFrame(appName);
         usernameChooser = new JTextField(15);
@@ -129,7 +164,29 @@ public class ChatScreen {
             } else {
                 chatBox.append("<" + username + ">:  " + messageBox.getText()
                         + "\n");
+
+
+                List<Integer> messageIDs = null;
+
+                try {
+                    messageIDs = dbService.getAllMessageIDs();
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                int nextMessageID = Collections.max(messageIDs) + 1;
+                User sender = new User("Billy", "en", "billy@gmail.com", "123", 6);
+                User receiver = new User("Howard", "en", "howard@gmail.com", "123", 7);
+                Message sentMessage = new Message(nextMessageID, messageBox.getText(), sender, receiver, new Date(122, Calendar.DECEMBER, 15));
+                try {
+                    dbService.addMessage(sentMessage, currChat);
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Clear the message box for new input
                 messageBox.setText("");
+
+
             }
             messageBox.requestFocusInWindow();
         }
