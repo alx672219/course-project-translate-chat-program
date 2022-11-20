@@ -57,7 +57,6 @@ public class ContactScreen extends JFrame{
 
         JPanel panel = new JPanel();
         JTextField tfUserid = new JTextField(6);
-        //JTextField tfUsername = new JTextField(3);
 
         panel.add(new JLabel("User ID"));
         panel.add(tfUserid);
@@ -80,6 +79,7 @@ public class ContactScreen extends JFrame{
         for (int i = 0; i < contacts.size(); i++) {
             rows[0] = String.valueOf(contacts.get(i));
             model.addRow(rows);
+            members.add(new MemberVO(contacts.get(i)));
 
         }
 
@@ -92,8 +92,6 @@ public class ContactScreen extends JFrame{
         tfUserid.setText("");
 
 
-        // 원래 있던 contact 불러오기 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! members.add(new MemberVO( 12L));
-        //members.add(new MemberVO(0L));
 
 
 
@@ -111,7 +109,6 @@ public class ContactScreen extends JFrame{
 
                 String[] rows = new String[2];
                 rows[0] = tfUserid.getText();
-                //rows[1] = tfUsername.getText();
                 model.addRow(rows);
 
                 tfUserid.setText("");
@@ -141,9 +138,6 @@ public class ContactScreen extends JFrame{
                 members.add(new MemberVO(userid));
 
 
-
-
-                //System.out.println("회원 숫자:"+members.size());
             }
         });
         //선택한 줄 지우기
@@ -152,21 +146,13 @@ public class ContactScreen extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 //선택한 줄의 번호 알아내기
 
-//                DBInitializer dbInitializer = new DBInitializer();
-//                try {
-//                    dbInitializer.init();
-//                } catch (FileNotFoundException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-
 
                 int rowIndex = table.getSelectedRow();
                 //선택 안하고 누를 경우 리턴값 -1
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
-                //System.out.println(members.get(rowIndex).userid);
+                System.out.println(members.size());
                 Long userid = members.get(rowIndex).userid;
-                //System.out.println(userid);
 
                 DBService dbService = new DBService();
                 User targetUser = null;
@@ -186,7 +172,6 @@ public class ContactScreen extends JFrame{
                 }
 
                 members.remove(rowIndex);
-//                System.out.println("회원 숫자:"+members.size());
             }
         });
 
