@@ -1,4 +1,8 @@
-package message_search_use_case;
+package views;
+
+import message_search_use_case.MessageSearchFailed;
+import message_search_use_case.MessageSearchOutputBoundary;
+import message_search_use_case.MessageSearchResponse;
 
 public class MessageSearchPresenter implements MessageSearchOutputBoundary {
 
