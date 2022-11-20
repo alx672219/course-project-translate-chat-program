@@ -3,17 +3,11 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import entities.Chat;
-import entities.Message;
+import com.google.storage.v2.Object;
 import entities.User;
 
-import javax.swing.text.Document;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
@@ -32,10 +26,11 @@ public class DBService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
+
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
         // First get document reference from specified collection and document
         // Then get the APIFuture of that document
+        Firestore dbFirestore = FirestoreClient.getFirestore();
         String documentName = "id" + String.valueOf(userID);
         DocumentReference documentReference = dbFirestore.collection("users").document(documentName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
@@ -43,7 +38,7 @@ public class DBService {
         // Extract DocumentSnapShot from ApiFuture object
         DocumentSnapshot document = future.get();
 
-        User user = null;
+        User user;
         if (document.exists()) {
             user = document.toObject(User.class);
             return user;
@@ -51,6 +46,75 @@ public class DBService {
             return null;
         }
 
+    }
+
+    /**
+     * Returns a list of all the user ids that are currently registered for the app.
+     * @return a list of all user ids currently registered for the app.
+     * @throws ExecutionException If firebase cannot execute properly
+     * @throws InterruptedException If the firebase request gets interrupted
+     */
+    public List<Integer> getAllUserId() throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        ArrayList<Integer> ret = new ArrayList<>();
+        // asynchronously retrieve all documents
+        ApiFuture<QuerySnapshot> future = db.collection("users").get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot query : documents) {
+            int uid = Integer.parseInt(query.get("user_id").toString());
+            ret.add(uid);
+        }
+        return ret;
+    }
+
+    /**
+     * Returns the User with a given username, or returns null if no User has this username.
+     */
+    public User getByUsername(String username) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference users = db.collection("users");
+        // Create a query against the collection.
+        Query query = users.whereEqualTo("name", username);
+        // retrieve  query results asynchronously using query.get()
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        // Usernames are unique so the querySnapshot should only contain 1 object
+        // Create a user object using that information and return the User
+        if (!querySnapshot.get().getDocuments().isEmpty()) {
+            return querySnapshot.get().getDocuments().get(0).toObject(User.class);
+        }
+        return null;
+    }
+
+    public void addContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        //System.out.println(user.getContacts());
+        String docName = "id" + user.getUser_id();
+        //System.out.println(docName);
+        user.getContacts().add(contactID);
+        //System.out.println(user.getContacts());
+        DocumentReference docRef = dbFireStore.collection("users").document(docName);
+        //System.out.println(docRef);
+        //System.out.println(user.getContacts());
+        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
+        WriteResult result = future.get();
+    }
+
+
+    public void deleteContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        //System.out.println(user.getContacts());
+        String docName = "id" + user.getUser_id();
+        //System.out.println(docName);
+        //System.out.println(user.getContacts().getClass().getName());
+        //System.out.println(user.getContacts());
+        user.getContacts().remove(contactID);
+        //System.out.println(user.getContacts());
+        DocumentReference docRef = dbFireStore.collection("users").document(docName);
+        //System.out.println(docRef);
+        //System.out.println(user.getContacts());
+        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
+        WriteResult result = future.get();
     }
 
     public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException {

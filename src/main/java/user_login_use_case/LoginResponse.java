@@ -3,7 +3,7 @@ package user_login_use_case;
 import shared.Response;
 
 public class LoginResponse extends Response {
-    private LoginData data;
+    private final LoginData data;
 
     public Exception getException() {
         return super.e;
@@ -12,6 +12,8 @@ public class LoginResponse extends Response {
     public LoginData getData() {
         return data;
     }
+
+    public boolean isSuccess() { return success; }
 
     public LoginResponse(LoginData data, boolean success, Exception e) {
         this.data = data;

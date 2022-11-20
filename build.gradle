@@ -9,9 +9,10 @@ repositories {
 dependencies {
     implementation 'junit:junit:4.13.2'
     implementation 'com.google.firebase:firebase-admin:9.1.0'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-all
+    testImplementation 'org.mockito:mockito-all:1.10.19'
 
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
-
     implementation 'com.google.cloud:google-cloud-texttospeech:2.6.0'
     implementation 'com.google.cloud:google-cloud-translate:2.5.0'
     implementation 'com.google.cloud:google-cloud-speech:4.0.0'

@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.HashMap;
 
 // Frameworks/Drivers layer
 
@@ -39,20 +41,28 @@ public class RegisterScreen extends JPanel implements ActionListener {
      * The controller
      */
     UserRegisterController controller;
+    Navigator nav;
+    HashMap<String, String> langs;
 
 
     /**
      * A window with a title and a JButton
      */
-    public RegisterScreen(String[] languages, UserRegisterController controller) {
-        this.default_lang = new AutoFillDropdown(languages);
+    public RegisterScreen(HashMap<String, String> languages, UserRegisterController controller, Navigator nav) {
+        String[] langsAsString = languages.keySet().toArray(new String[0]);
+        Arrays.sort(langsAsString);
+        this.default_lang = new AutoFillDropdown(langsAsString);
+        this.langs = languages;
         this.controller = controller;
+        this.nav = nav;
 
         JLabel title = new JLabel("Register");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         username.setBorder(BorderFactory.createTitledBorder("Username"));
         email.setBorder(BorderFactory.createTitledBorder("Email"));
+        password.setBorder(BorderFactory.createTitledBorder("Password"));
+        repeatPassword.setBorder(BorderFactory.createTitledBorder("Confirm Password"));
 
         JButton signUp = new JButton("Sign up");
         JButton login = new JButton("Login");
@@ -88,30 +98,38 @@ public class RegisterScreen extends JPanel implements ActionListener {
         String password1 = new String(this.password.getPassword());
         String password2 = new String(this.repeatPassword.getPassword());
         String email = this.email.getText();
-        String default_lang = (String) this.default_lang.getSelectedItem();
+        String default_lang = langs.get((String) this.default_lang.getSelectedItem());
 
+        // Move to login screen
+        if (source.equals("Login")) {
+            nav.showScreen("login");
+            return;
+        }
+        // Check if passwords match
         if (!password1.equals(password2)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match.");
             return;
         }
+        // Check if any of the fields are left blank
         if (username.isBlank() || password1.isBlank() || password2.isBlank() || email.isBlank()) {
             JOptionPane.showMessageDialog(this, "Must fill in all required fields.");
             return;
         }
-        System.out.println(source);
+        // Attempt to sign up
         if (source.equals("Sign up")) {
             try {
                 RegisterResponse resp = controller.register(username, password1, email, default_lang);
                 // TODO: Navigate to next page
                 CreationData data = resp.getData();
-                JOptionPane.showMessageDialog(this, "Creating account with paramters: \n" +
-                        data.getUsername() + "\n" + data.getPassword() + "\n" + data.getEmail() + "\n" + data.getDefault_lang()+ "\n"  + resp.getTime());
+                if (resp.isSuccess()) {
+                    JOptionPane.showMessageDialog(this, "Creating account with paramters: \n" +
+                            data.getUsername() + "\n" + data.getPassword() + "\n" + data.getEmail() + "\n" + data.getDefault_lang() + "\n" + resp.getTime());
+                } else {
+                    JOptionPane.showMessageDialog(this, resp.getException().getMessage());
+                }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
-        } else if (source.equals("Login")) {
-            // TODO: Navigate to Login Page
-            JOptionPane.showMessageDialog(this, "Not yet implemented!");
         }
     }
 }

@@ -17,9 +17,8 @@ public class User {
         this.password = password;
         this.user_id = user_id;
     }
-
     public User() { }
-   
+
     public String getName() {
         return this.name;
     }
@@ -29,7 +28,7 @@ public class User {
     public String getEmail() {
         return this.email;
     }
-    public String getDefaultLang() {
+    public String getDefault_lang() {
         return this.default_lang;
     }
     public int getUser_id() {
@@ -48,12 +47,13 @@ public class User {
     public void setPassword(String s) {
         this.password = s;
     }
-    public void setDefaultLang(String s) {
+    public void setDefault_lang(String s) {
         this.default_lang = s;
     }
     public void setUser_id(int s) {
         this.user_id = s;
     }
+
 //    public void setContacts(Long s) {
 //        this.contacts.add(s);
 //    }
