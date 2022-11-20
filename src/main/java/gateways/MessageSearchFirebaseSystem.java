@@ -25,7 +25,6 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
     public List<Message> search(MessageSearchData data) {
         String chatId = "id" + data.getChatId(); // to know which chat Document to search in
         String query = data.getText().toLowerCase(); // to know what to search for
-
         Firestore dbFirestore = FirestoreClient.getFirestore(); // getting Firestore instance
         // Getting the document reference of the chat associated with chatId
         DocumentReference chatDocumentReference = dbFirestore.collection("chats").document(chatId);
