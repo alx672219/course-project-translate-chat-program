@@ -3,6 +3,11 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.storage.v2.Object;
+import entities.User;
+
+import javax.swing.text.Document;
+import java.util.HashMap;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import entities.Chat;
@@ -32,6 +37,7 @@ public class DBService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
+
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         // First get document reference from specified collection and document
@@ -51,6 +57,37 @@ public class DBService {
             return null;
         }
 
+    }
+
+    public void addContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        //System.out.println(user.getContacts());
+        String docName = "id" + user.getUser_id();
+        //System.out.println(docName);
+        user.getContacts().add(contactID);
+        //System.out.println(user.getContacts());
+        DocumentReference docRef = dbFireStore.collection("users").document(docName);
+        //System.out.println(docRef);
+        //System.out.println(user.getContacts());
+        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
+        WriteResult result = future.get();
+    }
+
+
+    public void deleteContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        //System.out.println(user.getContacts());
+        String docName = "id" + user.getUser_id();
+        //System.out.println(docName);
+        //System.out.println(user.getContacts().getClass().getName());
+        //System.out.println(user.getContacts());
+        user.getContacts().remove(contactID);
+        //System.out.println(user.getContacts());
+        DocumentReference docRef = dbFireStore.collection("users").document(docName);
+        //System.out.println(docRef);
+        //System.out.println(user.getContacts());
+        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
+        WriteResult result = future.get();
     }
 
     public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException {

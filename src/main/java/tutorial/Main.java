@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutionException;
 public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
         // Initialize the Database
-        DBInitializer dbInitializer = new DBInitializer();
 
         // UI
         new ChatScreen();
