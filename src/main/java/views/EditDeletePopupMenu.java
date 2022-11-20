@@ -18,17 +18,18 @@ public class EditDeletePopupMenu extends JPopupMenu {
     JTextArea message;
     JPanel parentPanel;
     JTextPane chatBox;
+    String username;
 
 
     public EditDeletePopupMenu(int chatID, int messageID, MessageDeleteController deleteController,
                                MessageEditController editController, JTextArea message, JPanel parentPanel, JTextPane
-                                chatBox){
+                                chatBox, String username){
         this.chatID = chatID;
         this.messageID = messageID;
         this.edit = new JMenuItem("Edit");
         this.delete = new JMenuItem("Delete");
         this.edit.addActionListener(new EditActionListener());
-        this.edit.addActionListener(new DeleteActionListener());
+        this.delete.addActionListener(new DeleteActionListener());
         this.deleteController = deleteController;
         this.editController = editController;
         this.add(edit);
@@ -36,7 +37,7 @@ public class EditDeletePopupMenu extends JPopupMenu {
         this.message = message;
         this.parentPanel = parentPanel;
         this.chatBox = chatBox;
-
+        this.username = username;
 
     }
     class EditActionListener implements ActionListener{
@@ -53,6 +54,9 @@ public class EditDeletePopupMenu extends JPopupMenu {
             mainPanel.add(editTextField);
             mainPanel.add(editButton);
             editButton.addActionListener(new EditButtonActionListener());
+            editApplication.add(mainPanel);
+            editApplication.pack();
+            editApplication.setVisible(true);
 
         }
         class EditButtonActionListener implements  ActionListener{
@@ -61,7 +65,7 @@ public class EditDeletePopupMenu extends JPopupMenu {
             public void actionPerformed(ActionEvent e) {
                 editController.editMessage(new MessageEditData(editTextField.getText(), messageID));
                 JOptionPane.showMessageDialog(editApplication, "Edited!");
-                message.setText(editTextField.getText());
+                message.setText("<" + username + ">:  " + editTextField.getText());
             }
         }
     }
@@ -71,7 +75,9 @@ public class EditDeletePopupMenu extends JPopupMenu {
         public void actionPerformed(ActionEvent e) {
             try {
                 deleteController.delete(new MessageDeleteData(messageID, chatID));
-                chatBox.remove(message);
+                //chatBox.remove(message);
+                //chatBox.revalidate();
+                //chatBox.repaint();
             } catch (ExecutionException | InterruptedException ex){
 
                 JOptionPane.showMessageDialog(parentPanel, "Something went wrong! Please try again!");

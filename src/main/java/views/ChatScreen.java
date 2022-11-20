@@ -208,7 +208,7 @@ public class ChatScreen {
                 MessageEditController editController = new MessageEditController(editInteractor);
 
                 messageArea.addMouseListener(new EditDeletePopupListener(3, nextMessageID, deleteController,
-                        editController, messageArea, (JPanel) messageBox.getParent(), chatBox));
+                        editController, messageArea, (JPanel) messageBox.getParent(), chatBox, username));
 
 
             }
@@ -223,10 +223,12 @@ public class ChatScreen {
         JTextArea message;
         JPanel parentPanel;
         JTextPane chatBox;
+        String userName;
+
 
         public EditDeletePopupListener(int chatID, int messageID, MessageDeleteController deleteController,
                 MessageEditController editController, JTextArea message, JPanel parentPanel, JTextPane
-            chatBox){
+            chatBox, String userName){
             this.chatID = chatID;
             this.messageID = messageID;
             this.deleteController = deleteController;
@@ -234,6 +236,7 @@ public class ChatScreen {
             this.message = message;
             this.parentPanel = parentPanel;
             this.chatBox = chatBox;
+            this.userName = userName;
 
         }
         public void mousePressed(MouseEvent e){
@@ -244,7 +247,7 @@ public class ChatScreen {
 
         public void doPop(MouseEvent e){
             EditDeletePopupMenu editDeletePopupMenu = new EditDeletePopupMenu(chatID, messageID, deleteController,
-                     editController, message, parentPanel, chatBox);
+                     editController, message, parentPanel, chatBox, userName);
             editDeletePopupMenu.show(e.getComponent(), e.getXOnScreen(), e.getYOnScreen());
 
 
