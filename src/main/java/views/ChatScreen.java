@@ -3,6 +3,9 @@ package views;
 import entities.Chat;
 import entities.Message;
 import entities.User;
+import gateways.MessageDeleteFirebaseSystem;
+import gateways.MessageEditFirebaseSystem;
+import message_edit_delete_use_case.*;
 import services.DBInitializer;
 import services.DBService;
 
@@ -14,6 +17,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -22,15 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
 
 public class ChatScreen {
 
@@ -39,7 +37,7 @@ public class ChatScreen {
     JFrame      newFrame    = new JFrame(appName);
     JButton     sendMessage;
     JTextField  messageBox;
-    JTextArea   chatBox;
+    JTextPane chatBox;
     JTextField  usernameChooser;
     JFrame      preFrame;
 
@@ -123,10 +121,10 @@ public class ChatScreen {
         sendMessage = new JButton("Send Message");
         sendMessage.addActionListener(new sendMessageButtonListener());
 
-        chatBox = new JTextArea();
+        chatBox = new JTextPane();
         chatBox.setEditable(false);
         chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
-        chatBox.setLineWrap(true);
+        //chatBox.setLineWrap(true);
 
         mainPanel.add(new JScrollPane(chatBox), BorderLayout.CENTER);
 
@@ -162,8 +160,22 @@ public class ChatScreen {
                 chatBox.setText("Cleared all messages\n");
                 messageBox.setText("");
             } else {
-                chatBox.append("<" + username + ">:  " + messageBox.getText()
-                        + "\n");
+                JTextArea messageArea = new JTextArea();
+                messageArea.setLineWrap(true);
+                messageArea.setEditable(false);
+                messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
+                messageArea.setText("<" + username + ">:  " + messageBox.getText());
+                //chatBox.setCaretPosition(chatBox.getDocument().getLength());
+                chatBox.setSelectionStart(chatBox.getDocument().getLength());
+                chatBox.setSelectionEnd(chatBox.getDocument().getLength());
+                chatBox.insertComponent(messageArea);
+                try {
+                    chatBox.getDocument().insertString(chatBox.getDocument().getLength(),"\n", null);
+                } catch (BadLocationException e) {
+                    throw new RuntimeException(e);
+                }
+                //chatBox.append("<" + username + ">:  " + messageBox.getText()
+                //        + "\n");
 
 
                 List<Integer> messageIDs = null;
@@ -185,12 +197,66 @@ public class ChatScreen {
 
                 // Clear the message box for new input
                 messageBox.setText("");
+                MessageDeleteGateway deleteGateway = new MessageDeleteFirebaseSystem();
+                MessageDeleteOutputBoundary deletePresenter = new MessageDeletePresenter();
+                MessageDeleteInputBoundary deleteInteractor = new MessageDeleteInteractor(deleteGateway,
+                        deletePresenter);
+                MessageDeleteController deleteController = new MessageDeleteController(deleteInteractor);
+                MessageEditGateway editGateway = new MessageEditFirebaseSystem();
+                MessageEditOutputBoundary editPresenter = new MessageEditPresenter();
+                MessageEditInputBoundary editInteractor = new MessageEditInteractor(editGateway, editPresenter);
+                MessageEditController editController = new MessageEditController(editInteractor);
+
+                messageArea.addMouseListener(new EditDeletePopupListener(3, nextMessageID, deleteController,
+                        editController, messageArea, (JPanel) messageBox.getParent(), chatBox));
 
 
             }
             messageBox.requestFocusInWindow();
         }
     }
+    static class EditDeletePopupListener extends MouseAdapter{
+        int chatID;
+        int messageID;
+        MessageDeleteController deleteController;
+        MessageEditController editController;
+        JTextArea message;
+        JPanel parentPanel;
+        JTextPane chatBox;
+
+        public EditDeletePopupListener(int chatID, int messageID, MessageDeleteController deleteController,
+                MessageEditController editController, JTextArea message, JPanel parentPanel, JTextPane
+            chatBox){
+            this.chatID = chatID;
+            this.messageID = messageID;
+            this.deleteController = deleteController;
+            this.editController = editController;
+            this.message = message;
+            this.parentPanel = parentPanel;
+            this.chatBox = chatBox;
+
+        }
+        public void mousePressed(MouseEvent e){
+            if(e.isPopupTrigger()){
+                doPop(e);
+            }}
+
+
+        public void doPop(MouseEvent e){
+            EditDeletePopupMenu editDeletePopupMenu = new EditDeletePopupMenu(chatID, messageID, deleteController,
+                     editController, message, parentPanel, chatBox);
+            editDeletePopupMenu.show(e.getComponent(), e.getXOnScreen(), e.getYOnScreen());
+
+
+        }
+        public void mouseReleased(MouseEvent e){
+            if(e.isPopupTrigger()){
+                doPop(e);
+            }}
+
+
+    }
+
 
     String  username;
 
