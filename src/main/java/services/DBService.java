@@ -3,19 +3,14 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.storage.v2.Object;
 import entities.User;
 
-import javax.swing.text.Document;
 import java.util.HashMap;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import java.util.Map;
+
 import entities.Chat;
 import entities.Message;
-import entities.User;
 
-import javax.swing.text.Document;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -25,26 +20,35 @@ import java.util.concurrent.ExecutionException;
 
 public class DBService {
 
-    /**
+    /** Write the data of a given user to Firestore.
      *
-     * @param user
-     * @return
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @param user The User to write to the database
+     * @return The time at which the data was written
+     * @throws ExecutionException If execution is interrupted
+     * @throws InterruptedException If execution is interrupted
      */
     public String saveUserDetails(User user) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String docName = "id" + String.valueOf(user.getUser_id());
+        String docName = "id" + user.getUser_id();
         ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("users").document(docName).set(user);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
 
+    /**
+     * Returns the given User object corresponding to the given user id if
+     * one exists, otherwise returns null.
+     *
+     * @param userID The user id which corresponds to the user.
+     * @return The User object corresponding to the given user id
+     * @throws ExecutionException If execution is interrupted
+     * @throws InterruptedException If execution is interrupted
+     */
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         // First get document reference from specified collection and document
         // Then get the APIFuture of that document
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String documentName = "id" + String.valueOf(userID);
+        String documentName = "id" + userID;
         DocumentReference documentReference = dbFirestore.collection("users").document(documentName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
@@ -60,6 +64,45 @@ public class DBService {
         }
 
     }
+
+//    public void updateDefaultLang(User user, String newDefaultLang) {
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//        String docInfo = "id" + user.getUser_id();
+//        user.setDefault_lang(newDefaultLang);
+//        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+//        ApiFuture future = docRef.update("default_lang", user.getDefault_lang());
+//    }
+//    public void updateName(User user, String name) {
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//        String docInfo = "id" + user.getUser_id();
+//        user.setName(name);
+//        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+//        ApiFuture future = docRef.update("name", user.getName());
+//    }
+//    public void updatePassword(User user, String password) {
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//        String docInfo = "id" + user.getUser_id();
+//        user.setPassword(password);
+//        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+//        ApiFuture future = docRef.update("password", user.getPassword());
+//    }
+//
+//    public boolean existName(User user) {
+//        Firestore dbFirestore = FirestoreClient.getFirestore();
+//        CollectionReference usersReference = dbFirestore.collection("users");
+//        String userID = "id" + user.getUser_id();
+//
+//        try {
+//            for (DocumentReference ref : usersReference.listDocuments()) {
+//                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
+//                    return false;
+//                }
+//            }
+//            return true;
+//        } catch (InterruptedException | ExecutionException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     /**
      * Returns a list of all the user ids that are currently registered for the app.
@@ -130,9 +173,9 @@ public class DBService {
         WriteResult result = future.get();
     }
 
-    public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException {
+    public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String documentName = "id" + String.valueOf(chatID);
+        String documentName = "id" + chatID;
         DocumentReference documentReference = dbFirestore.collection("chats").document(documentName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
@@ -194,13 +237,13 @@ public class DBService {
         ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
 
         for (Message message: chat.getMessages()) {
-            String messageID = "id" + String.valueOf(message.getId());
+            String messageID = "id" + message.getId();
             DocumentReference messageRef = dbFireStore.collection("messages").document(messageID);
             listMessagePaths.add(messageRef);
         }
 
         docData.put("messages", listMessagePaths);
-        String docName = "id" + String.valueOf(chat.getId());
+        String docName = "id" + chat.getId();
         ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
         collectionsApiFuture.get();
     }
@@ -210,8 +253,8 @@ public class DBService {
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", String.valueOf(message.getId()));
 
-        String receiverID = "id" + String.valueOf(message.getReceiver().getUser_id());
-        String recipientID = "id" + String.valueOf(message.getRecipient().getUser_id());
+        String receiverID = "id" + message.getReceiver().getUser_id();
+        String recipientID = "id" + message.getRecipient().getUser_id();
 
         DocumentReference receiverRef = dbFirestore.collection("users").document(receiverID);
         DocumentReference recipientRef = dbFirestore.collection("users").document(recipientID);
@@ -221,14 +264,14 @@ public class DBService {
         docData.put("recipient", recipientRef);
         docData.put("timestamp", message.getTimestamp());
 
-        String docName = "id" + String.valueOf(message.getId());
+        String docName = "id" + message.getId();
         DocumentReference messageRef = dbFirestore.collection("messages").document(docName);
 
         ApiFuture<WriteResult> collectionsApiFuture = messageRef.set(docData);
         collectionsApiFuture.get();
 
         // Add the message to the chat
-        String chatDocName = "id" + String.valueOf(chat.getId());
+        String chatDocName = "id" + chat.getId();
         DocumentReference chatRef = dbFirestore.collection("chats").document(chatDocName);
 
         ApiFuture<WriteResult> arrayUnion = chatRef.update("messages", FieldValue.arrayUnion(messageRef));

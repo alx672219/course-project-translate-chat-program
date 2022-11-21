@@ -43,7 +43,7 @@ public class UserRegistrationFirebaseSystem implements UserRegistrationGateway {
         int id = Collections.max(ids) + 1;
 
         // Create the new user
-        User user = new User(data.getUsername(), data.getDefault_lang(), data.getEmail(), data.getPassword());
+        User user = new User(data.getUsername(), data.getDefault_lang(), data.getEmail(), data.getPassword(), 0);
         user.setUser_id(id);
         // Save the new user to database
         try {
