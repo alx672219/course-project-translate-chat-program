@@ -1,4 +1,4 @@
-package views.TempSamStuff;
+package atranslate_use_case;
 
 import atranslate_use_case.MessageTranslateData;
 import atranslate_use_case.MessageTranslateInputBoundary;
@@ -14,7 +14,7 @@ public class MessageTranslateController {
         this.messageTranslateInputBoundary = messageTranslateInputBoundary;
     }
 
-    MessageTranslateResponse translate(MessageTranslateData data) throws IOException {
+    public MessageTranslateResponse translate(MessageTranslateData data) throws IOException {
         return this.messageTranslateInputBoundary.translate(data);
     }
 }

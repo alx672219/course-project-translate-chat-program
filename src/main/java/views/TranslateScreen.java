@@ -1,5 +1,6 @@
-package views.TempSamStuff;
+package views;
 
+import atranslate_use_case.MessageTranslateController;
 import atranslate_use_case.MessageTranslateData;
 
 import javax.swing.*;

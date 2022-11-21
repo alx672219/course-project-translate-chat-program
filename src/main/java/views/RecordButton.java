@@ -1,6 +1,8 @@
-package views.TempSamStuff;
+package views;
 
+import audio_converter_use_case.AudioConvertController;
 import audio_converter_use_case.AudioConvertData;
+import audio_recorder_use_case.AudioRecorderController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -8,7 +10,7 @@ import java.awt.event.ActionListener;
 
 import java.io.IOException;
 
-import static java.lang.Thread.sleep;
+
 
 public class RecordButton extends JPanel implements ActionListener {
     JButton recordButton;

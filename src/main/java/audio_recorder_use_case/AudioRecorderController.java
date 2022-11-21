@@ -1,4 +1,4 @@
-package views.TempSamStuff;
+package audio_recorder_use_case;
 
 import audio_recorder_use_case.AudioRecorderInputBoundary;
 import audio_recorder_use_case.AudioRecorderResponse;
@@ -11,7 +11,7 @@ public class AudioRecorderController {
         this.audioRecorderInputBoundary = audioRecorderInputBoundary;
     }
 
-    AudioRecorderResponse record() {
+    public AudioRecorderResponse record() {
         return this.audioRecorderInputBoundary.record();
     }
 }

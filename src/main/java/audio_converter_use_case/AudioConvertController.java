@@ -1,4 +1,4 @@
-package views.TempSamStuff;
+package audio_converter_use_case;
 
 import audio_converter_use_case.AudioConvertData;
 import audio_converter_use_case.AudioConvertInputBoundary;
@@ -15,7 +15,7 @@ public class AudioConvertController {
         this.audioConvertInputBoundary = audioConvertInputBoundary;
     }
 
-    AudioConvertResponse convert(AudioConvertData data) throws IOException {
+    public AudioConvertResponse convert(AudioConvertData data) throws IOException {
         return this.audioConvertInputBoundary.convert(data);
     }
 }
