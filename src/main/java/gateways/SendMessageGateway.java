@@ -11,6 +11,8 @@ import entities.User;
 import services.DBService;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class SendMessageGateway {
@@ -27,6 +29,22 @@ public class SendMessageGateway {
 
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
         dbService.addChat(chat);
+    }
+
+    public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
+        return dbService.getUserDetails(userID);
+    }
+
+    public List<Integer> getAllMessages() {
+        List<Integer> messageIDs = null;
+
+        try {
+            messageIDs = dbService.getAllMessageIDs();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return messageIDs;
     }
 
 

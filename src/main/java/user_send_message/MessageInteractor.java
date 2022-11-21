@@ -30,25 +30,21 @@ public class MessageInteractor implements MessageInputBoundary {
     @Override
     public void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
         DBService dbService = new DBService();
-        Chat currChat = dbService.getChatDetails(chatID);
 
-        User sender = dbService.getUserDetails(senderID);
-        User receiver = dbService.getUserDetails(receiverID);
+//        Chat currChat = dbService.getChatDetails(chatID);
+
+        User sender = sendMessageGateway.getUserDetails(senderID);
+        User receiver = sendMessageGateway.getUserDetails(receiverID);
 
         MessageFactory messageFactory = new MessageFactory();
-        List<Integer> messageIDs = null;
 
-        try {
-            messageIDs = dbService.getAllMessageIDs();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        List<Integer> messageIDs = sendMessageGateway.getAllMessages();
 
         int nextMessageID = Collections.max(messageIDs) + 1;
 
         Message messsageToSend = messageFactory.createMessage(chatID, nextMessageID, message, sender, receiver, timestamp);
         // Gateway
-        SendMessageGateway sendMessageGateway = new SendMessageGateway();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
     }
 
