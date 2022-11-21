@@ -144,14 +144,9 @@ public class DBService {
 
     public void addContact(User user, Long contactID) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
-        //System.out.println(user.getContacts());
         String docName = "id" + user.getUser_id();
-        //System.out.println(docName);
         user.getContacts().add(contactID);
-        //System.out.println(user.getContacts());
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        //System.out.println(docRef);
-        //System.out.println(user.getContacts());
         ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
         WriteResult result = future.get();
     }
@@ -159,16 +154,9 @@ public class DBService {
 
     public void deleteContact(User user, Long contactID) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
-        //System.out.println(user.getContacts());
         String docName = "id" + user.getUser_id();
-        //System.out.println(docName);
-        //System.out.println(user.getContacts().getClass().getName());
-        //System.out.println(user.getContacts());
         user.getContacts().remove(contactID);
-        //System.out.println(user.getContacts());
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        //System.out.println(docRef);
-        //System.out.println(user.getContacts());
         ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
         WriteResult result = future.get();
     }
