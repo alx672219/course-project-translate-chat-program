@@ -43,7 +43,7 @@ public class ContactScreen extends JFrame{
         setAlwaysOnTop(true);
         setBounds(200, 100, 400, 200);
 
-        //columns
+        //Columns
         String[] colNames = new String[]{"User ID"};
         DefaultTableModel model = new DefaultTableModel(colNames, 0);
 
@@ -52,12 +52,14 @@ public class ContactScreen extends JFrame{
         add(scrollPane, BorderLayout.CENTER);
 
 
+        //Input Panel at the bottom of the screen
+
+
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
 
         JPanel panel = new JPanel();
         JTextField tfUserid = new JTextField(6);
-        //JTextField tfUsername = new JTextField(3);
 
         panel.add(new JLabel("User ID"));
         panel.add(tfUserid);
@@ -80,13 +82,11 @@ public class ContactScreen extends JFrame{
         for (int i = 0; i < contacts.size(); i++) {
             rows[0] = String.valueOf(contacts.get(i));
             model.addRow(rows);
+            members.add(new MemberVO(contacts.get(i)));
 
         }
 
-        // contats is array of integers
-        // but your row[1] which is showoing contacts is a string
 
-        // Display it with their contact
         model.addRow(rows);
 
         tfUserid.setText("");
@@ -99,9 +99,12 @@ public class ContactScreen extends JFrame{
 
 
 
+
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //Add
 
 
 
@@ -110,7 +113,6 @@ public class ContactScreen extends JFrame{
 
                 String[] rows = new String[2];
                 rows[0] = tfUserid.getText();
-                //rows[1] = tfUsername.getText();
                 model.addRow(rows);
 
                 tfUserid.setText("");
@@ -142,7 +144,17 @@ public class ContactScreen extends JFrame{
                 members.add(new MemberVO(userid));
 
 
+            }
+        });
 
+        btnDel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Delete
+
+
+                int rowIndex = table.getSelectedRow();
+                // If rowIndex is not selected, then rowIndex is -1
 
 
             }
@@ -165,9 +177,8 @@ public class ContactScreen extends JFrame{
 
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
-                //System.out.println(members.get(rowIndex).userid);
+                System.out.println(members.size());
                 Long userid = members.get(rowIndex).userid;
-                //System.out.println(userid);
 
                 DBService dbService = new DBService();
                 User targetUser = null;
