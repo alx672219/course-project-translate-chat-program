@@ -1,4 +1,4 @@
-package AudioUseCase;
+package audio_use_case;
 import javax.sound.sampled.*;
 import java.io.*;
 

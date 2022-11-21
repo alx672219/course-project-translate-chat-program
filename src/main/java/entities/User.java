@@ -10,11 +10,12 @@ public class User {
     private int user_id;
     private ArrayList<Long> contacts = new ArrayList<Long>();
 
-    public User(String name, String default_lang, String email, String password) {
+    public User(String name, String default_lang, String email, String password, int user_id) {
         this.name = name;
         this.default_lang = default_lang;
         this.email = email;
         this.password = password;
+        this.user_id = user_id;
     }
 
     public User() { }
