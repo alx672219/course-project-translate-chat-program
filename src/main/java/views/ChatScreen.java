@@ -3,6 +3,11 @@ package views;
 import entities.Chat;
 import entities.Message;
 import entities.User;
+import gateways.MessageSearchFirebaseSystem;
+import message_search_use_case.MessageSearchGateway;
+import message_search_use_case.MessageSearchInputBoundary;
+import message_search_use_case.MessageSearchInteractor;
+import message_search_use_case.MessageSearchOutputBoundary;
 import services.DBInitializer;
 import services.DBService;
 import user_send_message.MessageInputBoundary;
@@ -141,6 +146,14 @@ public class ChatScreen {
     public void display() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
+
+        MessageSearchGateway searchGateway = new MessageSearchFirebaseSystem();
+        MessageSearchOutputBoundary searchPresenter = new MessageSearchPresenter();
+        MessageSearchInputBoundary searchInteractor = new MessageSearchInteractor(searchGateway, searchPresenter);
+        MessageSearchController searchController = new MessageSearchController(searchInteractor);
+        JPanel searchBarPanel = new SearchBarPanel(searchController, currChat.getId());
+
+        mainPanel.add(searchBarPanel, BorderLayout.NORTH);
 
         JPanel southPanel = new JPanel();
         southPanel.setBackground(Color.BLUE);
