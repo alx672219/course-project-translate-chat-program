@@ -21,10 +21,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -51,7 +48,16 @@ public class ChatScreen {
 
     User receiver;
 
-    public static void main(String[] args) {
+    MessageEditController editController;
+    MessageDeleteController deleteController;
+    MessageSearchController searchController;
+
+    public ChatScreen(MessageEditController editController, MessageDeleteController deleteController,
+                      MessageSearchController searchController) {
+        this.deleteController = deleteController;
+        this.editController = editController;
+        this.searchController = searchController;
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -61,7 +67,7 @@ public class ChatScreen {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ChatScreen mainGUI = new ChatScreen();
+
                 try {
                     mainGUI.preDisplay();
                 } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
@@ -197,18 +203,18 @@ public class ChatScreen {
 
                 // Clear the message box for new input
                 messageBox.setText("");
-                MessageDeleteGateway deleteGateway = new MessageDeleteFirebaseSystem();
-                MessageDeleteOutputBoundary deletePresenter = new MessageDeletePresenter();
-                MessageDeleteInputBoundary deleteInteractor = new MessageDeleteInteractor(deleteGateway,
-                        deletePresenter);
-                MessageDeleteController deleteController = new MessageDeleteController(deleteInteractor);
-                MessageEditGateway editGateway = new MessageEditFirebaseSystem();
-                MessageEditOutputBoundary editPresenter = new MessageEditPresenter();
-                MessageEditInputBoundary editInteractor = new MessageEditInteractor(editGateway, editPresenter);
-                MessageEditController editController = new MessageEditController(editInteractor);
 
-                messageArea.addMouseListener(new EditDeletePopupListener(3, nextMessageID, deleteController,
-                        editController, messageArea, (JPanel) messageBox.getParent(), chatBox, username));
+
+                List<Integer> ids = new ArrayList<>();
+                ids.add(nextMessageID);
+                ids.add(3); //Change to chatID later
+
+                List<Object> controllers = new ArrayList<>();
+                controllers.add(editController);
+                controllers.add(deleteController);
+
+                messageArea.addMouseListener(new EditDeletePopupListener(ids, controllers, messageArea,
+                        (JPanel) messageBox.getParent(), chatBox, username));
 
 
             }
@@ -216,23 +222,18 @@ public class ChatScreen {
         }
     }
     static class EditDeletePopupListener extends MouseAdapter{
-        int chatID;
-        int messageID;
-        MessageDeleteController deleteController;
-        MessageEditController editController;
+        List<Integer> ids;
+        List<Object> controllers;
         JTextArea message;
         JPanel parentPanel;
         JTextPane chatBox;
         String userName;
 
 
-        public EditDeletePopupListener(int chatID, int messageID, MessageDeleteController deleteController,
-                MessageEditController editController, JTextArea message, JPanel parentPanel, JTextPane
+        public EditDeletePopupListener(List<Integer> ids, List<Object> controllers, JTextArea message, JPanel parentPanel, JTextPane
             chatBox, String userName){
-            this.chatID = chatID;
-            this.messageID = messageID;
-            this.deleteController = deleteController;
-            this.editController = editController;
+            this.ids = ids;
+            this.controllers = controllers;
             this.message = message;
             this.parentPanel = parentPanel;
             this.chatBox = chatBox;
@@ -246,8 +247,7 @@ public class ChatScreen {
 
 
         public void doPop(MouseEvent e){
-            EditDeletePopupMenu editDeletePopupMenu = new EditDeletePopupMenu(chatID, messageID, deleteController,
-                     editController, message, parentPanel, chatBox, userName);
+            EditDeletePopupMenu editDeletePopupMenu = new EditDeletePopupMenu(this.ids, this.controllers, message, parentPanel, chatBox, userName);
             editDeletePopupMenu.show(e.getComponent(), e.getXOnScreen(), e.getYOnScreen());
 
 
