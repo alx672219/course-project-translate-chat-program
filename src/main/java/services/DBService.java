@@ -3,6 +3,11 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firestore.v1.Write;
+import entities.User;
+
+import java.util.HashMap;
+import java.util.Map;
 import com.google.storage.v2.Object;
 import entities.User;
 
@@ -61,7 +66,47 @@ public class DBService {
 
     }
 
-    /**
+    public void updateDefaultLang(User user, String newDefaultLang) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String docInfo = "id" + user.getUser_id();
+        user.setDefaultLang(newDefaultLang);
+        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+        ApiFuture future = docRef.update("default_lang", user.getDefaultLang());
+    }
+    public void updateName(User user, String name) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String docInfo = "id" + user.getUser_id();
+        user.setName(name);
+        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+        ApiFuture future = docRef.update("name", user.getName());
+    }
+    public void updatePassword(User user, String password) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String docInfo = "id" + user.getUser_id();
+        user.setPassword(password);
+        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+        ApiFuture future = docRef.update("password", user.getPassword());
+    }
+
+    public boolean existName(User user) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference usersReference = dbFirestore.collection("users");
+        String userID = "id" + user.getUser_id();
+
+        try {
+            for (DocumentReference ref : usersReference.listDocuments()) {
+                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+/**
      * Returns a list of all the user ids that are currently registered for the app.
      * @return a list of all user ids currently registered for the app.
      * @throws ExecutionException If firebase cannot execute properly
