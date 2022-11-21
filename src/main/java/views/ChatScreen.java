@@ -37,7 +37,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class ChatScreen {
+public class ChatScreen extends JPanel {
 
     String      appName     = "Translation Chat App";
     ChatScreen     mainGUI;
@@ -45,7 +45,9 @@ public class ChatScreen {
     JButton     sendMessage;
     JTextField  messageBox;
     JTextArea   chatBox;
-    JTextField  usernameChooser;
+
+    String username;
+
     JFrame      preFrame;
 
     int chatID;
@@ -58,10 +60,11 @@ public class ChatScreen {
 
     Navigator nav;
 
-    public ChatScreen(int chatID, int senderID, int receiverID, Navigator nav, SendMessageController sendMessageController) {
+    public ChatScreen(int chatID, int senderID, int receiverID, String username, Navigator nav, SendMessageController sendMessageController) {
         this.chatID = chatID;
         this.senderID = senderID;
         this.receiverID = receiverID;
+        this.username = username;
         this.nav = nav;
         this.sendMessageController = sendMessageController;
 
@@ -74,49 +77,42 @@ public class ChatScreen {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                try {
-                    mainGUI.preDisplay(chatID, senderID, receiverID);
-                } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
-                    throw new RuntimeException(e);
-                }
+                mainGUI.display();
             }
         });
 
     }
 
 
-    public void preDisplay(int chatID, int senderID, int receiverID) throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
+//    public void preDisplay(int chatID, int senderID, int receiverID) throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
 
-        this.chatID = chatID;
-        this.senderID = senderID;
-        this.receiverID = receiverID;
 
-        newFrame.setVisible(false);
-        preFrame = new JFrame(appName);
-        usernameChooser = new JTextField(15);
-        JLabel chooseUsernameLabel = new JLabel("Pick a username:");
-        JButton enterServer = new JButton("Enter Chat Server");
-        enterServer.addActionListener(new enterServerButtonListener());
-        JPanel prePanel = new JPanel(new GridBagLayout());
+//        newFrame.setVisible(false);
+//        preFrame = new JFrame(appName);
+//        usernameChooser = new JTextField(15);
+//        JLabel chooseUsernameLabel = new JLabel("Pick a username:");
+//        JButton enterServer = new JButton("Enter Chat Server");
+//        enterServer.addActionListener(new enterServerButtonListener());
+//        JPanel prePanel = new JPanel(new GridBagLayout());
+//
+//        GridBagConstraints preRight = new GridBagConstraints();
+//        preRight.insets = new Insets(0, 0, 0, 10);
+//        preRight.anchor = GridBagConstraints.EAST;
+//        GridBagConstraints preLeft = new GridBagConstraints();
+//        preLeft.anchor = GridBagConstraints.WEST;
+//        preLeft.insets = new Insets(0, 10, 0, 10);
+//        // preRight.weightx = 2.0;
+//        preRight.fill = GridBagConstraints.HORIZONTAL;
+//        preRight.gridwidth = GridBagConstraints.REMAINDER;
+//
+//        prePanel.add(chooseUsernameLabel, preLeft);
+//        prePanel.add(usernameChooser, preRight);
+//        preFrame.add(prePanel, BorderLayout.CENTER);
+//        preFrame.add(enterServer, BorderLayout.SOUTH);
+//        preFrame.setSize(300, 300);
+//        preFrame.setVisible(true);
 
-        GridBagConstraints preRight = new GridBagConstraints();
-        preRight.insets = new Insets(0, 0, 0, 10);
-        preRight.anchor = GridBagConstraints.EAST;
-        GridBagConstraints preLeft = new GridBagConstraints();
-        preLeft.anchor = GridBagConstraints.WEST;
-        preLeft.insets = new Insets(0, 10, 0, 10);
-        // preRight.weightx = 2.0;
-        preRight.fill = GridBagConstraints.HORIZONTAL;
-        preRight.gridwidth = GridBagConstraints.REMAINDER;
-
-        prePanel.add(chooseUsernameLabel, preLeft);
-        prePanel.add(usernameChooser, preRight);
-        preFrame.add(prePanel, BorderLayout.CENTER);
-        preFrame.add(enterServer, BorderLayout.SOUTH);
-        preFrame.setSize(300, 300);
-        preFrame.setVisible(true);
-
-    }
+//    }
 
     public void display() {
         JPanel mainPanel = new JPanel();
@@ -199,18 +195,17 @@ public class ChatScreen {
         }
     }
 
-    String  username;
 
-    class enterServerButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            username = usernameChooser.getText();
-            if (username.length() < 1) {
-                System.out.println("No!");
-            } else {
-                preFrame.setVisible(false);
-                display();
-            }
-        }
-
-    }
+//    class enterServerButtonListener implements ActionListener {
+//        public void actionPerformed(ActionEvent event) {
+//            username = usernameChooser.getText();
+//            if (username.length() < 1) {
+//                System.out.println("No!");
+//            } else {
+//                preFrame.setVisible(false);
+//                display();
+//            }
+//        }
+//
+//    }
 }
