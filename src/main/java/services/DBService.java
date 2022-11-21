@@ -70,9 +70,9 @@ public class DBService {
     public void updateDefaultLang(User user, String newDefaultLang) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
-        user.setDefaultLang(newDefaultLang);
+        user.setDefault_lang(newDefaultLang);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("default_lang", user.getDefaultLang());
+        ApiFuture future = docRef.update("default_lang", user.getDefault_lang());
     }
     public void updateName(User user, String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -105,7 +105,7 @@ public class DBService {
             throw new RuntimeException(e);
         }
     }
-}
+
 
 /**
      * Returns a list of all the user ids that are currently registered for the app.

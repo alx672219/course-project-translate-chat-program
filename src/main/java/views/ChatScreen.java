@@ -4,9 +4,6 @@ import entities.Chat;
 import entities.Message;
 import entities.User;
 
-import gateways.MessageDeleteFirebaseSystem;
-import gateways.MessageEditFirebaseSystem;
-import message_edit_delete_use_case.*;
 
 import gateways.MessageSearchFirebaseSystem;
 import message_search_use_case.MessageSearchGateway;
