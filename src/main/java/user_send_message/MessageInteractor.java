@@ -4,10 +4,8 @@ import entities.Chat;
 import entities.Message;
 import entities.User;
 import gateways.SendMessageGateway;
-import services.DBService;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -29,8 +27,6 @@ public class MessageInteractor implements MessageInputBoundary {
 
     @Override
     public void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
-        DBService dbService = new DBService();
-
 //        Chat currChat = dbService.getChatDetails(chatID);
 
         User sender = sendMessageGateway.getUserDetails(senderID);

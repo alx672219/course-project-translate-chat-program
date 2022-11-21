@@ -8,7 +8,6 @@ import message_search_use_case.MessageSearchGateway;
 import message_search_use_case.MessageSearchInputBoundary;
 import message_search_use_case.MessageSearchInteractor;
 import message_search_use_case.MessageSearchOutputBoundary;
-import services.DBInitializer;
 import user_send_message.MessageInputBoundary;
 import user_send_message.MessageInteractor;
 
@@ -48,8 +47,6 @@ public class ChatScreen {
     JTextArea   chatBox;
     JTextField  usernameChooser;
     JFrame      preFrame;
-
-    DBInitializer dbInitializer;
 
     int chatID;
 
@@ -100,8 +97,6 @@ public class ChatScreen {
 //    }
 
     public void preDisplay(int chatID, int senderID, int receiverID) throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
-        this.dbInitializer = new DBInitializer();
-        this.dbInitializer.init();
 
         this.chatID = chatID;
         this.senderID = senderID;
