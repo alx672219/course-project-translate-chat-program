@@ -51,7 +51,6 @@ public class ContactScreen extends JFrame{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        //테이블 아래쪽에 데이터 입력 할수있는 패널
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
 
@@ -92,7 +91,6 @@ public class ContactScreen extends JFrame{
         tfUserid.setText("");
 
 
-        // 원래 있던 contact 불러오기 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! members.add(new MemberVO( 12L));
         //members.add(new MemberVO(0L));
 
 
@@ -102,8 +100,6 @@ public class ContactScreen extends JFrame{
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //입력된 값 테이블에 추가하기
-                //입력된 값들을 한줄 데이터 배열로 만들기
 
 
 
@@ -122,7 +118,7 @@ public class ContactScreen extends JFrame{
 
                 User targetUser = null;
                 try {
-                    targetUser = dbService.getUserDetails(1); // 이게 모냐 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+                    targetUser = dbService.getUserDetails(1);
                 } catch (ExecutionException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -143,14 +139,11 @@ public class ContactScreen extends JFrame{
 
 
 
-                //System.out.println("회원 숫자:"+members.size());
             }
         });
-        //선택한 줄 지우기
         btnDel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //선택한 줄의 번호 알아내기
 
 //                DBInitializer dbInitializer = new DBInitializer();
 //                try {
@@ -161,7 +154,6 @@ public class ContactScreen extends JFrame{
 
 
                 int rowIndex = table.getSelectedRow();
-                //선택 안하고 누를 경우 리턴값 -1
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
                 //System.out.println(members.get(rowIndex).userid);
@@ -186,7 +178,6 @@ public class ContactScreen extends JFrame{
                 }
 
                 members.remove(rowIndex);
-//                System.out.println("회원 숫자:"+members.size());
             }
         });
 

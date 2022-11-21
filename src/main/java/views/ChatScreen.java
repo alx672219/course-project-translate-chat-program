@@ -3,6 +3,11 @@ package views;
 import entities.Chat;
 import entities.Message;
 import entities.User;
+import gateways.MessageSearchFirebaseSystem;
+import message_search_use_case.MessageSearchGateway;
+import message_search_use_case.MessageSearchInputBoundary;
+import message_search_use_case.MessageSearchInteractor;
+import message_search_use_case.MessageSearchOutputBoundary;
 import services.DBInitializer;
 import services.DBService;
 
@@ -113,6 +118,14 @@ public class ChatScreen {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
+        MessageSearchGateway searchGateway = new MessageSearchFirebaseSystem();
+        MessageSearchOutputBoundary searchPresenter = new MessageSearchPresenter();
+        MessageSearchInputBoundary searchInteractor = new MessageSearchInteractor(searchGateway, searchPresenter);
+        MessageSearchController searchController = new MessageSearchController(searchInteractor);
+        JPanel searchBarPanel = new SearchBarPanel(searchController, currChat.getId());
+
+        mainPanel.add(searchBarPanel, BorderLayout.NORTH);
+
         JPanel southPanel = new JPanel();
         southPanel.setBackground(Color.BLUE);
         southPanel.setLayout(new GridBagLayout());
@@ -174,8 +187,14 @@ public class ChatScreen {
                     throw new RuntimeException(e);
                 }
                 int nextMessageID = Collections.max(messageIDs) + 1;
-                User sender = new User("Billy", "en", "billy@gmail.com", "123", 6);
-                User receiver = new User("Howard", "en", "howard@gmail.com", "123", 7);
+                User sender;
+                User receiver;
+                try {
+                    sender = dbService.getUserDetails(2);
+                    receiver = dbService.getUserDetails(3);
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 Message sentMessage = new Message(nextMessageID, messageBox.getText(), sender, receiver, new Date(122, Calendar.DECEMBER, 15));
                 try {
                     dbService.addMessage(sentMessage, currChat);
