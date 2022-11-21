@@ -13,7 +13,7 @@ public class TranslateScreen extends JFrame {
 
     public TranslateScreen(MessageTranslateData data, MessageTranslateController MTC) throws IOException {
         this.MTC = MTC;
-        this.setSize(200,100);
+        this.setSize(600,200);
         this.setLocation(
                 (int)MouseInfo.getPointerInfo().getLocation().getX() + 10,
                 (int)MouseInfo.getPointerInfo().getLocation().getY());
