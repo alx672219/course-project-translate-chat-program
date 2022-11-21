@@ -51,7 +51,9 @@ public class ContactScreen extends JFrame{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
+
         //Input Panel at the bottom of the screen
+
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
@@ -91,6 +93,11 @@ public class ContactScreen extends JFrame{
 
 
 
+        //members.add(new MemberVO(0L));
+
+
+
+
 
 
         btnAdd.addActionListener(new ActionListener() {
@@ -98,6 +105,7 @@ public class ContactScreen extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 //Add
+
 
 
 
@@ -115,7 +123,9 @@ public class ContactScreen extends JFrame{
 
                 User targetUser = null;
                 try {
+
                     targetUser = dbService.getUserDetails(1);
+
                 } catch (ExecutionException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -146,11 +156,13 @@ public class ContactScreen extends JFrame{
                 int rowIndex = table.getSelectedRow();
                 // If rowIndex is not selected, then rowIndex is -1
 
+
             }
         });
         btnDel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
 
 //                DBInitializer dbInitializer = new DBInitializer();
 //                try {
@@ -161,6 +173,8 @@ public class ContactScreen extends JFrame{
 
 
                 int rowIndex = table.getSelectedRow();
+
+
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
                 System.out.println(members.size());
@@ -184,6 +198,7 @@ public class ContactScreen extends JFrame{
                 }
 
                 members.remove(rowIndex);
+
             }
         });
 
