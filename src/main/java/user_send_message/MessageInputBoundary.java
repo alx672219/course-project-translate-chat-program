@@ -19,5 +19,5 @@ public interface MessageInputBoundary {
 
     void createChat(int chatID) throws ExecutionException, InterruptedException;
 
-    void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException, ParseException;
+    void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException;
 }

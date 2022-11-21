@@ -5,6 +5,8 @@ import entities.Message;
 import entities.User;
 import services.DBInitializer;
 import services.DBService;
+import user_send_message.MessageInputBoundary;
+import user_send_message.MessageInteractor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -45,15 +47,17 @@ public class ChatScreen {
 
     DBInitializer dbInitializer;
 
+    int chatID;
+
+    int senderID;
+
+    int receiverID;
+
     DBService dbService;
 
-    Chat currChat;
+    SendMessageController sendMessageController;
 
-    User sender;
-
-    User receiver;
-
-    public static void main(String[] args) {
+    public void run(int chatID, int senderID, int receiverID) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -65,7 +69,7 @@ public class ChatScreen {
                 }
                 ChatScreen mainGUI = new ChatScreen();
                 try {
-                    mainGUI.preDisplay();
+                    mainGUI.preDisplay(chatID, senderID, receiverID);
                 } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -73,13 +77,38 @@ public class ChatScreen {
         });
     }
 
-    public void preDisplay() throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    UIManager.setLookAndFeel(UIManager
+//                            .getSystemLookAndFeelClassName());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                ChatScreen mainGUI = new ChatScreen();
+//                try {
+//                    mainGUI.preDisplay();
+//                } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        });
+//    }
+
+    public void preDisplay(int chatID, int senderID, int receiverID) throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
         this.dbInitializer = new DBInitializer();
         this.dbInitializer.init();
         this.dbService = new DBService();
 
-        this.currChat = dbService.getChatDetails(3);
+        this.chatID = chatID;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
 
+        MessageInputBoundary messageInteractor = new MessageInteractor();
+
+        this.sendMessageController = new SendMessageController(messageInteractor);
 
 
         newFrame.setVisible(false);
@@ -165,21 +194,11 @@ public class ChatScreen {
                 chatBox.append("<" + username + ">:  " + messageBox.getText()
                         + "\n");
 
-
-                List<Integer> messageIDs = null;
+                Date curr_date = new Date();
 
                 try {
-                    messageIDs = dbService.getAllMessageIDs();
-                } catch (ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                int nextMessageID = Collections.max(messageIDs) + 1;
-                User sender = new User("Billy", "en", "billy@gmail.com", "123", 6);
-                User receiver = new User("Howard", "en", "howard@gmail.com", "123", 7);
-                Message sentMessage = new Message(nextMessageID, messageBox.getText(), sender, receiver, new Date(122, Calendar.DECEMBER, 15));
-                try {
-                    dbService.addMessage(sentMessage, currChat);
-                } catch (ExecutionException | InterruptedException e) {
+                    sendMessageController.sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date);
+                } catch (ExecutionException | InterruptedException | ParseException e) {
                     throw new RuntimeException(e);
                 }
 
