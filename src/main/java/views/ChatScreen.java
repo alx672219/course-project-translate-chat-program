@@ -60,30 +60,57 @@ public class ChatScreen {
     MessageDeleteController deleteController;
     MessageSearchController searchController;
 
+    public static void main(String[] args) {
+
+        MessageEditGateway eGateway = new MessageEditFirebaseSystem();
+        MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
+        MessageEditInputBoundary eInteractor  = new MessageEditInteractor(eGateway, ePresenter);
+        MessageEditController eController = new MessageEditController(eInteractor);
+
+        MessageDeleteGateway dGateway = new MessageDeleteFirebaseSystem();
+        MessageDeleteOutputBoundary dPresenter = new MessageDeletePresenter();
+        MessageDeleteInputBoundary dInteractor  = new MessageDeleteInteractor(dGateway, dPresenter);
+        MessageDeleteController dController = new MessageDeleteController(dInteractor);
+
+        MessageSearchGateway sGateway = new MessageSearchFirebaseSystem();
+        MessageSearchOutputBoundary sPresenter = new MessageSearchPresenter();
+        MessageSearchInputBoundary sInteractor  = new MessageSearchInteractor(sGateway, sPresenter);
+        MessageSearchController sController = new MessageSearchController(sInteractor);
+
+        new ChatScreen(eController, dController, sController);
+    }
+
     public ChatScreen(MessageEditController editController, MessageDeleteController deleteController,
                       MessageSearchController searchController) {
         this.deleteController = deleteController;
         this.editController = editController;
         this.searchController = searchController;
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel(UIManager
-                            .getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    mainGUI.preDisplay();
-                } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+        this.mainGUI = this;
+        this.runChatScreen();
     }
+
+    public void runChatScreen() {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        UIManager.setLookAndFeel(UIManager
+                                .getSystemLookAndFeelClassName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        mainGUI.preDisplay();
+                    } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
+
+
 
     public void preDisplay() throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
         this.dbInitializer = new DBInitializer();

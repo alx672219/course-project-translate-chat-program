@@ -187,7 +187,7 @@ public class DBService {
                 // Convert it into a User class
                 User recipient = recipientRef.get().get().toObject(User.class);
 
-                Integer id = Integer.parseInt((String) messageRef.get().get().getData().get("id"));
+                Integer id = ((Long) messageRef.get().get().getData().get("id")).intValue();
                 String messageText = (String) messageRef.get().get().getData().get("message");
 
                 String timestamp = messageRef.get().get().getData().get("timestamp").toString();
