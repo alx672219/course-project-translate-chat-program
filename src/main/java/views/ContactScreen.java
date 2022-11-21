@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 
-public class ContactScreen extends JFrame{
+public class ContactScreen extends JPanel{
     ArrayList<MemberVO>members = new ArrayList<MemberVO>();
     DBService dbService;
 
@@ -38,9 +38,9 @@ public class ContactScreen extends JFrame{
             throw new RuntimeException(ex);
         }
 
-        setTitle("Contacts");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setAlwaysOnTop(true);
+//        setTitle("Contacts");
+//        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        setAlwaysOnTop(true);
         setBounds(200, 100, 400, 200);
 
         //Columns
@@ -204,6 +204,9 @@ public class ContactScreen extends JFrame{
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new ContactScreen();
+        JFrame application = new JFrame("Application");
+        application.add(new ContactScreen());
+        application.pack();
+        application.setVisible(true);
     }
 }
