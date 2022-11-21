@@ -51,12 +51,13 @@ public class DBService {
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
         ApiFuture future = docRef.update("name", user.getName());
     }
-    public void updatePassword(User user, String password) {
+    public void updatePassword(User user, String password) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
         user.setPassword(password);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("password", user.getPassword());
+        ApiFuture<WriteResult> future = docRef.update("password", user.getPassword());
+        WriteResult result = future.get();
     }
 
     public boolean existName(User user) {

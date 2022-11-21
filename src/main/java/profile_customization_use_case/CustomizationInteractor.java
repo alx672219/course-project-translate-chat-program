@@ -1,5 +1,7 @@
 package profile_customization_use_case;
 
+import java.util.concurrent.ExecutionException;
+
 public class CustomizationInteractor implements CustomizationInputBoundary{
 
     CustomizationGateway gateway;
@@ -45,7 +47,7 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
     }
 
     @Override
-    public CustomizationResponse changePassword(CustomizationData data) {
+    public CustomizationResponse changePassword(CustomizationData data) throws ExecutionException, InterruptedException {
         // Update the database such that the user's "password" field is updated
         if (data.getPassword().isEmpty()) {
             return presenter.prepareFailView("Please enter a password");

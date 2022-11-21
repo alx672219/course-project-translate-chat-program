@@ -4,6 +4,8 @@ import entities.User;
 import profile_customization_use_case.CustomizationGateway;
 import services.DBService;
 
+import java.util.concurrent.ExecutionException;
+
 public class CustomizationGatewayImplementation implements CustomizationGateway {
     DBService dbService;
     @Override
@@ -17,7 +19,9 @@ public class CustomizationGatewayImplementation implements CustomizationGateway 
     }
 
     @Override
-    public void updatePassword(User user, String password) { dbService.updatePassword(user, password); }
+    public void updatePassword(User user, String password) throws ExecutionException, InterruptedException {
+        dbService.updatePassword(user, password);
+    }
 
     @Override
     public boolean existName(User user) { return dbService.existName(user); }

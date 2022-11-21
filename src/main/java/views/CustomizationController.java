@@ -4,6 +4,8 @@ import entities.User;
 import profile_customization_use_case.CustomizationData;
 import profile_customization_use_case.CustomizationInputBoundary;
 
+import java.util.concurrent.ExecutionException;
+
 public class CustomizationController {
     private final CustomizationInputBoundary cib;
 
@@ -19,7 +21,7 @@ public class CustomizationController {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
         this.cib.changeName(data);
     }
-    public void changePassword(String name, String default_lang, String password, User user) {
+    public void changePassword(String name, String default_lang, String password, User user) throws ExecutionException, InterruptedException {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
         this.cib.changePassword(data);
     }
