@@ -1,4 +1,4 @@
-package audio_recorder_use_case;
+package views;
 
 import audio_recorder_use_case.AudioRecorderInputBoundary;
 import audio_recorder_use_case.AudioRecorderResponse;

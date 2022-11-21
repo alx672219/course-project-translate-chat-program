@@ -1,7 +1,6 @@
 package views;
 
 import audio_converter_use_case.AudioConvertData;
-import audio_recorder_use_case.AudioRecorderController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -35,16 +34,16 @@ public class RecordButton extends JPanel implements ActionListener {
 
         recordButton.addActionListener(this);
 
-        panel.add(textBox);
-        panel.add(recordButton);
-        panel.add(timeLabel);
-
+        this.add(textBox);
+        this.add(recordButton);
+        this.add(timeLabel);
 
 
     }
 public void display() throws IOException {
     String translation = audioConvertController
             .convert(new AudioConvertData("src/main/Others/RecordedAudio.wav", "en"))
+            //#TODO this data should be gathered from the chat screen, once everything is put together
             .getResult();
     textBox.setText(translation);
 }
