@@ -1,4 +1,4 @@
-package views.TempSamStuff;
+package views;
 
 import audio_converter_use_case.*;
 import audio_recorder_use_case.*;
@@ -37,8 +37,6 @@ public class TranslateScreenTest {
 
         RecordButton rc = new RecordButton(ARC, ACC, MTC);
 
-        JFrame frame = new JFrame();
-        frame.add(rc);
-        frame.setVisible(true);
+
     }
 }
