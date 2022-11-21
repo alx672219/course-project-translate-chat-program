@@ -1,5 +1,6 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Message {
@@ -20,6 +21,8 @@ public class Message {
         this.recipient = recipient;
         this.timestamp = timestamp;
     }
+
+    public Message() { }
 
     // Getter & Setter Methods
     public int getId() {

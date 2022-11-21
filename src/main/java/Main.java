@@ -1,36 +1,87 @@
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
-import entities.User;
-import gateways.CustomizationGatewayImplementation;
-import profile_customization_use_case.CustomizationGateway;
-import profile_customization_use_case.CustomizationInteractor;
+import gateways.UserLoginFirebaseSystem;
+import gateways.UserRegistrationFirebaseSystem;
+import org.jetbrains.annotations.NotNull;
 import services.DBInitializer;
 import services.DBService;
-import views.CustomizationController;
-import views.CustomizationPresenter;
-import views.ProfileScreen;
+import user_login_use_case.LoginInputBoundary;
+import user_login_use_case.UserLoginGateway;
+import user_login_use_case.UserLoginInteractor;
+import user_register_use_case.UserRegistrationGateway;
+import user_register_use_case.UserRegistrationInteractor;
+import views.*;
+import user_register_use_case.UserRegisterInputBoundary;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
-import java.util.concurrent.ExecutionException;
+import java.awt.*;
+import java.io.*;
+import java.util.HashMap;
 
-public class Main extends JFrame{
-    public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
-        JFrame application = new JFrame("Application");
-        DBInitializer dbInitializer = new DBInitializer();
-        dbInitializer.init();
-        DBService dbService = new DBService();
-        User user = dbService.getUserDetails(5);
+public class Main {
+    public static void main(String[] args) {
+        // Set up Database
+        try {
+            new DBInitializer().init();
+        } catch (Exception ignored) {
+        }
 
-        CustomizationPresenter presenter = new CustomizationPresenter();
-        CustomizationGateway gateway = new CustomizationGatewayImplementation();
-        CustomizationInteractor interactor = new CustomizationInteractor(gateway, presenter);
-        CustomizationController controller = new CustomizationController(interactor);
-        JPanel ProfileScreen = new ProfileScreen(controller, user);
+        CardLayout cardLayout = new CardLayout();
+        JPanel screens = new JPanel(cardLayout);
+        JFrame application = new JFrame("Translation App");
+        application.add(screens);
 
-        application.add(ProfileScreen);
-        application.pack(); // Sets size according to components
+        Navigator nav = new CardLayoutNavigator(cardLayout, screens);
+        DBService dbs = new DBService();
+
+        // Initialize screens
+        JPanel registerScreen = initRegisterScreen(nav, dbs);
+        JPanel loginSreen = initLoginScreen(nav, dbs);
+        // Add screens to the card layout
+        screens.add(registerScreen, "register");
+        screens.add(loginSreen, "login");
+
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        application.setSize(640, 640);
         application.setVisible(true);
+        nav.showScreen("register");
     }
+    @NotNull
+    private static JPanel initRegisterScreen(Navigator nav, DBService db) {
+        UserRegistrationGateway userFactory = new UserRegistrationFirebaseSystem(db);
+        UserRegisterPresenter presenter = new UserRegisterPresenter();
+        UserRegisterInputBoundary interactor = new UserRegistrationInteractor(userFactory, presenter);
+        UserRegisterController userRegisterController = new UserRegisterController(interactor);
+
+        HashMap<String, String> langs = new HashMap<>();
+
+        try(BufferedReader br = new BufferedReader(new FileReader("src/main/java/languages.txt"))) {
+            String line = br.readLine();
+
+            while (line != null) {
+                String[] langCode = line.split(" ");
+                langCode[0] = langCode[0].strip();
+                langCode[1] = langCode[1].strip();
+                langs.put(langCode[0], langCode[1]);
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new RegisterScreen(langs, userRegisterController, nav);
+    }
+    @NotNull
+    private static JPanel initLoginScreen(Navigator nav, DBService db) {
+        UserLoginGateway auth = new UserLoginFirebaseSystem(db);
+        LoginPresenter presenter = new LoginPresenter();
+        LoginInputBoundary interactor = new UserLoginInteractor(auth, presenter);
+        LoginController userLoginController = new LoginController(interactor);
+
+        return new LoginScreen(userLoginController, nav);
+    }
+
+    @NotNull
+    private static JPanel initChatScreen(Navigator nav, DBService db) {
+        return new JPanel();
+    }
+
 }
