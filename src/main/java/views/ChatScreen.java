@@ -9,7 +9,6 @@ import message_search_use_case.MessageSearchInputBoundary;
 import message_search_use_case.MessageSearchInteractor;
 import message_search_use_case.MessageSearchOutputBoundary;
 import services.DBInitializer;
-import services.DBService;
 import user_send_message.MessageInputBoundary;
 import user_send_message.MessageInteractor;
 
@@ -58,8 +57,6 @@ public class ChatScreen {
 
     int receiverID;
 
-    DBService dbService;
-
     SendMessageController sendMessageController;
 
     public void run(int chatID, int senderID, int receiverID) {
@@ -105,7 +102,6 @@ public class ChatScreen {
     public void preDisplay(int chatID, int senderID, int receiverID) throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
         this.dbInitializer = new DBInitializer();
         this.dbInitializer.init();
-        this.dbService = new DBService();
 
         this.chatID = chatID;
         this.senderID = senderID;
@@ -151,7 +147,7 @@ public class ChatScreen {
         MessageSearchOutputBoundary searchPresenter = new MessageSearchPresenter();
         MessageSearchInputBoundary searchInteractor = new MessageSearchInteractor(searchGateway, searchPresenter);
         MessageSearchController searchController = new MessageSearchController(searchInteractor);
-        JPanel searchBarPanel = new SearchBarPanel(searchController, currChat.getId());
+        JPanel searchBarPanel = new SearchBarPanel(searchController, chatID);
 
         mainPanel.add(searchBarPanel, BorderLayout.NORTH);
 
