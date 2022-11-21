@@ -66,44 +66,44 @@ public class DBService {
 
     }
 
-//    public void updateDefaultLang(User user, String newDefaultLang) {
-//        Firestore dbFirestore = FirestoreClient.getFirestore();
-//        String docInfo = "id" + user.getUser_id();
-//        user.setDefault_lang(newDefaultLang);
-//        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-//        ApiFuture future = docRef.update("default_lang", user.getDefault_lang());
-//    }
-//    public void updateName(User user, String name) {
-//        Firestore dbFirestore = FirestoreClient.getFirestore();
-//        String docInfo = "id" + user.getUser_id();
-//        user.setName(name);
-//        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-//        ApiFuture future = docRef.update("name", user.getName());
-//    }
-//    public void updatePassword(User user, String password) {
-//        Firestore dbFirestore = FirestoreClient.getFirestore();
-//        String docInfo = "id" + user.getUser_id();
-//        user.setPassword(password);
-//        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-//        ApiFuture future = docRef.update("password", user.getPassword());
-//    }
-//
-//    public boolean existName(User user) {
-//        Firestore dbFirestore = FirestoreClient.getFirestore();
-//        CollectionReference usersReference = dbFirestore.collection("users");
-//        String userID = "id" + user.getUser_id();
-//
-//        try {
-//            for (DocumentReference ref : usersReference.listDocuments()) {
-//                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        } catch (InterruptedException | ExecutionException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public void updateDefaultLang(User user, String newDefaultLang) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String docInfo = "id" + user.getUser_id();
+        user.setDefault_lang(newDefaultLang);
+        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+        ApiFuture future = docRef.update("default_lang", user.getDefault_lang());
+    }
+    public void updateName(User user, String name) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String docInfo = "id" + user.getUser_id();
+        user.setName(name);
+        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+        ApiFuture future = docRef.update("name", user.getName());
+    }
+    public void updatePassword(User user, String password) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String docInfo = "id" + user.getUser_id();
+        user.setPassword(password);
+        DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+        ApiFuture future = docRef.update("password", user.getPassword());
+    }
+
+    public boolean existName(User user) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference usersReference = dbFirestore.collection("users");
+        String userID = "id" + user.getUser_id();
+
+        try {
+            for (DocumentReference ref : usersReference.listDocuments()) {
+                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Returns a list of all the user ids that are currently registered for the app.
