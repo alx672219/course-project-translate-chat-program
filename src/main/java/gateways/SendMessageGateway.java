@@ -10,6 +10,7 @@ import entities.Message;
 import entities.User;
 import services.DBService;
 
+import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 
 public class SendMessageGateway {
@@ -34,7 +35,7 @@ public class SendMessageGateway {
      * @param chatID
      * @param message
      */
-    public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException {
+    public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException {
         Chat targetChat = dbService.getChatDetails(chatID);
         targetChat.addMessage(message);
         dbService.addMessage(message, targetChat);
