@@ -56,7 +56,15 @@ public class ChatScreen {
 
     SendMessageController sendMessageController;
 
-    public void run(int chatID, int senderID, int receiverID) {
+    Navigator nav;
+
+    public ChatScreen(int chatID, int senderID, int receiverID, Navigator nav, SendMessageController sendMessageController) {
+        this.chatID = chatID;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
+        this.nav = nav;
+        this.sendMessageController = sendMessageController;
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -66,7 +74,6 @@ public class ChatScreen {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ChatScreen mainGUI = new ChatScreen();
                 try {
                     mainGUI.preDisplay(chatID, senderID, receiverID);
                 } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
@@ -74,38 +81,15 @@ public class ChatScreen {
                 }
             }
         });
+
     }
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    UIManager.setLookAndFeel(UIManager
-//                            .getSystemLookAndFeelClassName());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                ChatScreen mainGUI = new ChatScreen();
-//                try {
-//                    mainGUI.preDisplay();
-//                } catch (FileNotFoundException | InterruptedException | ExecutionException | ParseException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        });
-//    }
 
     public void preDisplay(int chatID, int senderID, int receiverID) throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
 
         this.chatID = chatID;
         this.senderID = senderID;
         this.receiverID = receiverID;
-
-        MessageInputBoundary messageInteractor = new MessageInteractor();
-
-        this.sendMessageController = new SendMessageController(messageInteractor);
-
 
         newFrame.setVisible(false);
         preFrame = new JFrame(appName);

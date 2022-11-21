@@ -8,6 +8,8 @@ import user_login_use_case.UserLoginGateway;
 import user_login_use_case.UserLoginInteractor;
 import user_register_use_case.UserRegistrationGateway;
 import user_register_use_case.UserRegistrationInteractor;
+import user_send_message.MessageInputBoundary;
+import user_send_message.MessageInteractor;
 import views.*;
 import user_register_use_case.UserRegisterInputBoundary;
 
@@ -35,6 +37,7 @@ public class Main {
         // Initialize screens
         JPanel registerScreen = initRegisterScreen(nav, dbs);
         JPanel loginSreen = initLoginScreen(nav, dbs);
+        JPanel chatScreen = initChatScreen(nav, dbs);
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.add(loginSreen, "login");
@@ -77,6 +80,13 @@ public class Main {
         LoginController userLoginController = new LoginController(interactor);
 
         return new LoginScreen(userLoginController, nav);
+    }
+
+    @NotNull
+    private static JPanel initChatScreen(Navigator nav, DBService db) {
+        MessageInputBoundary messageInteractor = new MessageInteractor();
+        SendMessageController sendMessageController = new SendMessageController(messageInteractor);
+        return null;
     }
 
 }
