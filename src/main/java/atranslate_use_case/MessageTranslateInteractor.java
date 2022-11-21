@@ -12,7 +12,7 @@ public class MessageTranslateInteractor implements MessageTranslateInputBoundary
     }
 
     @Override
-    public MessageTranslateResponse convert(MessageTranslateData data) throws IOException {
+    public MessageTranslateResponse translate(MessageTranslateData data) throws IOException {
 
         //Do failure cases
 
