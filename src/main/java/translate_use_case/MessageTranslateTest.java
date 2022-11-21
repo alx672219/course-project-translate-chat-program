@@ -1,7 +1,5 @@
-package atranslate_use_case;
+package translate_use_case;
 
-import audio_converter_use_case.AudioConvertData;
-import gateways.AudioConvertGoogleCloud;
 import gateways.MessageTranslateGoogleCloud;
 
 import java.io.IOException;

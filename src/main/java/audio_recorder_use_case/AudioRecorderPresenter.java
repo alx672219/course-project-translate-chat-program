@@ -1,8 +1,5 @@
 package audio_recorder_use_case;
 
-import atranslate_use_case.MessageTranslateFailed;
-import atranslate_use_case.MessageTranslateResponse;
-
 public class AudioRecorderPresenter implements AudioRecorderOutputBoundary{
 
     @Override

@@ -1,9 +1,9 @@
 package views;
 
-import atranslate_use_case.MessageTranslateController;
-import atranslate_use_case.MessageTranslateData;
+import translate_use_case.MessageTranslateData;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class TranslateScreen extends JFrame {
@@ -11,14 +11,16 @@ public class TranslateScreen extends JFrame {
     JLabel translatedText;
     MessageTranslateController MTC;
 
-    public TranslateScreen(MessageTranslateData data, int x, int y, MessageTranslateController MTC) throws IOException {
+    public TranslateScreen(MessageTranslateData data, MessageTranslateController MTC) throws IOException {
         this.MTC = MTC;
         this.setSize(200,100);
-        this.setLocation(x + 5, y + 5);
+        this.setLocation(
+                (int)MouseInfo.getPointerInfo().getLocation().getX() + 10,
+                (int)MouseInfo.getPointerInfo().getLocation().getY());
         translatedText = new JLabel(MTC.translate(data).getResult());
         this.add(translatedText);
         this.setVisible(true);
-        this.setDefaultCloseOperation(3);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
     }

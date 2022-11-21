@@ -1,8 +1,8 @@
-package atranslate_use_case;
+package views;
 
-import atranslate_use_case.MessageTranslateData;
-import atranslate_use_case.MessageTranslateInputBoundary;
-import atranslate_use_case.MessageTranslateResponse;
+import translate_use_case.MessageTranslateData;
+import translate_use_case.MessageTranslateInputBoundary;
+import translate_use_case.MessageTranslateResponse;
 
 
 import java.io.IOException;
