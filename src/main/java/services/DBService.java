@@ -3,7 +3,6 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.storage.v2.Object;
 import entities.User;
 
 import javax.swing.text.Document;
@@ -130,7 +129,7 @@ public class DBService {
         WriteResult result = future.get();
     }
 
-    public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException {
+    public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String documentName = "id" + String.valueOf(chatID);
         DocumentReference documentReference = dbFirestore.collection("chats").document(documentName);
@@ -208,7 +207,7 @@ public class DBService {
     public void addMessage(Message message, Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
-        docData.put("id", String.valueOf(message.getId()));
+        docData.put("id", message.getId());
 
         String receiverID = "id" + String.valueOf(message.getReceiver().getUser_id());
         String recipientID = "id" + String.valueOf(message.getRecipient().getUser_id());
