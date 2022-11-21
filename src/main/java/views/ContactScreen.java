@@ -51,7 +51,7 @@ public class ContactScreen extends JFrame{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        //
+
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
 
@@ -92,7 +92,7 @@ public class ContactScreen extends JFrame{
         tfUserid.setText("");
 
 
-        //  contact !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! members.add(new MemberVO( 12L));
+
         //members.add(new MemberVO(0L));
 
 
@@ -102,7 +102,7 @@ public class ContactScreen extends JFrame{
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+
 
 
 
@@ -121,7 +121,9 @@ public class ContactScreen extends JFrame{
 
                 User targetUser = null;
                 try {
-                    targetUser = dbService.getUserDetails(1); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
+                    targetUser = dbService.getUserDetails(1);
+
                 } catch (ExecutionException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -142,14 +144,13 @@ public class ContactScreen extends JFrame{
 
 
 
-                //System.out.println(:"+members.size());
+
             }
         });
-        //
         btnDel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+
 
 //                DBInitializer dbInitializer = new DBInitializer();
 //                try {
@@ -160,7 +161,8 @@ public class ContactScreen extends JFrame{
 
 
                 int rowIndex = table.getSelectedRow();
-                // -1
+
+
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
                 //System.out.println(members.get(rowIndex).userid);
@@ -185,7 +187,7 @@ public class ContactScreen extends JFrame{
                 }
 
                 members.remove(rowIndex);
-//                System.out.println(":"+members.size());
+
             }
         });
 

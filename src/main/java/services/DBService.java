@@ -254,7 +254,7 @@ public class DBService {
     public void addMessage(Message message, Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
-        docData.put("id", String.valueOf(message.getId()));
+        docData.put("id", message.getId());
 
         String receiverID = "id" + String.valueOf(message.getReceiver().getUser_id());
         String recipientID = "id" + String.valueOf(message.getRecipient().getUser_id());
