@@ -3,6 +3,7 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firestore.v1.Write;
 import entities.User;
 
 import java.util.HashMap;
@@ -239,7 +240,7 @@ public class DBService {
     public void addMessage(Message message, Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
-        docData.put("id", String.valueOf(message.getId()));
+        docData.put("id", message.getId());
 
         String receiverID = "id" + message.getReceiver().getUser_id();
         String recipientID = "id" + message.getRecipient().getUser_id();
