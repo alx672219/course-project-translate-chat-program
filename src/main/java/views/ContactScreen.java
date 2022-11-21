@@ -43,7 +43,7 @@ public class ContactScreen extends JFrame{
         setAlwaysOnTop(true);
         setBounds(200, 100, 400, 200);
 
-        //columns
+        //Columns
         String[] colNames = new String[]{"User ID"};
         DefaultTableModel model = new DefaultTableModel(colNames, 0);
 
@@ -51,7 +51,7 @@ public class ContactScreen extends JFrame{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        //테이블 아래쪽에 데이터 입력 할수있는 패널
+        //Input Panel at the bottom of the screen
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
 
@@ -83,10 +83,7 @@ public class ContactScreen extends JFrame{
 
         }
 
-        // contats is array of integers
-        // but your row[1] which is showoing contacts is a string
 
-        // Display it with their contact
         model.addRow(rows);
 
         tfUserid.setText("");
@@ -100,8 +97,7 @@ public class ContactScreen extends JFrame{
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //입력된 값 테이블에 추가하기
-                //입력된 값들을 한줄 데이터 배열로 만들기
+                //Add
 
 
 
@@ -119,7 +115,7 @@ public class ContactScreen extends JFrame{
 
                 User targetUser = null;
                 try {
-                    targetUser = dbService.getUserDetails(1); // 이게 모냐 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+                    targetUser = dbService.getUserDetails(1);
                 } catch (ExecutionException ex) {
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
@@ -140,15 +136,15 @@ public class ContactScreen extends JFrame{
 
             }
         });
-        //선택한 줄 지우기
+
         btnDel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //선택한 줄의 번호 알아내기
+                //Delete
 
 
                 int rowIndex = table.getSelectedRow();
-                //선택 안하고 누를 경우 리턴값 -1
+                // If rowIndex is not selected, then rowIndex is -1
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
                 System.out.println(members.size());
