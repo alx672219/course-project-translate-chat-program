@@ -52,6 +52,7 @@ public class ContactScreen extends JFrame{
         add(scrollPane, BorderLayout.CENTER);
 
         //Input Panel at the bottom of the screen
+
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
 
@@ -92,11 +93,10 @@ public class ContactScreen extends JFrame{
 
 
 
-
-
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 //Add
 
 
@@ -145,6 +145,22 @@ public class ContactScreen extends JFrame{
 
                 int rowIndex = table.getSelectedRow();
                 // If rowIndex is not selected, then rowIndex is -1
+
+            }
+        });
+        btnDel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+//                DBInitializer dbInitializer = new DBInitializer();
+//                try {
+//                    dbInitializer.init();
+//                } catch (FileNotFoundException ex) {
+//                    throw new RuntimeException(ex);
+//                }
+
+
+                int rowIndex = table.getSelectedRow();
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
                 System.out.println(members.size());

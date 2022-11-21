@@ -22,6 +22,8 @@ public class Message {
         this.timestamp = timestamp;
     }
 
+    public Message() { }
+
     // Getter & Setter Methods
     public int getId() {
         return id;
