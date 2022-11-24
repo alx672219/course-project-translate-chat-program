@@ -1,5 +1,7 @@
 package profile_customization_use_case;
 
+import entities.User;
+
 public class CustomizationInteractor implements CustomizationInputBoundary{
 
     CustomizationGateway gateway;
@@ -29,9 +31,11 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
     @Override
     public CustomizationResponse changeName(CustomizationData data) {
         // Update the database such that the user's "name" field is updated
+        User updatedUser = new User(data.getName(), data.getUser().getDefault_lang(), data.getUser().getEmail(),
+                data.getUser().getPassword(), data.getUser().getUser_id());
         if (data.getName().isEmpty()) {
             return presenter.prepareFailView("Please enter a name");
-        } else if (gateway.existName(data.getUser())) {
+        } else if (gateway.existName(updatedUser)) {
             return presenter.prepareFailView("Name already taken, please enter another name");
         }
 

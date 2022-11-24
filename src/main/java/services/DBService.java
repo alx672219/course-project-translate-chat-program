@@ -95,11 +95,11 @@ public class DBService {
 
         try {
             for (DocumentReference ref : usersReference.listDocuments()) {
-                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
-                    return false;
+                if (ref.get().get().getData().get("name").equals(user.getName())) {
+                    return true;
                 }
             }
-            return true;
+            return false;
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }

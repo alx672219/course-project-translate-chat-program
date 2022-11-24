@@ -23,14 +23,14 @@ public class UserLoginFirebaseSystem implements UserLoginGateway {
         try {
             user = db.getByUsername(username);
         } catch (ExecutionException | InterruptedException e) {
-            return new LoginResponse(data, false, e);
+            return new LoginResponse(null, data, false, e);
         }
         if (user == null) {
-            return new LoginResponse(data, false, new RuntimeException("User not found"));
+            return new LoginResponse(null, data, false, new RuntimeException("User not found"));
         } else if (!user.getPassword().equals(password)) {
-            return new LoginResponse(data, false, new RuntimeException("Password doesn't match"));
+            return new LoginResponse(user, data, false, new RuntimeException("Password doesn't match"));
         } else {
-            return new LoginResponse(data, true, null);
+            return new LoginResponse(user, data, true, null);
         }
     }
 }

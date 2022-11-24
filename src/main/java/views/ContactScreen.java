@@ -12,44 +12,32 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 
 
-public class ContactScreen extends JFrame{
-    ArrayList<MemberVO>members = new ArrayList<MemberVO>();
+public class ContactScreen extends JPanel implements ActionListener {
+    ArrayList<MemberVO>members = new ArrayList<>();
     DBService dbService;
+    int userID;
 
-    public ContactScreen() throws ExecutionException, InterruptedException {
+    JTable table;
+    DefaultTableModel model;
+    JTextField tfUserid;
+    public ContactScreen(int userID) throws ExecutionException, InterruptedException {
+        this.userID = userID;
         this.dbService = new DBService();
-        DBInitializer dbInitializer = new DBInitializer();
-        try {
-            dbInitializer.init();
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        setTitle("Contacts");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setAlwaysOnTop(true);
-        setBounds(200, 100, 400, 200);
-
         //Columns
         String[] colNames = new String[]{"User ID"};
-        DefaultTableModel model = new DefaultTableModel(colNames, 0);
+        this.model = new DefaultTableModel(colNames, 0);
 
-        JTable table = new JTable(model);
+        BorderLayout borderLayout = new BorderLayout();
+        this.setLayout(borderLayout);
+
+        this.table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        this.add(scrollPane, BorderLayout.CENTER);
 
 
         //Input Panel at the bottom of the screen
@@ -59,7 +47,7 @@ public class ContactScreen extends JFrame{
         bottomPanel.setLayout(new GridLayout(2,1));
 
         JPanel panel = new JPanel();
-        JTextField tfUserid = new JTextField(6);
+        this.tfUserid = new JTextField(6);
 
         panel.add(new JLabel("User ID"));
         panel.add(tfUserid);
@@ -75,140 +63,116 @@ public class ContactScreen extends JFrame{
         String[] rows = new String[2];
 
         // Fetch list of all users from database
-        User targetUser = dbService.getUserDetails(1);
+        User targetUser = dbService.getUserDetails(userID);
         ArrayList<Long> contacts = targetUser.getContacts();
         System.out.println(contacts);
 
-        for (int i = 0; i < contacts.size(); i++) {
-            rows[0] = String.valueOf(contacts.get(i));
+        for (Long contact : contacts) {
+            rows[0] = String.valueOf(contact);
             model.addRow(rows);
-            members.add(new MemberVO(contacts.get(i)));
-
+            members.add(new MemberVO(contact));
         }
-
-
-        model.addRow(rows);
 
         tfUserid.setText("");
+        btnAdd.addActionListener(this);
+        btnDel.addActionListener(this);
+
+        this.add(bottomPanel, BorderLayout.SOUTH);
+
+    }
+
+    public int getSelectedRowUserID() {
+        int rowIndex = this.table.getSelectedRow();
+        if (rowIndex == -1) {
+            return rowIndex;
+        } else {
+            int contactID = members.get(rowIndex).userid.intValue();
+            return contactID;
+        }
+    }
 
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String source = e.getActionCommand();
 
-        //members.add(new MemberVO(0L));
+        if (source.equals("Delete")) {
+            int rowIndex = this.table.getSelectedRow();
 
+            if (rowIndex == -1) {
+                JOptionPane.showMessageDialog(this, "Select a contact.");
+            }
+            this.model.removeRow(rowIndex);
 
+            Long contactID = members.get(rowIndex).userid;
 
-
-
-
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                //Add
-
-
-
-
-
-
-                String[] rows = new String[2];
-                rows[0] = tfUserid.getText();
-                model.addRow(rows);
-
-                tfUserid.setText("");
+            User targetUser;
+            try {
+                targetUser = dbService.getUserDetails(userID);
+            } catch (ExecutionException | InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
 
 
-                Long userid = Long.parseLong(rows[0]);
+            try {
+                dbService.deleteContact(targetUser, contactID);
+            } catch (ExecutionException | InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            members.remove(rowIndex);
+
+        } else if (source.equals("Add")) {
+            String[] rows = new String[2];
+
+            if (this.tfUserid.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Type in a user ID.");
+            } else if (!tfUserid.getText().matches("^\\d*$")) {
+                JOptionPane.showMessageDialog(this, "Type in an integer.");
+            }
+
+            rows[0] = this.tfUserid.getText();
 
 
-                User targetUser = null;
-                try {
+            this.tfUserid.setText("");
 
-                    targetUser = dbService.getUserDetails(1);
 
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
+            Long userid = Long.parseLong(rows[0]);
 
-                try {
+
+            User targetUser;
+            try {
+
+                targetUser = dbService.getUserDetails(userID);
+
+            } catch (ExecutionException | InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            try {
+                if (userid.intValue() == userID) {
+                    JOptionPane.showMessageDialog(this, "You can't add yourself as a contact!");
+                } else if (dbService.getUserDetails(userid.intValue()) == null) {
+                    JOptionPane.showMessageDialog(this, "There is no user with this ID.");
+                } else if (targetUser.getContacts().contains(userid)) {
+                    JOptionPane.showMessageDialog(this, "You already have a contact with this ID.");
+                } else {
                     dbService.addContact(targetUser, userid);
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
+                    model.addRow(rows);
+                    members.add(new MemberVO(userid));
                 }
 
-
-                members.add(new MemberVO(userid));
-
-
+            } catch (ExecutionException | InterruptedException ex) {
+                throw new RuntimeException(ex);
             }
-        });
-
-        btnDel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Delete
-
-
-                int rowIndex = table.getSelectedRow();
-                // If rowIndex is not selected, then rowIndex is -1
-
-
-            }
-        });
-        btnDel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-//                DBInitializer dbInitializer = new DBInitializer();
-//                try {
-//                    dbInitializer.init();
-//                } catch (FileNotFoundException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-
-
-                int rowIndex = table.getSelectedRow();
-
-
-                if (rowIndex == -1) return;
-                model.removeRow(rowIndex);
-                System.out.println(members.size());
-                Long userid = members.get(rowIndex).userid;
-
-                DBService dbService = new DBService();
-                User targetUser = null;
-                try {
-                    targetUser = dbService.getUserDetails(1);
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-
-                try {
-                    dbService.deleteContact(targetUser, userid);
-                } catch (ExecutionException | InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                members.remove(rowIndex);
-
-            }
-        });
 
 
 
-        add(bottomPanel, BorderLayout.SOUTH);
-        setVisible(true);
         }
 
-        class MemberVO{
+    }
+
+    static class MemberVO{
         private final Long userid;
 
         public MemberVO(Long userid){
@@ -218,7 +182,12 @@ public class ContactScreen extends JFrame{
 
     }
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new ContactScreen();
+    public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
+        DBInitializer initializer = new DBInitializer();
+        initializer.init();
+        JFrame app = new JFrame("app");
+        app.add(new ContactScreen(1));
+        app.pack();
+        app.setVisible(true);
     }
 }
