@@ -47,7 +47,15 @@ public class HomeScreen extends JPanel implements ActionListener{
         this.add(rightPanel, BorderLayout.EAST);
         this.putClientProperty("right", rightPanel);
         addOpenChatBtn(rightPanel);
+        addChatPanel(rightPanel);
+    }
 
+    private void addChatPanel(JPanel panel) {
+        JPanel chatPanel = new JPanel();
+        BorderLayout borderLayout = new BorderLayout();
+        chatPanel.setLayout(borderLayout);
+        panel.add(chatPanel, BorderLayout.SOUTH);
+        panel.putClientProperty("chat", chatPanel);
     }
 
     private void addOpenChatBtn(JPanel panel) {
@@ -103,7 +111,6 @@ public class HomeScreen extends JPanel implements ActionListener{
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String source = e.getActionCommand();
@@ -131,7 +138,10 @@ public class HomeScreen extends JPanel implements ActionListener{
                 JOptionPane.showMessageDialog(this, "Select a row.");
             } else {
                 JLabel contactIDLabel = new JLabel("Contact ID:" + contactID);
-                rightPanel.add(contactIDLabel, BorderLayout.SOUTH);
+                JPanel chatPanel = (JPanel) rightPanel.getClientProperty("chat");
+                chatPanel.removeAll();
+                chatPanel.revalidate();
+                chatPanel.add(contactIDLabel, BorderLayout.CENTER);
                 addChatScreen(rightPanel, contactID);
             }
 

@@ -152,10 +152,7 @@ public class ChatScreen {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        MessageSearchGateway searchGateway = new MessageSearchFirebaseSystem();
-        MessageSearchOutputBoundary searchPresenter = new MessageSearchPresenter();
-        MessageSearchInputBoundary searchInteractor = new MessageSearchInteractor(searchGateway, searchPresenter);
-        MessageSearchController searchController = new MessageSearchController(searchInteractor);
+
         JPanel searchBarPanel = new SearchBarPanel(searchController, currChat.getId());
 
         mainPanel.add(searchBarPanel, BorderLayout.NORTH);

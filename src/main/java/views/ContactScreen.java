@@ -125,11 +125,7 @@ public class ContactScreen extends JPanel implements ActionListener {
             }
 
             rows[0] = this.tfUserid.getText();
-
-
             this.tfUserid.setText("");
-
-
             long contactID = Long.parseLong(rows[0]);
 
             try {
@@ -139,10 +135,7 @@ public class ContactScreen extends JPanel implements ActionListener {
             } catch (Exception error) {
                 JOptionPane.showMessageDialog(this, error.getMessage());
             }
-
-
         }
-
     }
 
     static class MemberVO{
