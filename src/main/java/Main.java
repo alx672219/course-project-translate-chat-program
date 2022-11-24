@@ -1,5 +1,9 @@
-import gateways.UserLoginFirebaseSystem;
-import gateways.UserRegistrationFirebaseSystem;
+import gateways.*;
+import message_edit_delete_use_case.*;
+import message_search_use_case.MessageSearchGateway;
+import message_search_use_case.MessageSearchInputBoundary;
+import message_search_use_case.MessageSearchInteractor;
+import message_search_use_case.MessageSearchOutputBoundary;
 import org.jetbrains.annotations.NotNull;
 import services.DBInitializer;
 import services.DBService;
@@ -8,6 +12,8 @@ import user_login_use_case.UserLoginGateway;
 import user_login_use_case.UserLoginInteractor;
 import user_register_use_case.UserRegistrationGateway;
 import user_register_use_case.UserRegistrationInteractor;
+import user_send_message.MessageInputBoundary;
+import user_send_message.MessageInteractor;
 import views.*;
 import user_register_use_case.UserRegisterInputBoundary;
 
@@ -35,9 +41,12 @@ public class Main {
         // Initialize screens
         JPanel registerScreen = initRegisterScreen(nav, dbs);
         JPanel loginSreen = initLoginScreen(nav, dbs);
+//        JPanel chatScreen = initChatScreen(nav, dbs, 3);
+
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.add(loginSreen, "login");
+//        screens.add(chatScreen, "chatScreen");
 
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setSize(640, 640);
@@ -80,8 +89,29 @@ public class Main {
     }
 
     @NotNull
-    private static JPanel initChatScreen(Navigator nav, DBService db) {
-        return new JPanel();
+    private static JPanel initChatScreen(Navigator nav, DBService db, int chatID,
+                                         int senderID, int receiverID) {
+
+        MessageEditGateway eGateway = new MessageEditFirebaseSystem();
+        MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
+        MessageEditInputBoundary eInteractor  = new MessageEditInteractor(eGateway, ePresenter);
+        MessageEditController eController = new MessageEditController(eInteractor);
+
+        MessageDeleteGateway dGateway = new MessageDeleteFirebaseSystem();
+        MessageDeleteOutputBoundary dPresenter = new MessageDeletePresenter();
+        MessageDeleteInputBoundary dInteractor  = new MessageDeleteInteractor(dGateway, dPresenter);
+        MessageDeleteController dController = new MessageDeleteController(dInteractor);
+
+        MessageSearchGateway sGateway = new MessageSearchFirebaseSystem();
+        MessageSearchOutputBoundary sPresenter = new MessageSearchPresenter();
+        MessageSearchInputBoundary sInteractor  = new MessageSearchInteractor(sGateway, sPresenter);
+        MessageSearchController sController = new MessageSearchController(sInteractor);
+
+        MessageInputBoundary messageInteractor = new MessageInteractor();
+        SendMessageController sendMessageController = new SendMessageController(messageInteractor);
+
+//        return new ChatScreen(eController, dController, sController, chatID, sendMessageController);
+        return null;
     }
 
 }

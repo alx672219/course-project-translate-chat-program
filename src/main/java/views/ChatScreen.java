@@ -16,6 +16,8 @@ import message_search_use_case.MessageSearchOutputBoundary;
 
 import services.DBInitializer;
 import services.DBService;
+import user_send_message.MessageInputBoundary;
+import user_send_message.MessageInteractor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
-public class ChatScreen {
+public class ChatScreen extends JPanel {
 
     String      appName     = "Translation Chat App";
     ChatScreen     mainGUI;
@@ -46,12 +48,6 @@ public class ChatScreen {
     JTextField  usernameChooser;
     JFrame      preFrame;
 
-    DBInitializer dbInitializer;
-
-    DBService dbService;
-
-    Chat currChat;
-
     User sender;
 
     User receiver;
@@ -60,7 +56,17 @@ public class ChatScreen {
     MessageDeleteController deleteController;
     MessageSearchController searchController;
 
-    public static void main(String[] args) {
+    SendMessageController sendMessageController;
+
+    int chatID;
+
+    int senderID;
+
+    int receiverID;
+
+    ArrayList<Message> messages;
+
+    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException, FileNotFoundException {
 
         MessageEditGateway eGateway = new MessageEditFirebaseSystem();
         MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
@@ -77,14 +83,28 @@ public class ChatScreen {
         MessageSearchInputBoundary sInteractor  = new MessageSearchInteractor(sGateway, sPresenter);
         MessageSearchController sController = new MessageSearchController(sInteractor);
 
-        new ChatScreen(eController, dController, sController);
+        MessageInputBoundary messageInteractor = new MessageInteractor();
+        SendMessageController sendMessageController = new SendMessageController(messageInteractor);
+
+        DBInitializer dbInitializer = new DBInitializer();
+        dbInitializer.init();
+        DBService dbService = new DBService();
+        ArrayList<Message> messages = dbService.getAllMessages(3);
+
+        new ChatScreen(4, 5, 3, eController, dController, sController, sendMessageController, messages);
     }
 
-    public ChatScreen(MessageEditController editController, MessageDeleteController deleteController,
-                      MessageSearchController searchController) {
+    public ChatScreen(int senderID, int receiverID, int chatID, MessageEditController editController,
+                      MessageDeleteController deleteController, MessageSearchController searchController,
+                      SendMessageController sendMessageController, ArrayList<Message> messages) {
         this.deleteController = deleteController;
         this.editController = editController;
         this.searchController = searchController;
+        this.chatID = chatID;
+        this.senderID = senderID;
+        this.receiverID = receiverID;
+        this.sendMessageController = sendMessageController;
+        this.messages = messages;
 
         this.mainGUI = this;
         this.runChatScreen();
@@ -113,14 +133,6 @@ public class ChatScreen {
 
 
     public void preDisplay() throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
-        this.dbInitializer = new DBInitializer();
-        this.dbInitializer.init();
-        this.dbService = new DBService();
-
-        this.currChat = dbService.getChatDetails(3);
-
-
-
         newFrame.setVisible(false);
         preFrame = new JFrame(appName);
         usernameChooser = new JTextField(15);
@@ -156,7 +168,7 @@ public class ChatScreen {
         MessageSearchOutputBoundary searchPresenter = new MessageSearchPresenter();
         MessageSearchInputBoundary searchInteractor = new MessageSearchInteractor(searchGateway, searchPresenter);
         MessageSearchController searchController = new MessageSearchController(searchInteractor);
-        JPanel searchBarPanel = new SearchBarPanel(searchController, currChat.getId());
+        JPanel searchBarPanel = new SearchBarPanel(searchController, chatID);
 
         mainPanel.add(searchBarPanel, BorderLayout.NORTH);
 
@@ -195,10 +207,68 @@ public class ChatScreen {
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
 
+        // Initialize chatbox with all saved messages from the chat
+        for (Message currMessage : this.messages) {
+            JTextArea messageArea = new JTextArea();
+            messageArea.setLineWrap(true);
+            messageArea.setEditable(false);
+            messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
+            messageArea.setText("<" + username + ">:  " + currMessage.getMessage());
+            //chatBox.setCaretPosition(chatBox.getDocument().getLength());
+            chatBox.setSelectionStart(chatBox.getDocument().getLength());
+            chatBox.setSelectionEnd(chatBox.getDocument().getLength());
+            chatBox.insertComponent(messageArea);
+
+            try {
+                chatBox.getDocument().insertString(chatBox.getDocument().getLength(),"\n", null);
+            } catch (BadLocationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         newFrame.add(mainPanel);
         newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         newFrame.setSize(470, 300);
         newFrame.setVisible(true);
+    }
+
+    public JTextArea sendMessage() {
+        JTextArea messageArea = new JTextArea();
+        messageArea.setLineWrap(true);
+        messageArea.setEditable(false);
+        messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
+        messageArea.setText("<" + username + ">:  " + messageBox.getText());
+        //chatBox.setCaretPosition(chatBox.getDocument().getLength());
+        chatBox.setSelectionStart(chatBox.getDocument().getLength());
+        chatBox.setSelectionEnd(chatBox.getDocument().getLength());
+        chatBox.insertComponent(messageArea);
+        try {
+            chatBox.getDocument().insertString(chatBox.getDocument().getLength(),"\n", null);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
+
+        Date curr_date = new Date();
+
+        try {
+            sendMessageController.sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date);
+        } catch (ExecutionException | InterruptedException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Clear the message box for new input
+        messageBox.setText("");
+
+
+//                List<Integer> ids = new ArrayList<>();
+//                ids.add(nextMessageID);
+//                ids.add(3); //Change to chatID later
+
+
+        // Clear the message box for new input
+        messageBox.setText("");
+
+        return messageArea;
     }
 
     class sendMessageButtonListener implements ActionListener {
@@ -209,54 +279,11 @@ public class ChatScreen {
                 chatBox.setText("Cleared all messages\n");
                 messageBox.setText("");
             } else {
-                JTextArea messageArea = new JTextArea();
-                messageArea.setLineWrap(true);
-                messageArea.setEditable(false);
-                messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
-                messageArea.setText("<" + username + ">:  " + messageBox.getText());
-                //chatBox.setCaretPosition(chatBox.getDocument().getLength());
-                chatBox.setSelectionStart(chatBox.getDocument().getLength());
-                chatBox.setSelectionEnd(chatBox.getDocument().getLength());
-                chatBox.insertComponent(messageArea);
-                try {
-                    chatBox.getDocument().insertString(chatBox.getDocument().getLength(),"\n", null);
-                } catch (BadLocationException e) {
-                    throw new RuntimeException(e);
-                }
-                //chatBox.append("<" + username + ">:  " + messageBox.getText()
-                //        + "\n");
-
-
-                List<Integer> messageIDs = null;
-
-                try {
-                    messageIDs = dbService.getAllMessageIDs();
-                } catch (ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                int nextMessageID = Collections.max(messageIDs) + 1;
-                User sender;
-                User receiver;
-                try {
-                    sender = dbService.getUserDetails(2);
-                    receiver = dbService.getUserDetails(3);
-                } catch (ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                Message sentMessage = new Message(nextMessageID, messageBox.getText(), sender, receiver, new Date(122, Calendar.DECEMBER, 15));
-                try {
-                    dbService.addMessage(sentMessage, currChat);
-                } catch (ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                // Clear the message box for new input
-                messageBox.setText("");
-
+                JTextArea messageArea = sendMessage();
 
                 List<Integer> ids = new ArrayList<>();
-                ids.add(nextMessageID);
-                ids.add(3); //Change to chatID later
+//                ids.add(nextMessageID);
+                ids.add(chatID); //Change to chatID later
 
                 List<Object> controllers = new ArrayList<>();
                 controllers.add(editController);
@@ -265,8 +292,55 @@ public class ChatScreen {
                 messageArea.addMouseListener(new EditDeletePopupListener(ids, controllers, messageArea,
                         (JPanel) messageBox.getParent(), chatBox, username));
 
-
             }
+//                JTextArea messageArea = new JTextArea();
+//                messageArea.setLineWrap(true);
+//                messageArea.setEditable(false);
+//                messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
+//                messageArea.setText("<" + username + ">:  " + messageBox.getText());
+//                //chatBox.setCaretPosition(chatBox.getDocument().getLength());
+//                chatBox.setSelectionStart(chatBox.getDocument().getLength());
+//                chatBox.setSelectionEnd(chatBox.getDocument().getLength());
+//                chatBox.insertComponent(messageArea);
+//                try {
+//                    chatBox.getDocument().insertString(chatBox.getDocument().getLength(),"\n", null);
+//                } catch (BadLocationException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                Date curr_date = new Date();
+//
+//                try {
+//                    sendMessageController.sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date);
+//                } catch (ExecutionException | InterruptedException | ParseException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                // Clear the message box for new input
+//                messageBox.setText("");
+//
+//
+////                List<Integer> ids = new ArrayList<>();
+////                ids.add(nextMessageID);
+////                ids.add(3); //Change to chatID later
+//
+//
+//                // Clear the message box for new input
+//                messageBox.setText("");
+//
+//
+//                List<Integer> ids = new ArrayList<>();
+////                ids.add(nextMessageID);
+//                ids.add(chatID); //Change to chatID later
+//
+//                List<Object> controllers = new ArrayList<>();
+//                controllers.add(editController);
+//                controllers.add(deleteController);
+//
+
+//
+//
+//            }
             messageBox.requestFocusInWindow();
         }
     }
