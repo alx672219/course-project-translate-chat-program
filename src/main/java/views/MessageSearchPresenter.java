@@ -19,7 +19,7 @@ public class MessageSearchPresenter implements MessageSearchOutputBoundary {
     /**
      * Method called when search fails.
      * @param error error message that was raised
-     * @throws MessageSearchFailed if...
+     * @throws MessageSearchFailed all the time
      */
     @Override
     public MessageSearchResponse prepareFailView(String error) {

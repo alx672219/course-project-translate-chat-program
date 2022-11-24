@@ -1,5 +1,6 @@
 package views;
 
+import contact_usecases.delete_contact_use_case.DeleteContactData;
 import entities.User;
 import services.DBInitializer;
 import services.DBService;
@@ -21,13 +22,15 @@ public class ContactScreen extends JPanel implements ActionListener {
     ArrayList<MemberVO>members = new ArrayList<>();
     DBService dbService;
     int userID;
+    DeleteContactController dcController;
 
     JTable table;
     DefaultTableModel model;
     JTextField tfUserid;
-    public ContactScreen(int userID) throws ExecutionException, InterruptedException {
+    public ContactScreen(int userID, DeleteContactController dcController) throws ExecutionException, InterruptedException {
         this.userID = userID;
         this.dbService = new DBService();
+        this.dcController = dcController;
         //Columns
         String[] colNames = new String[]{"User ID"};
         this.model = new DefaultTableModel(colNames, 0);
@@ -105,20 +108,8 @@ public class ContactScreen extends JPanel implements ActionListener {
             this.model.removeRow(rowIndex);
 
             Long contactID = members.get(rowIndex).userid;
-
-            User targetUser;
-            try {
-                targetUser = dbService.getUserDetails(userID);
-            } catch (ExecutionException | InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-
-
-            try {
-                dbService.deleteContact(targetUser, contactID);
-            } catch (ExecutionException | InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+            DeleteContactData dcData = new DeleteContactData(userID, contactID);
+            dcController.deleteContact(dcData);
 
             members.remove(rowIndex);
 
@@ -186,7 +177,7 @@ public class ContactScreen extends JPanel implements ActionListener {
         DBInitializer initializer = new DBInitializer();
         initializer.init();
         JFrame app = new JFrame("app");
-        app.add(new ContactScreen(1));
+        //app.add(new ContactScreen(1));
         app.pack();
         app.setVisible(true);
     }

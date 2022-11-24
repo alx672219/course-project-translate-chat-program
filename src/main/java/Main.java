@@ -1,3 +1,7 @@
+import contact_usecases.delete_contact_use_case.DeleteContactInputBoundary;
+import contact_usecases.delete_contact_use_case.DeleteContactInteractor;
+import contact_usecases.delete_contact_use_case.DeleteContactOutputBoundary;
+import contact_usecases.delete_contact_use_case.UserDeleteContactGateway;
 import gateways.*;
 import message_edit_delete_use_case.*;
 import message_search_use_case.MessageSearchGateway;
@@ -93,11 +97,18 @@ public class Main {
         MessageInputBoundary sendMessageInteractor = new MessageInteractor(sendMessageGateway);
         SendMessageController sendMessageController = new SendMessageController(sendMessageInteractor);
 
+        UserDeleteContactGateway deleteContactGateway = new UserDeleteContactPersistance();
+        DeleteContactOutputBoundary deleteContactPresenter = new DeleteContactPresenter();
+        DeleteContactInputBoundary deleteContactInteractor = new DeleteContactInteractor(deleteContactGateway,
+                deleteContactPresenter);
+        DeleteContactController deleteContactController = new DeleteContactController(deleteContactInteractor);
+
         controllers.put("customization", customizationController);
         controllers.put("message_search", messageSearchController);
         controllers.put("message_edit", messageEditController);
         controllers.put("message_delete", messageDeleteController);
         controllers.put("send", sendMessageController);
+        controllers.put("delete_contact", deleteContactController);
 
         return new HomeScreen(getLangs(), controllers, nav);
     }
