@@ -1,3 +1,7 @@
+import contact_usecases.add_contact_use_case.AddContactInputBoundary;
+import contact_usecases.add_contact_use_case.AddContactInteractor;
+import contact_usecases.add_contact_use_case.AddContactOutputBoundary;
+import contact_usecases.add_contact_use_case.UserAddContactGateway;
 import contact_usecases.delete_contact_use_case.DeleteContactInputBoundary;
 import contact_usecases.delete_contact_use_case.DeleteContactInteractor;
 import contact_usecases.delete_contact_use_case.DeleteContactOutputBoundary;
@@ -51,7 +55,7 @@ public class Main {
         // Initialize screens
         JPanel registerScreen = initRegisterScreen(nav, dbs);
         JPanel loginSreen = initLoginScreen(nav, dbs);
-        JPanel homeScreen = initHomeScreen(nav, dbs);
+        JPanel homeScreen = initHomeScreen(nav);
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.putClientProperty("register", registerScreen);
@@ -66,7 +70,7 @@ public class Main {
         nav.showScreen("register");
     }
     @NotNull
-    private static JPanel initHomeScreen(Navigator nav, DBService dbs) {
+    private static JPanel initHomeScreen(Navigator nav) {
         Map<String, Object> controllers = new HashMap<>();
 
         CustomizationGateway customizationGateway = new CustomizationGatewayImplementation();
@@ -103,12 +107,19 @@ public class Main {
                 deleteContactPresenter);
         DeleteContactController deleteContactController = new DeleteContactController(deleteContactInteractor);
 
+        UserAddContactGateway addContactGateway = new UserAddContactPersistance();
+        AddContactOutputBoundary addContactPresenter = new AddContactPresenter();
+        AddContactInputBoundary addContactInteractor = new AddContactInteractor(addContactGateway,
+                addContactPresenter);
+        AddContactController addContactController = new AddContactController(addContactInteractor);
+
         controllers.put("customization", customizationController);
         controllers.put("message_search", messageSearchController);
         controllers.put("message_edit", messageEditController);
         controllers.put("message_delete", messageDeleteController);
         controllers.put("send", sendMessageController);
         controllers.put("delete_contact", deleteContactController);
+        controllers.put("add_contact", addContactController);
 
         return new HomeScreen(getLangs(), controllers, nav);
     }
@@ -154,11 +165,6 @@ public class Main {
         LoginController userLoginController = new LoginController(interactor);
 
         return new LoginScreen(userLoginController, nav);
-    }
-
-    @NotNull
-    private static JPanel initChatScreen(Navigator nav, DBService db) {
-        return new JPanel();
     }
 
 }

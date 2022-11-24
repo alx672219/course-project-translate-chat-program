@@ -69,7 +69,8 @@ public class HomeScreen extends JPanel implements ActionListener{
     private void addContactScreen(JPanel panel) {
         try {
             ContactScreen contactScreen =  new ContactScreen(currUser.getUser_id(),
-                    (DeleteContactController) controllers.get("delete_contact"));
+                    (DeleteContactController) controllers.get("delete_contact"),
+                    (AddContactController) controllers.get("add_contact"));
             panel.add(contactScreen, BorderLayout.SOUTH);
             panel.putClientProperty("contact", contactScreen);
         } catch (ExecutionException | InterruptedException e) {

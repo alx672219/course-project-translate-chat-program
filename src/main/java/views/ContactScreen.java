@@ -1,5 +1,6 @@
 package views;
 
+import contact_usecases.add_contact_use_case.AddContactData;
 import contact_usecases.delete_contact_use_case.DeleteContactData;
 import entities.User;
 import services.DBInitializer;
@@ -23,14 +24,16 @@ public class ContactScreen extends JPanel implements ActionListener {
     DBService dbService;
     int userID;
     DeleteContactController dcController;
+    AddContactController acController;
 
     JTable table;
     DefaultTableModel model;
     JTextField tfUserid;
-    public ContactScreen(int userID, DeleteContactController dcController) throws ExecutionException, InterruptedException {
+    public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController) throws ExecutionException, InterruptedException {
         this.userID = userID;
         this.dbService = new DBService();
         this.dcController = dcController;
+        this.acController = acController;
         //Columns
         String[] colNames = new String[]{"User ID"};
         this.model = new DefaultTableModel(colNames, 0);
@@ -89,8 +92,7 @@ public class ContactScreen extends JPanel implements ActionListener {
         if (rowIndex == -1) {
             return rowIndex;
         } else {
-            int contactID = members.get(rowIndex).userid.intValue();
-            return contactID;
+            return members.get(rowIndex).userid.intValue();
         }
     }
 
@@ -128,35 +130,15 @@ public class ContactScreen extends JPanel implements ActionListener {
             this.tfUserid.setText("");
 
 
-            Long userid = Long.parseLong(rows[0]);
-
-
-            User targetUser;
-            try {
-
-                targetUser = dbService.getUserDetails(userID);
-
-            } catch (ExecutionException | InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+            long contactID = Long.parseLong(rows[0]);
 
             try {
-                if (userid.intValue() == userID) {
-                    JOptionPane.showMessageDialog(this, "You can't add yourself as a contact!");
-                } else if (dbService.getUserDetails(userid.intValue()) == null) {
-                    JOptionPane.showMessageDialog(this, "There is no user with this ID.");
-                } else if (targetUser.getContacts().contains(userid)) {
-                    JOptionPane.showMessageDialog(this, "You already have a contact with this ID.");
-                } else {
-                    dbService.addContact(targetUser, userid);
-                    model.addRow(rows);
-                    members.add(new MemberVO(userid));
-                }
-
-            } catch (ExecutionException | InterruptedException ex) {
-                throw new RuntimeException(ex);
+                this.acController.addContact(new AddContactData(userID, (int) contactID));
+                model.addRow(rows);
+                members.add(new MemberVO(contactID));
+            } catch (Exception error) {
+                JOptionPane.showMessageDialog(this, error.getMessage());
             }
-
 
 
         }
