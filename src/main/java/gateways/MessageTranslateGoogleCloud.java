@@ -1,7 +1,7 @@
 package gateways;
 
-import atranslate_use_case.MessageTranslateData;
-import atranslate_use_case.MessageTranslateGateway;
+import translate_use_case.MessageTranslateData;
+import translate_use_case.MessageTranslateGateway;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;
@@ -10,7 +10,6 @@ import com.google.cloud.translate.Translation;
 
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MessageTranslateGoogleCloud implements MessageTranslateGateway {

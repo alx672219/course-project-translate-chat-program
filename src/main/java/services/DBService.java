@@ -3,6 +3,7 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firestore.v1.Document;
 import com.google.firestore.v1.Write;
 import entities.User;
 
@@ -105,6 +106,7 @@ public class DBService {
         }
     }
 
+
     /**
      * Returns a list of all the user ids that are currently registered for the app.
      * @return a list of all user ids currently registered for the app.
@@ -186,7 +188,7 @@ public class DBService {
                 // Convert it into a User class
                 User recipient = recipientRef.get().get().toObject(User.class);
 
-                Integer id = Integer.parseInt((String) messageRef.get().get().getData().get("id"));
+                Integer id = ((Long) messageRef.get().get().getData().get("id")).intValue();
                 String messageText = (String) messageRef.get().get().getData().get("message");
 
                 String timestamp = messageRef.get().get().getData().get("timestamp").toString();
@@ -216,6 +218,47 @@ public class DBService {
             ret.add(uid);
         }
         return ret;
+    }
+
+    public ArrayList<Message> getAllMessages(int chatID) throws ExecutionException, InterruptedException, ParseException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        String documentName = "id" + chatID;
+        DocumentReference documentReference = dbFireStore.collection("chats").document(documentName);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        DocumentSnapshot document = future.get();
+
+        Chat chat = null;
+
+        if (document.exists()) {
+            // Convert document reference to class
+            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) document.getData().get("messages");
+            ArrayList<Message> messages = new ArrayList<>();
+            for (DocumentReference messageRef: messageRefs) {
+                // Get the document reference of the message's receiver object instance
+                DocumentReference receiverRef = (DocumentReference) messageRef.get().get().getData().get("receiver");
+                // Convert it into a User class
+                User receiver = receiverRef.get().get().toObject(User.class);
+
+                // Get the document reference of the message's receiver object instance
+                DocumentReference recipientRef = (DocumentReference) messageRef.get().get().getData().get("recipient");
+                // Convert it into a User class
+                User recipient = recipientRef.get().get().toObject(User.class);
+
+                Integer id = ((Long) messageRef.get().get().getData().get("id")).intValue();
+                String messageText = (String) messageRef.get().get().getData().get("message");
+
+                String timestamp = messageRef.get().get().getData().get("timestamp").toString();
+                Date date = new SimpleDateFormat("dd-MM-yyyy").parse(timestamp);
+
+                Message message = new Message(id, messageText, receiver, recipient, date);
+                messages.add(message);
+            }
+
+            return messages;
+        } else {
+            return null;
+        }
     }
 
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {

@@ -1,5 +1,11 @@
-import gateways.UserLoginFirebaseSystem;
-import gateways.UserRegistrationFirebaseSystem;
+import entities.Message;
+import entities.User;
+import gateways.*;
+import message_edit_delete_use_case.*;
+import message_search_use_case.MessageSearchGateway;
+import message_search_use_case.MessageSearchInputBoundary;
+import message_search_use_case.MessageSearchInteractor;
+import message_search_use_case.MessageSearchOutputBoundary;
 import org.jetbrains.annotations.NotNull;
 import services.DBInitializer;
 import services.DBService;
@@ -16,10 +22,13 @@ import user_register_use_case.UserRegisterInputBoundary;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException {
         // Set up Database
         try {
             new DBInitializer().init();
@@ -37,15 +46,17 @@ public class Main {
         // Initialize screens
         JPanel registerScreen = initRegisterScreen(nav, dbs);
         JPanel loginSreen = initLoginScreen(nav, dbs);
-        JPanel chatScreen = initChatScreen(nav, dbs);
+        JPanel chatScreen = initChatScreen(nav, dbs, 3, 3, 4);
+
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.add(loginSreen, "login");
+        screens.add(chatScreen, "chatScreen");
 
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setSize(640, 640);
         application.setVisible(true);
-        nav.showScreen("register");
+        nav.showScreen("chatScreen");
     }
     @NotNull
     private static JPanel initRegisterScreen(Navigator nav, DBService db) {
@@ -83,10 +94,33 @@ public class Main {
     }
 
     @NotNull
-    private static JPanel initChatScreen(Navigator nav, DBService db) {
+    private static JPanel initChatScreen(Navigator nav, DBService db, int chatID,
+                                         int senderID, int receiverID) throws ParseException, ExecutionException, InterruptedException {
+
+        MessageEditGateway eGateway = new MessageEditFirebaseSystem();
+        MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
+        MessageEditInputBoundary eInteractor  = new MessageEditInteractor(eGateway, ePresenter);
+        MessageEditController eController = new MessageEditController(eInteractor);
+
+        MessageDeleteGateway dGateway = new MessageDeleteFirebaseSystem();
+        MessageDeleteOutputBoundary dPresenter = new MessageDeletePresenter();
+        MessageDeleteInputBoundary dInteractor  = new MessageDeleteInteractor(dGateway, dPresenter);
+        MessageDeleteController dController = new MessageDeleteController(dInteractor);
+
+        MessageSearchGateway sGateway = new MessageSearchFirebaseSystem();
+        MessageSearchOutputBoundary sPresenter = new MessageSearchPresenter();
+        MessageSearchInputBoundary sInteractor  = new MessageSearchInteractor(sGateway, sPresenter);
+        MessageSearchController sController = new MessageSearchController(sInteractor);
+
         MessageInputBoundary messageInteractor = new MessageInteractor();
         SendMessageController sendMessageController = new SendMessageController(messageInteractor);
-        return null;
+
+        ArrayList<Message> messages = db.getAllMessages(chatID);
+
+        User sender = db.getUserDetails(senderID);
+        String senderName = sender.getName();
+
+        return new ChatScreen(nav, 4, 5, 3, senderName, eController, dController, sController, sendMessageController, messages);
     }
 
 }

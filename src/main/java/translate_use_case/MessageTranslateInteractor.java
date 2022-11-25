@@ -1,4 +1,4 @@
-package atranslate_use_case;
+package translate_use_case;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ public class MessageTranslateInteractor implements MessageTranslateInputBoundary
     }
 
     @Override
-    public MessageTranslateResponse convert(MessageTranslateData data) throws IOException {
+    public MessageTranslateResponse translate(MessageTranslateData data) throws IOException {
 
         //Do failure cases
 
