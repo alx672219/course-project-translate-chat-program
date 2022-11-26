@@ -1,19 +1,14 @@
 package gateways;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
 import entities.Chat;
 import entities.Message;
-import entities.User;
 import services.DBService;
+import user_send_message.SendMessageGateway;
 
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 
-public class SendMessageGateway {
+public class SendMessageGatewayImplementation implements SendMessageGateway {
     /** Gets Chat corresponding to chatID
      *
      * @param chatID
@@ -21,10 +16,11 @@ public class SendMessageGateway {
      */
     DBService dbService;
 
-    public SendMessageGateway() {
+    public SendMessageGatewayImplementation() {
         dbService = new DBService();
     }
 
+    @Override
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
         dbService.addChat(chat);
     }

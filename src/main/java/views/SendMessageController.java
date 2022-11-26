@@ -13,11 +13,9 @@ import java.util.concurrent.ExecutionException;
 
 public class SendMessageController {
     private final MessageInputBoundary messageInputBoundary;
-    private final MessageOutputBoundary messageOutputBoundary;
 
-    public SendMessageController(MessageInputBoundary messageInputBoundary, MessageOutputBoundary messageOutputBoundary) {
+    public SendMessageController(MessageInputBoundary messageInputBoundary) {
         this.messageInputBoundary = messageInputBoundary;
-        this.messageOutputBoundary = messageOutputBoundary;
     }
 
     public void createChat(int chatID) throws ExecutionException, InterruptedException {

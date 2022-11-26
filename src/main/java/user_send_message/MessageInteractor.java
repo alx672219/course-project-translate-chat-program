@@ -3,10 +3,9 @@ package user_send_message;
 import entities.Chat;
 import entities.Message;
 import entities.User;
-import gateways.SendMessageGateway;
+import gateways.SendMessageGatewayImplementation;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 //import entities.TextMessage;
@@ -14,8 +13,8 @@ import java.util.concurrent.ExecutionException;
 public class MessageInteractor implements MessageInputBoundary {
     SendMessageGateway sendMessageGateway;
 
-    public MessageInteractor() {
-        sendMessageGateway = new SendMessageGateway();
+    public MessageInteractor(SendMessageGateway sendMessageGateway) {
+        this.sendMessageGateway = sendMessageGateway;
     }
 
     @Override
@@ -29,7 +28,7 @@ public class MessageInteractor implements MessageInputBoundary {
         MessageFactory messageFactory = new MessageFactory();
         Message messsageToSend = messageFactory.createMessage(chatID, id, message, receiver, recipient, timestamp);
         // Gateway
-        SendMessageGateway sendMessageGateway = new SendMessageGateway();
+        SendMessageGatewayImplementation sendMessageGateway = new SendMessageGatewayImplementation();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
     }
 

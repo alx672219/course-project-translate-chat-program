@@ -83,30 +83,37 @@ public class ProfileScreen extends JPanel implements ActionListener{
         String password = new String(this.passField.getPassword());
         String default_lang = langs.get((String) this.langBox.getSelectedItem());
 
-        if (source.equals("set name")) {
-            try {
-                controller.changeName(name, default_lang, password, user);
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(this, exception.getMessage());
+        switch (source) {
+            case "set name" -> {
+                try {
+                    controller.changeName(name, default_lang, password, user);
+                    JOptionPane.showMessageDialog(this, "Updated name!");
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(this, exception.getMessage());
+                }
+                user.setName(name);
+                System.out.println(user.getName());
             }
-            user.setName(name);
-            System.out.println(user.getName());
-        } else if (source.equals("set password")) {
-            System.out.println(password.length());
-            try {
-                controller.changePassword(name, default_lang, password, user);
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(this, exception.getMessage());
+            case "set password" -> {
+                System.out.println(password.length());
+                try {
+                    controller.changePassword(name, default_lang, password, user);
+                    JOptionPane.showMessageDialog(this, "Updated password!");
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(this, exception.getMessage());
+                }
+                user.setPassword(password);
+                System.out.println(user.getPassword());
             }
-            user.setPassword(password);
-            System.out.println(user.getPassword());
-        } else if (source.equals("set default language")) {
-            try {
-                controller.changeLanguage(name, default_lang, password, user);
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(this, exception.getMessage());
+            case "set default language" -> {
+                try {
+                    controller.changeLanguage(name, default_lang, password, user);
+                    JOptionPane.showMessageDialog(this, "Updated default language!");
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(this, exception.getMessage());
+                }
+                user.setDefault_lang(default_lang);
             }
-            user.setDefault_lang(default_lang);
         }
     }
 
