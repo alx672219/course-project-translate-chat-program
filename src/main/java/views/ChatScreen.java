@@ -192,9 +192,15 @@ public class ChatScreen extends JPanel {
             messageArea.setEditable(false);
             messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
             messageArea.setText("<" + senderName + ">:  " + currMessage.getMessage());
+            List<Integer> ids = new ArrayList<>();
+            ids.add(currMessage.getId());
+            ids.add(chatID);
+            List<Object> controllers = new ArrayList<>();
+            controllers.add(editController);
+            controllers.add(deleteController);
+            messageArea.addMouseListener(new EditDeletePopupListener(ids, controllers, messageArea,
+                    (JPanel) messageBox.getParent(), chatBox, senderName));
             //chatBox.setCaretPosition(chatBox.getDocument().getLength());
-            chatBox.setSelectionStart(chatBox.getDocument().getLength());
-            chatBox.setSelectionEnd(chatBox.getDocument().getLength());
             chatBox.insertComponent(messageArea);
 
             try {
@@ -216,6 +222,7 @@ public class ChatScreen extends JPanel {
         messageArea.setEditable(false);
         messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
         messageArea.setText("<" + senderName + ">:  " + messageBox.getText());
+
         //chatBox.setCaretPosition(chatBox.getDocument().getLength());
         chatBox.setSelectionStart(chatBox.getDocument().getLength());
         chatBox.setSelectionEnd(chatBox.getDocument().getLength());
@@ -225,23 +232,16 @@ public class ChatScreen extends JPanel {
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         }
-        // Persists message to database
-        sendMessage();
 
-        // Clear the message box for new input
-        messageBox.setText("");
-
-        // Clear the message box for new input
-        messageBox.setText("");
 
         return messageArea;
     }
 
-    public void sendMessage() {
+    public int sendMessage() {
         Date curr_date = new Date();
 
         try {
-            sendMessageController.sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date);
+            return sendMessageController.sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date).getMessage().getId();
         } catch (ExecutionException | InterruptedException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -256,9 +256,13 @@ public class ChatScreen extends JPanel {
                 messageBox.setText("");
             } else {
                 JTextArea messageArea = displayMessage();
+                // Persists message to database
+                int msgID = sendMessage();
+                // Clear the message box for new input
+                messageBox.setText("");
 
                 List<Integer> ids = new ArrayList<>();
-//                ids.add(nextMessageID);
+                ids.add(msgID);
                 ids.add(chatID); //Change to chatID later
 
                 List<Object> controllers = new ArrayList<>();
@@ -300,7 +304,7 @@ public class ChatScreen extends JPanel {
 
         public void doPop(MouseEvent e){
             EditDeletePopupMenu editDeletePopupMenu = new EditDeletePopupMenu(this.ids, this.controllers, message, parentPanel, chatBox, userName);
-            editDeletePopupMenu.show(e.getComponent(), e.getXOnScreen(), e.getYOnScreen());
+            editDeletePopupMenu.show(e.getComponent(), e.getX(), e.getY());
 
 
         }

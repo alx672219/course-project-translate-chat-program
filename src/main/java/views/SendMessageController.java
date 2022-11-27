@@ -5,6 +5,7 @@ import entities.Message;
 import entities.User;
 import user_send_message.MessageInputBoundary;
 import user_send_message.MessageOutputBoundary;
+import user_send_message.SendMessageResponse;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -30,8 +31,8 @@ public class SendMessageController {
      * @param senderID
      * @param timestamp
      */
-    public void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
-        this.messageInputBoundary.sendMessage(chatID, message, senderID, receiverID, timestamp);
+    public SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
+        return this.messageInputBoundary.sendMessage(chatID, message, senderID, receiverID, timestamp);
     }
 
 }

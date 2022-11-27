@@ -20,7 +20,7 @@ public class MessageInteractor implements MessageInputBoundary {
     }
 
     @Override
-    public void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
+    public SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
 //        Chat currChat = dbService.getChatDetails(chatID);
 
         User sender = sendMessageGateway.getUserDetails(senderID);
@@ -37,6 +37,8 @@ public class MessageInteractor implements MessageInputBoundary {
         // Gateway
         SendMessageGatewayImplementation sendMessageGateway = new SendMessageGatewayImplementation();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
+        SendMessageResponse response = new SendMessageResponse(messsageToSend, true, null);
+        return response;
     }
 
 }

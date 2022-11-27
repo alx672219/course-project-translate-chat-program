@@ -6,6 +6,8 @@ import contact_usecases.delete_contact_use_case.DeleteContactInputBoundary;
 import contact_usecases.delete_contact_use_case.DeleteContactInteractor;
 import contact_usecases.delete_contact_use_case.DeleteContactOutputBoundary;
 import contact_usecases.delete_contact_use_case.UserDeleteContactGateway;
+import entities.Message;
+import entities.User;
 import gateways.*;
 import message_edit_delete_use_case.*;
 import message_search_use_case.MessageSearchGateway;
@@ -33,11 +35,14 @@ import user_register_use_case.UserRegisterInputBoundary;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException {
         // Set up Database
         try {
             new DBInitializer().init();
@@ -56,6 +61,7 @@ public class Main {
         JPanel registerScreen = initRegisterScreen(nav, dbs);
         JPanel loginSreen = initLoginScreen(nav, dbs);
         JPanel homeScreen = initHomeScreen(nav);
+        JPanel chatScreen = initChatScreen(nav, dbs, 3, 3, 4);
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.putClientProperty("register", registerScreen);
@@ -63,11 +69,12 @@ public class Main {
         screens.putClientProperty("login", loginSreen);
         screens.add(homeScreen, "home");
         screens.putClientProperty("home", homeScreen);
+        screens.add(chatScreen, "chat");
 
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setSize(640, 640);
         application.setVisible(true);
-        nav.showScreen("register");
+        nav.showScreen("chat");
     }
     @NotNull
     private static JPanel initHomeScreen(Navigator nav) {
@@ -167,4 +174,37 @@ public class Main {
         return new LoginScreen(userLoginController, nav);
     }
 
+    @NotNull
+    private static JPanel initChatScreen(Navigator nav, DBService db, int chatID,
+                                         int senderID, int receiverID) throws ParseException, ExecutionException, InterruptedException {
+
+        MessageEditGateway eGateway = new MessageEditFirebaseSystem();
+        MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
+        MessageEditInputBoundary eInteractor = new MessageEditInteractor(eGateway, ePresenter);
+        MessageEditController eController = new MessageEditController(eInteractor);
+
+        MessageDeleteGateway dGateway = new MessageDeleteFirebaseSystem();
+        MessageDeleteOutputBoundary dPresenter = new MessageDeletePresenter();
+        MessageDeleteInputBoundary dInteractor = new MessageDeleteInteractor(dGateway, dPresenter);
+        MessageDeleteController dController = new MessageDeleteController(dInteractor);
+
+        MessageSearchGateway sGateway = new MessageSearchFirebaseSystem();
+        MessageSearchOutputBoundary sPresenter = new MessageSearchPresenter();
+        MessageSearchInputBoundary sInteractor = new MessageSearchInteractor(sGateway, sPresenter);
+        MessageSearchController sController = new MessageSearchController(sInteractor);
+
+        SendMessageGateway gateway = new SendMessageGatewayImplementation();
+        MessageInputBoundary messageInteractor = new MessageInteractor(gateway);
+        SendMessageController sendMessageController = new SendMessageController(messageInteractor);
+
+        ArrayList<Message> messages = db.getAllMessages(chatID);
+
+        User sender = db.getUserDetails(senderID);
+        String senderName = sender.getName();
+
+        return new ChatScreen(nav, 4, 5, 3, senderName, eController, dController, sController, sendMessageController, messages);
+    }
 }
+
+
+

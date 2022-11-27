@@ -67,15 +67,13 @@ public class EditDeletePopupMenu extends JPopupMenu {
             }
         }
     }
-    class DeleteActionListener implements  ActionListener{
+    class DeleteActionListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
                 ((MessageDeleteController) controllers.get(1)).delete(new MessageDeleteData(ids.get(0), ids.get(1)));
-                //chatBox.remove(message);
-                //chatBox.revalidate();
-                //chatBox.repaint();
+                message.setText("");
             } catch (ExecutionException | InterruptedException ex){
 
                 JOptionPane.showMessageDialog(parentPanel, "Something went wrong! Please try again!");
