@@ -1,35 +1,15 @@
 package views;
 
-import entities.Chat;
 import entities.Message;
-import entities.User;
 
-import gateways.MessageDeleteFirebaseSystem;
-import gateways.MessageEditFirebaseSystem;
-import message_edit_delete_use_case.*;
-
-import gateways.MessageSearchFirebaseSystem;
-import message_search_use_case.MessageSearchGateway;
-import message_search_use_case.MessageSearchInputBoundary;
-import message_search_use_case.MessageSearchInteractor;
-import message_search_use_case.MessageSearchOutputBoundary;
-
-import services.DBInitializer;
-import services.DBService;
-import user_send_message.MessageInputBoundary;
-import user_send_message.MessageInteractor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -45,22 +25,8 @@ public class ChatScreen extends JPanel {
     JButton     sendMessage;
     JTextField  messageBox;
     JTextPane chatBox;
-    JTextField  usernameChooser;
-    JFrame      preFrame;
 
-    DBInitializer dbInitializer;
-
-    String  username;
-
-    User sender;
-
-    User receiver;
-
-    MessageEditController editController;
-    MessageDeleteController deleteController;
-    MessageSearchController searchController;
-
-    SendMessageController sendMessageController;
+    Map<String, Object> controllers;
 
     int chatID;
 
@@ -73,6 +39,7 @@ public class ChatScreen extends JPanel {
     ArrayList<Message> messages;
 
     Navigator nav;
+    String lang;
 
 //    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException, FileNotFoundException {
 //
@@ -108,20 +75,15 @@ public class ChatScreen extends JPanel {
 //    }
 
     public ChatScreen(Navigator nav, int senderID, int receiverID, int chatID, String senderName,
-                      MessageEditController editController, MessageDeleteController deleteController,
-                      MessageSearchController searchController, SendMessageController sendMessageController,
-                      ArrayList<Message> messages) {
-        this.deleteController = deleteController;
-        this.editController = editController;
-        this.searchController = searchController;
+                      Map<String, Object> controllers, ArrayList<Message> messages, String lang) {
+        this.controllers = controllers;
         this.chatID = chatID;
         this.senderID = senderID;
         this.receiverID = receiverID;
         this.senderName = senderName;
-        this.sendMessageController = sendMessageController;
         this.messages = messages;
         this.nav = nav;
-
+        this.lang = lang;
         this.mainGUI = this;
         this.runChatScreen();
     }
@@ -146,19 +108,20 @@ public class ChatScreen extends JPanel {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        JPanel searchBarPanel = new SearchBarPanel(searchController, chatID);
+        JPanel searchBarPanel = new SearchBarPanel((MessageSearchController) controllers.get("search"), chatID);
 
         mainPanel.add(searchBarPanel, BorderLayout.NORTH);
 
         JPanel southPanel = new JPanel();
         southPanel.setBackground(Color.BLUE);
-        southPanel.setLayout(new GridBagLayout());
+        BoxLayout boxLayout = new BoxLayout(southPanel, BoxLayout.X_AXIS);
+        southPanel.setLayout(boxLayout);
 
         messageBox = new JTextField(30);
         messageBox.requestFocusInWindow();
 
         sendMessage = new JButton("Send Message");
-        sendMessage.addActionListener(new sendMessageButtonListener());
+        sendMessage.addActionListener(new sendMessageButtonListener(this));
 
         chatBox = new JTextPane();
         chatBox.setEditable(false);
@@ -166,22 +129,14 @@ public class ChatScreen extends JPanel {
         //chatBox.setLineWrap(true);
 
         mainPanel.add(new JScrollPane(chatBox), BorderLayout.CENTER);
+        JPanel recordButton = new RecordButton((AudioRecorderController) controllers.get("audio_record"),
+                (AudioConvertController) controllers.get("audio_convert"),
+                (MessageTranslateController) controllers.get("message_translate"), this.lang, messageBox);
 
-        GridBagConstraints left = new GridBagConstraints();
-        left.anchor = GridBagConstraints.LINE_START;
-        left.fill = GridBagConstraints.HORIZONTAL;
-        left.weightx = 512.0D;
-        left.weighty = 1.0D;
 
-        GridBagConstraints right = new GridBagConstraints();
-        right.insets = new Insets(0, 10, 0, 0);
-        right.anchor = GridBagConstraints.LINE_END;
-        right.fill = GridBagConstraints.NONE;
-        right.weightx = 1.0D;
-        right.weighty = 1.0D;
-
-        southPanel.add(messageBox, left);
-        southPanel.add(sendMessage, right);
+        southPanel.add(messageBox);
+        southPanel.add(sendMessage);
+        southPanel.add(recordButton);
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
 
@@ -195,11 +150,11 @@ public class ChatScreen extends JPanel {
             List<Integer> ids = new ArrayList<>();
             ids.add(currMessage.getId());
             ids.add(chatID);
-            List<Object> controllers = new ArrayList<>();
-            controllers.add(editController);
-            controllers.add(deleteController);
-            messageArea.addMouseListener(new EditDeletePopupListener(ids, controllers, messageArea,
-                    (JPanel) messageBox.getParent(), chatBox, senderName));
+            List<Object> conts = new ArrayList<>();
+            conts.add(controllers.get("edit"));
+            conts.add(controllers.get("delete"));
+            messageArea.addMouseListener(new messageAreaListener(ids, conts, messageArea,
+                    (JPanel) messageBox.getParent(), chatBox, senderName, lang));
             //chatBox.setCaretPosition(chatBox.getDocument().getLength());
             chatBox.insertComponent(messageArea);
 
@@ -241,16 +196,21 @@ public class ChatScreen extends JPanel {
         Date curr_date = new Date();
 
         try {
-            return sendMessageController.sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date).getMessage().getId();
+            return ((SendMessageController) controllers.get("send")).sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date).getMessage().getId();
         } catch (ExecutionException | InterruptedException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
     class sendMessageButtonListener implements ActionListener {
+        JPanel parent;
+        public sendMessageButtonListener(JPanel parent) {
+            this.parent = parent;
+        }
+
         public void actionPerformed(ActionEvent event) {
             if (messageBox.getText().length() < 1) {
-                // do nothing
+                JOptionPane.showMessageDialog(parent, "Type something in!");
             } else if (messageBox.getText().equals(".clear")) {
                 chatBox.setText("Cleared all messages\n");
                 messageBox.setText("");
@@ -265,41 +225,47 @@ public class ChatScreen extends JPanel {
                 ids.add(msgID);
                 ids.add(chatID); //Change to chatID later
 
-                List<Object> controllers = new ArrayList<>();
-                controllers.add(editController);
-                controllers.add(deleteController);
+                List<Object> conts = new ArrayList<>();
+                conts.add(controllers.get("edit"));
+                conts.add(controllers.get("delete"));
 
-                messageArea.addMouseListener(new EditDeletePopupListener(ids, controllers, messageArea,
-                        (JPanel) messageBox.getParent(), chatBox, senderName));
+                messageArea.addMouseListener(new messageAreaListener(ids, conts, messageArea,
+                        (JPanel) messageBox.getParent(), chatBox, senderName, lang));
 
             }
 
             messageBox.requestFocusInWindow();
         }
     }
-    static class EditDeletePopupListener extends MouseAdapter{
+    static class messageAreaListener extends MouseAdapter {
         List<Integer> ids;
         List<Object> controllers;
         JTextArea message;
         JPanel parentPanel;
         JTextPane chatBox;
         String userName;
+        String lang;
 
 
-        public EditDeletePopupListener(List<Integer> ids, List<Object> controllers, JTextArea message, JPanel parentPanel, JTextPane
-            chatBox, String userName){
+        public messageAreaListener(List<Integer> ids, List<Object> controllers, JTextArea message, JPanel parentPanel, JTextPane
+            chatBox, String userName, String lang){
             this.ids = ids;
             this.controllers = controllers;
             this.message = message;
             this.parentPanel = parentPanel;
             this.chatBox = chatBox;
             this.userName = userName;
+            this.lang = lang;
 
         }
         public void mousePressed(MouseEvent e){
             if(e.isPopupTrigger()){
                 doPop(e);
-            }}
+            } else {
+                LabelAdapter labelAdapter = new LabelAdapter(lang);
+                labelAdapter.mouseClicked(e);
+            }
+        }
 
 
         public void doPop(MouseEvent e){
@@ -311,7 +277,8 @@ public class ChatScreen extends JPanel {
         public void mouseReleased(MouseEvent e){
             if(e.isPopupTrigger()){
                 doPop(e);
-            }}
+            }
+        }
 
 
     }

@@ -1,3 +1,7 @@
+import audio_converter_use_case.AudioConvertInteractor;
+import audio_converter_use_case.AudioConvertPresenter;
+import audio_recorder_use_case.AudioRecorderInteractor;
+import audio_recorder_use_case.AudioRecorderPresenter;
 import contact_usecases.add_contact_use_case.AddContactInputBoundary;
 import contact_usecases.add_contact_use_case.AddContactInteractor;
 import contact_usecases.add_contact_use_case.AddContactOutputBoundary;
@@ -21,6 +25,8 @@ import profile_customization_use_case.CustomizationInteractor;
 import profile_customization_use_case.CustomizationOutputBoundary;
 import services.DBInitializer;
 import services.DBService;
+import translate_use_case.MessageTranslateInteractor;
+import translate_use_case.MessageTranslatePresenter;
 import user_login_use_case.LoginInputBoundary;
 import user_login_use_case.UserLoginGateway;
 import user_login_use_case.UserLoginInteractor;
@@ -61,7 +67,12 @@ public class Main {
         JPanel registerScreen = initRegisterScreen(nav, dbs);
         JPanel loginSreen = initLoginScreen(nav, dbs);
         JPanel homeScreen = initHomeScreen(nav);
-        JPanel chatScreen = initChatScreen(nav, dbs, 3, 3, 4);
+        JPanel chatScreen;
+        try {
+            chatScreen = initChatScreen(nav, dbs, 3, 3, 4);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.putClientProperty("register", registerScreen);
@@ -176,7 +187,7 @@ public class Main {
 
     @NotNull
     private static JPanel initChatScreen(Navigator nav, DBService db, int chatID,
-                                         int senderID, int receiverID) throws ParseException, ExecutionException, InterruptedException {
+                                         int senderID, int receiverID) throws ParseException, ExecutionException, InterruptedException, IOException {
 
         MessageEditGateway eGateway = new MessageEditFirebaseSystem();
         MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
@@ -197,12 +208,36 @@ public class Main {
         MessageInputBoundary messageInteractor = new MessageInteractor(gateway);
         SendMessageController sendMessageController = new SendMessageController(messageInteractor);
 
+        AudioConvertPresenter ACP = new AudioConvertPresenter();
+        AudioConvertGoogleCloud ACGC = new AudioConvertGoogleCloud("speech-key.json");
+        AudioConvertInteractor ACI = new AudioConvertInteractor(ACGC, ACP);
+
+        AudioRecorderPresenter ARP = new AudioRecorderPresenter();
+        AudioRecorder AR = new AudioRecorder();
+        AudioRecorderInteractor ARI = new AudioRecorderInteractor(AR, ARP);
+
+        MessageTranslateGoogleCloud MTGC = new MessageTranslateGoogleCloud("speech-key.json");
+        MessageTranslatePresenter MTP = new MessageTranslatePresenter();
+        MessageTranslateInteractor MTI = new MessageTranslateInteractor(MTGC, MTP);
+        MessageTranslateController MTC = new MessageTranslateController(MTI);
+
+        AudioConvertController ACC = new AudioConvertController(ACI);
+        AudioRecorderController ARC = new AudioRecorderController(ARI);
+
         ArrayList<Message> messages = db.getAllMessages(chatID);
 
         User sender = db.getUserDetails(senderID);
         String senderName = sender.getName();
+        Map<String, Object> controllers = new HashMap<>();
+        controllers.put("send", sendMessageController);
+        controllers.put("edit", eController);
+        controllers.put("search", sController);
+        controllers.put("delete", dController);
+        controllers.put("audio_record", ARC);
+        controllers.put("audio_convert", ACC);
+        controllers.put("message_translate", MTC);
 
-        return new ChatScreen(nav, 4, 5, 3, senderName, eController, dController, sController, sendMessageController, messages);
+        return new ChatScreen(nav, 4, 5, 3, senderName, controllers, messages, "fr");
     }
 }
 

@@ -8,6 +8,7 @@ import gateways.MessageTranslateGoogleCloud;
 import translate_use_case.MessageTranslateInteractor;
 import translate_use_case.MessageTranslatePresenter;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class AudioMessageAndTranslate {
@@ -28,9 +29,11 @@ public class AudioMessageAndTranslate {
         AudioConvertController ACC = new AudioConvertController(ACI);
         AudioRecorderController ARC = new AudioRecorderController(ARI);
 
-        RecordButton rc = new RecordButton(ARC, ACC, MTC);
-
-        rc.setVisible(true);
+        RecordButton rc = new RecordButton(ARC, ACC, MTC, "fr", new JTextField());
+        JFrame app = new JFrame("Application");
+        app.add(rc);
+        app.pack();
+        app.setVisible(true);
 //        JFrame frame = new JFrame();
 //        frame.add(rc);
 //        frame.setVisible(true);
