@@ -1,14 +1,17 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Chat {
     private int id;
     private ArrayList<Message> messages;
+    private List<User> users;
 
-    public Chat(int id) {
+    public Chat(int id, List<User> users) {
         this.id = id;
         this.messages = new ArrayList<>();
+        this.users = users;
     }
 
     public Chat() { }
@@ -33,5 +36,13 @@ public class Chat {
 
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

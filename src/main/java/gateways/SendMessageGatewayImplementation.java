@@ -2,6 +2,7 @@ package gateways;
 
 import entities.Chat;
 import entities.Message;
+import entities.User;
 import services.DBService;
 import user_send_message.SendMessageGateway;
 
@@ -35,7 +36,7 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
         List<Integer> messageIDs = null;
 
         try {
-            messageIDs = dbService.getAllMessageIDs();
+            messageIDs = dbService.getAllIDs("messages");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

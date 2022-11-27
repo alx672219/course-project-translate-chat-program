@@ -13,11 +13,9 @@ public interface MessageInputBoundary {
     /**
      * Creates a message
      *
-     * @param data needed to create message instance
+     * @param senderID needed to create message instance
      * @return the message created
      */
-
-    void createChat(int chatID) throws ExecutionException, InterruptedException;
 
     void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException;
 }

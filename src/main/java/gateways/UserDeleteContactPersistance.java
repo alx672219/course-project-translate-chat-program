@@ -27,6 +27,7 @@ public class UserDeleteContactPersistance implements UserDeleteContactGateway {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+        dbService.deleteChat(userID, contactID);
         List<Integer> ids = new ArrayList<>();
         ids.add(userID);
         ids.add(contactID);

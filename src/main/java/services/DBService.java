@@ -12,7 +12,9 @@ import java.util.Map;
 
 import entities.Chat;
 import entities.Message;
+import org.checkerframework.checker.units.qual.A;
 
+import javax.print.Doc;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -197,7 +199,13 @@ public class DBService {
                 Message message = new Message(id, messageText, receiver, recipient, date);
                 messages.add(message);
             }
-            Chat targetChat = new Chat(chatID);
+            ArrayList<DocumentReference> usersRef = (ArrayList<DocumentReference>) document.getData().get("users");
+            ArrayList<User> users = new ArrayList<>();
+            for (DocumentReference userRef : usersRef) {
+                users.add(userRef.get().get().toObject(User.class));
+            }
+
+            Chat targetChat = new Chat(chatID, users);
             targetChat.setMessages(messages);
             return targetChat;
 
@@ -206,11 +214,11 @@ public class DBService {
         }
     }
 
-    public List<Integer> getAllMessageIDs() throws ExecutionException, InterruptedException {
+    public List<Integer> getAllIDs(String collection) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         ArrayList<Integer> ret = new ArrayList<>();
         // asynchronously retrieve all documents
-        ApiFuture<QuerySnapshot> future = db.collection("messages").get();
+        ApiFuture<QuerySnapshot> future = db.collection(collection).get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot query : documents) {
@@ -219,6 +227,8 @@ public class DBService {
         }
         return ret;
     }
+
+
 
     public ArrayList<Message> getAllMessages(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
@@ -266,14 +276,21 @@ public class DBService {
 
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", String.valueOf(chat.getId()));
-        ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
 
+        ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
         for (Message message: chat.getMessages()) {
             String messageID = "id" + message.getId();
             DocumentReference messageRef = dbFireStore.collection("messages").document(messageID);
             listMessagePaths.add(messageRef);
         }
+        ArrayList<DocumentReference> listUserPaths = new ArrayList<>();
+        for (User user : chat.getUsers()) {
+            String userID = "id" + user.getUser_id();
+            DocumentReference userRef = dbFireStore.collection("users").document(userID);
+            listUserPaths.add(userRef);
+        }
 
+        docData.put("users", listUserPaths);
         docData.put("messages", listMessagePaths);
         String docName = "id" + chat.getId();
         ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
@@ -307,5 +324,27 @@ public class DBService {
         DocumentReference chatRef = dbFirestore.collection("chats").document(chatDocName);
 
         ApiFuture<WriteResult> arrayUnion = chatRef.update("messages", FieldValue.arrayUnion(messageRef));
+    }
+
+    public void deleteChat(Integer userID, Integer contactID) {
+
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        try {
+            List<QueryDocumentSnapshot> docs = dbFirestore.collection("chats").get().get().getDocuments();
+            for (QueryDocumentSnapshot query : docs) {
+                List<DocumentReference> userRefs = (List<DocumentReference>) query.get("users");
+                List<Integer> ids = new ArrayList<>();
+                for (DocumentReference userRef : userRefs) {
+                    int id = ((Long) Objects.requireNonNull(userRef.get().get().getData()).get("user_id")).intValue();
+                    ids.add(id);
+                }
+                if (ids.contains(userID) && ids.contains(contactID)) {
+                    query.getReference().delete();
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

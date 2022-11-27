@@ -20,12 +20,6 @@ public class MessageInteractor implements MessageInputBoundary {
     }
 
     @Override
-    public void createChat(int chatID) throws ExecutionException, InterruptedException {
-        Chat chat = new Chat(chatID);
-        sendMessageGateway.addChat(chat);
-    }
-
-    @Override
     public void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
 //        Chat currChat = dbService.getChatDetails(chatID);
 

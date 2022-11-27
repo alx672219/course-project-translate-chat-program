@@ -20,16 +20,14 @@ public class SendMessageController {
 //        this.messageOutputBoundary = messageOutputBoundary;
     }
 
-    public void createChat(int chatID) throws ExecutionException, InterruptedException {
-        this.messageInputBoundary.createChat(chatID);
-    }
+
 
     /** Sends the created message
      *
-     * @param id
+     * @param chatID
      * @param message
-     * @param receiver
-     * @param recipient
+     * @param receiverID
+     * @param senderID
      * @param timestamp
      */
     public void sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
