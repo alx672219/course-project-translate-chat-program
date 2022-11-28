@@ -1,12 +1,6 @@
 package translate_use_case;
 
 public class MessageTranslateData {
-    /**
-     * Data class containing the information required to translate a message
-     * original is the original, untranslated text
-     * targetLanguage is the language to be translated into
-     * sourceLanguage is the original language of the string
-     */
     private final String original;
     private final String targetLanguage;
     private final String sourceLanguage;

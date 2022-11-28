@@ -21,11 +21,10 @@ public class MessageEditFirebaseSystem implements MessageEditGateway {
         try {
             DocumentSnapshot messageDoc = messageDocumentReference.get().get();
             Map<String, Object> msgData = messageDoc.getData();
+            assert msgData != null;
             msgData.put("message", text);
             messageDocumentReference.set(msgData);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
 

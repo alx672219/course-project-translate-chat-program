@@ -16,13 +16,12 @@ import java.io.IOException;
 import static views.RecordButton.MTC;
 
 
-public class RecordButton extends JFrame implements ActionListener {
+public class RecordButton extends JPanel implements ActionListener {
     JButton recordButton;
-    JPanel panel;
     JTextField textBox;
-    JLabel timeLabel;
     AudioRecorderController audioRecorderController;
     AudioConvertController audioConvertController;
+    String lang;
 
     static MessageTranslateController MTC;
     boolean recording;
@@ -31,46 +30,28 @@ public class RecordButton extends JFrame implements ActionListener {
 
     ImageIcon micImage;
 
-    public RecordButton(AudioRecorderController ARC, AudioConvertController ACC, MessageTranslateController MTC){
+    public RecordButton(AudioRecorderController ARC, AudioConvertController ACC, MessageTranslateController MTC, String lang, JTextField textBox){
 
         this.MTC = MTC; //#TODO remove after
-
+        this.lang = lang;
         this.setLayout(new FlowLayout())    ;
         this.recording = false;
         this.audioRecorderController = ARC;
         this.audioConvertController =  ACC;
-        this.panel = new JPanel();
-        this.textBox = new JTextField();
-        this.recordButton = new JButton();
-        this.timeLabel = new JLabel("test");
+        this.textBox = textBox;
+        this.recordButton = new JButton("Record");
 
         this.setSize(600, 200);
-        this.textBox.setPreferredSize(new Dimension(500, 50));
-        this.textBox.addMouseListener(new LabelAdapter());
         this.recordButton.setPreferredSize(new Dimension(50, 50));
         this.recordButton.setLocation(0, 75);
 
-        this.timeLabel.setPreferredSize(new Dimension(100, 50));
-        this.timeLabel.setLocation(100, 50);
-
-        Border Black = BorderFactory.createLineBorder(Color.BLACK);
-        this.timeLabel.setBorder(Black);
         recordButton.addActionListener(this);
 
-        this.add(textBox);
         this.add(recordButton);
-        this.add(timeLabel);
-
-
-
-        this.setDefaultCloseOperation(3);
-        this.setVisible(true);
-
-
     }
 public void display() throws IOException {
     String translation = audioConvertController
-            .convert(new AudioConvertData("src/main/Others/RecordedAudio.wav", "en"))
+            .convert(new AudioConvertData("src/main/Others/RecordedAudio.wav", lang))
             //#TODO this data should be gathered from the chat screen, once everything is put together
             .getResult();
     textBox.setText(translation);
@@ -91,14 +72,12 @@ public void display() throws IOException {
                             if (!recording) {
                                 break;
                             }
-                            timeLabel.setText(""+i);
                             Thread.sleep(1000);//The thread sleeps for as long as we record, this determines how long our recording is
                         }
                         System.out.println("yyayayay");
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                    timeLabel.setText("");
                     try {
                         display();
                     } catch (IOException ex) {
@@ -133,26 +112,22 @@ public void display() throws IOException {
 }
 class LabelAdapter extends MouseAdapter {
     TranslateScreen translator;
+
+    public LabelAdapter(String lang) {
+        this.lang = lang;
+    }
+
+    String lang;
+
     @Override
     public void mouseClicked(MouseEvent e) {
-        String text = ((JTextField) e.getSource()).getText();
+        String text = ((JTextArea) e.getSource()).getText();
+        String textToTrasnlate = text.substring(text.indexOf(":") + 3);
 
         try {
-            translator = new TranslateScreen(new MessageTranslateData(text, "fr", "en"), MTC);
+            translator = new TranslateScreen(new MessageTranslateData(textToTrasnlate, this.lang, "en"), MTC);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        translator.setDefaultCloseOperation(3);
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        if(translator != null){translator.dispose();}
-
     }
 }

@@ -14,13 +14,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class AudioConvertGoogleCloud implements AudioConvertGateway {
-    private String keyPath; //Path containing the json file with the API key
-    private SpeechClient speech;
-    private ByteString byteString;
-    private RecognitionConfig recognitionConfig;
+    private final SpeechClient speech;
 
     public AudioConvertGoogleCloud(String keyPath) throws IOException {
-        this.keyPath = keyPath;
+        //Path containing the json file with the API key
         this.speech = createSpeechClient(keyPath);
     }
 
@@ -31,7 +28,7 @@ public class AudioConvertGoogleCloud implements AudioConvertGateway {
         String FilePath = audioConvertData.getFilePath();
         String LanguageCode = audioConvertData.getLanguageCode();
 
-        StringBuilder translatedText = new StringBuilder("");
+        StringBuilder translatedText = new StringBuilder();
         ByteString audioBytes = createAudioBytes(FilePath);
         RecognitionConfig config = createRecognitionConfig(16000, 2, LanguageCode);
         RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
@@ -49,22 +46,18 @@ public class AudioConvertGoogleCloud implements AudioConvertGateway {
     }
 
     public ByteString createAudioBytes(String File) throws IOException {
-        String fileName = File;
-        Path path = Paths.get(fileName);
+        Path path = Paths.get(File);
         byte[] data = Files.readAllBytes(path);
-        ByteString audioBytes = ByteString.copyFrom(data);
 
-        return audioBytes;
+        return ByteString.copyFrom(data);
     }
     public RecognitionConfig createRecognitionConfig(int sampleRateHertz, int audioChannelCount, String LanguageCode){
-        RecognitionConfig config =
-                RecognitionConfig.newBuilder()
-                        .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                        .setSampleRateHertz(sampleRateHertz)
-                        .setAudioChannelCount(audioChannelCount)
-                        .setLanguageCode(LanguageCode)
-                        .build();
-        return config;
+        return RecognitionConfig.newBuilder()
+                .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
+                .setSampleRateHertz(sampleRateHertz)
+                .setAudioChannelCount(audioChannelCount)
+                .setLanguageCode(LanguageCode)
+                .build();
     }
     public SpeechClient createSpeechClient(String keyPath) throws IOException {
         SpeechSettings settings =
@@ -73,7 +66,6 @@ public class AudioConvertGoogleCloud implements AudioConvertGateway {
                                 .create(ServiceAccountCredentials
                                         .fromStream(new FileInputStream(keyPath))))
                         .build();
-        SpeechClient speech = SpeechClient.create(settings);
-        return speech;
+        return SpeechClient.create(settings);
     }
 }

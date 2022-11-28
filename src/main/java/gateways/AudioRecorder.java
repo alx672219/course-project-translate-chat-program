@@ -46,9 +46,8 @@ public class AudioRecorder implements AudioRecorderGateway {
         int channels = 2;
         boolean signed = true;
         boolean bigEndian = true;
-        AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
+        return new AudioFormat(sampleRate, sampleSizeInBits,
                 channels, signed, bigEndian);
-        return format;
     }
 
     @Override
@@ -60,21 +59,19 @@ public class AudioRecorder implements AudioRecorderGateway {
         if(recording){finish();}
         else {
             //Makes a new thread so we can record at the same time the program runs
-            Thread stopper = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        for (int i = 1; i <= MAX_RECORD_TIME-1; i++) {
-                            if (!recording) {
-                                break;
-                            }
-                            Thread.sleep(1000);//The thread sleeps for as long as we record, this determines how long our recording is
-                            if (i == MAX_RECORD_TIME-1) {
-                                finish();
-                            }
+            Thread stopper = new Thread(() -> {
+                try {
+                    for (int i = 1; i <= MAX_RECORD_TIME-1; i++) {
+                        if (!recording) {
+                            break;
                         }
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                        Thread.sleep(1000);//The thread sleeps for as long as we record, this determines how long our recording is
+                        if (i == MAX_RECORD_TIME-1) {
+                            finish();
+                        }
                     }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
             });
             stopper.start();

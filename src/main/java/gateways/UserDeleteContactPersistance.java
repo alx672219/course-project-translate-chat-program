@@ -1,16 +1,39 @@
 package gateways;
 
+import contact_usecases.delete_contact_use_case.UserDeleteContactGateway;
 import entities.User;
-import gateways.UserDeleteContactGateway;
 import services.DBService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class UserDeleteContactPersistance implements UserDeleteContactGateway {
+    DBService dbService;
+    public UserDeleteContactPersistance() {
+        dbService = new DBService();
+    }
+
     @Override
-    public void deleteContact(Long userID, Long contactID) throws ExecutionException, InterruptedException {
-        DBService dbService = new DBService();
-        User targetUser = dbService.getUserDetails(Integer.parseInt(String.valueOf(userID)));
-        dbService.deleteContact(targetUser, contactID);
+    public List<Integer> deleteContact(Integer userID, Integer contactID) {
+        User mainUser;
+        User contactUser;
+        try {
+            mainUser = dbService.getUserDetails(userID);
+            contactUser = dbService.getUserDetails(contactID);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            dbService.deleteContact(mainUser, Long.valueOf(contactID));
+            dbService.deleteContact(contactUser, Long.valueOf(userID));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        dbService.deleteChat(userID, contactID);
+        List<Integer> ids = new ArrayList<>();
+        ids.add(userID);
+        ids.add(contactID);
+        return ids;
     }
 }

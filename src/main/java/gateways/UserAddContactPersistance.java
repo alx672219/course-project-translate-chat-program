@@ -1,16 +1,47 @@
 package gateways;
 
+import contact_usecases.add_contact_use_case.UserAddContactGateway;
+import entities.Chat;
 import entities.User;
-import gateways.UserAddContactGateway;
 import services.DBService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class UserAddContactPersistance implements UserAddContactGateway {
+    DBService dbService;
+
+    public UserAddContactPersistance() {
+        this.dbService = new DBService();
+    }
+
     @Override
-    public void addContact(Long userID, Long contactID) throws ExecutionException, InterruptedException {
-        DBService dbService = new DBService();
-        User targetUser = dbService.getUserDetails(Integer.parseInt(String.valueOf(userID)));
-        dbService.addContact(targetUser, contactID);
+    public void addContact(Integer userID, Integer contactID) throws ExecutionException, InterruptedException {
+
+        User mainUser = dbService.getUserDetails(userID);
+        User contactUser = dbService.getUserDetails(contactID);
+
+        dbService.addContact(mainUser, Long.valueOf(contactID));
+        dbService.addContact(contactUser, Long.valueOf(userID));
+
+
+        List<Integer> chatIDs = dbService.getAllIDs("chats");
+        int nextChatID = Collections.max(chatIDs) + 1;
+        List<User> users = new ArrayList<>();
+        users.add(mainUser);
+        users.add(contactUser);
+        Chat chatToAdd = new Chat(nextChatID, users);
+        dbService.addChat(chatToAdd);
+    }
+
+    @Override
+    public User getUserDetails(int userID) {
+        try {
+            return dbService.getUserDetails(userID);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
