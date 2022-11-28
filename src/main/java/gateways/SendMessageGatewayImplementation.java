@@ -7,6 +7,7 @@ import services.DBService;
 import user_send_message.SendMessageGateway;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -42,6 +43,20 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
         }
 
         return messageIDs;
+    }
+
+    @Override
+    public ArrayList<Message> getMessagesByChat(int chatID) {
+        try {
+            return dbService.getAllMessages(chatID);
+        } catch (ExecutionException | InterruptedException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int getChatIDByUsers(int userID, int contactID) {
+        return dbService.getChatIDByUsers(userID, contactID);
     }
 
 

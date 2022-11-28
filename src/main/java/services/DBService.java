@@ -12,6 +12,7 @@ import java.util.Map;
 
 import entities.Chat;
 import entities.Message;
+import org.apache.arrow.flatbuf.Int;
 import org.checkerframework.checker.units.qual.A;
 
 import javax.print.Doc;
@@ -332,12 +333,7 @@ public class DBService {
         try {
             List<QueryDocumentSnapshot> docs = dbFirestore.collection("chats").get().get().getDocuments();
             for (QueryDocumentSnapshot query : docs) {
-                List<DocumentReference> userRefs = (List<DocumentReference>) query.get("users");
-                List<Integer> ids = new ArrayList<>();
-                for (DocumentReference userRef : userRefs) {
-                    int id = ((Long) Objects.requireNonNull(userRef.get().get().getData()).get("user_id")).intValue();
-                    ids.add(id);
-                }
+                List<Integer> ids = this.getUserIDsOfChat(query);
                 if (ids.contains(userID) && ids.contains(contactID)) {
                     query.getReference().delete();
                 }
@@ -346,5 +342,37 @@ public class DBService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public List<Integer> getUserIDsOfChat(QueryDocumentSnapshot query) {
+        List<DocumentReference> userRefs = (List<DocumentReference>) query.get("users");
+        List<Integer> ids = new ArrayList<>();
+        assert userRefs != null;
+        for (DocumentReference userRef : userRefs) {
+            int id;
+            try {
+                id = ((Long) Objects.requireNonNull(userRef.get().get().getData()).get("user_id")).intValue();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            ids.add(id);
+        }
+        return ids;
+    }
+
+    public int getChatIDByUsers(int userID, int contactID) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        try {
+            List<QueryDocumentSnapshot> docs = dbFirestore.collection("chats").get().get().getDocuments();
+            for (QueryDocumentSnapshot query : docs) {
+                List<Integer> ids = this.getUserIDsOfChat(query);
+                if (ids.contains(userID) && ids.contains(contactID)) {
+                    return Integer.parseInt((String) Objects.requireNonNull(query.get("id")));
+                }
+            }
+            return -1;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -5,15 +5,20 @@ import entities.Message;
 import entities.User;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface SendMessageGateway {
-    public void addChat(Chat chat) throws ExecutionException, InterruptedException;
+    void addChat(Chat chat) throws ExecutionException, InterruptedException;
 
-    public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException;
+    void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException;
 
-    public User getUserDetails(int userID) throws ExecutionException, InterruptedException;
+    User getUserDetails(int userID) throws ExecutionException, InterruptedException;
 
-    public List<Integer> getAllMessages();
+    List<Integer> getAllMessages();
+
+    ArrayList<Message> getMessagesByChat(int chatID);
+
+    int getChatIDByUsers(int userID, int contactID);
 }

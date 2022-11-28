@@ -36,9 +36,7 @@ public class ChatScreen extends JPanel {
 
     String senderName;
 
-    ArrayList<Message> messages;
 
-    Navigator nav;
     String lang;
 
 //    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException, FileNotFoundException {
@@ -74,15 +72,13 @@ public class ChatScreen extends JPanel {
 //        new ChatScreen(4, 5, 3, senderName, eController, dController, sController, sendMessageController, messages);
 //    }
 
-    public ChatScreen(Navigator nav, int senderID, int receiverID, int chatID, String senderName,
-                      Map<String, Object> controllers, ArrayList<Message> messages, String lang) {
+    public ChatScreen(int senderID, int receiverID, int chatID, String senderName,
+                      Map<String, Object> controllers, String lang) {
         this.controllers = controllers;
         this.chatID = chatID;
         this.senderID = senderID;
         this.receiverID = receiverID;
         this.senderName = senderName;
-        this.messages = messages;
-        this.nav = nav;
         this.lang = lang;
         this.mainGUI = this;
         this.runChatScreen();
@@ -139,9 +135,9 @@ public class ChatScreen extends JPanel {
         southPanel.add(recordButton);
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
-
+        ArrayList<Message> messages = ((SendMessageController) controllers.get("send")).getAllMessages(chatID);
         // Initialize chatbox with all saved messages from the chat
-        for (Message currMessage : this.messages) {
+        for (Message currMessage : messages) {
             JTextArea messageArea = new JTextArea();
             messageArea.setLineWrap(true);
             messageArea.setEditable(false);
@@ -166,7 +162,6 @@ public class ChatScreen extends JPanel {
         }
 
         newFrame.add(mainPanel);
-        newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         newFrame.setSize(470, 300);
         newFrame.setVisible(true);
     }
@@ -259,7 +254,7 @@ public class ChatScreen extends JPanel {
 
         }
         public void mousePressed(MouseEvent e){
-            if(e.isPopupTrigger()){
+            if (e.isPopupTrigger()){
                 doPop(e);
             } else {
                 LabelAdapter labelAdapter = new LabelAdapter(lang);
@@ -271,8 +266,6 @@ public class ChatScreen extends JPanel {
         public void doPop(MouseEvent e){
             EditDeletePopupMenu editDeletePopupMenu = new EditDeletePopupMenu(this.ids, this.controllers, message, parentPanel, chatBox, userName);
             editDeletePopupMenu.show(e.getComponent(), e.getX(), e.getY());
-
-
         }
         public void mouseReleased(MouseEvent e){
             if(e.isPopupTrigger()){

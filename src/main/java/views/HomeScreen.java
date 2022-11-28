@@ -137,12 +137,10 @@ public class HomeScreen extends JPanel implements ActionListener{
             if (contactID == -1) {
                 JOptionPane.showMessageDialog(this, "Select a row.");
             } else {
-                JLabel contactIDLabel = new JLabel("Contact ID:" + contactID);
+                //JLabel contactIDLabel = new JLabel("Contact ID:" + contactID);
                 JPanel chatPanel = (JPanel) rightPanel.getClientProperty("chat");
-                chatPanel.removeAll();
-                chatPanel.revalidate();
-                chatPanel.add(contactIDLabel, BorderLayout.CENTER);
-                addChatScreen(rightPanel, contactID);
+                //chatPanel.add(contactIDLabel, BorderLayout.CENTER);
+                addChatScreen(chatPanel, contactID);
             }
 
         }
@@ -150,5 +148,19 @@ public class HomeScreen extends JPanel implements ActionListener{
 
     private void addChatScreen(JPanel panel, int contactID) {
         int currUserID = this.currUser.getUser_id();
+        int chatID = ((SendMessageController) this.controllers.get("send")).getChatIDByUsers(currUserID, contactID);
+        if (chatID == -1) {
+            JOptionPane.showMessageDialog(panel, "Something went wrong!");
+        }
+        Map<String, Object> controllersForChat =  new HashMap<>();
+        controllersForChat.put("send", controllers.get("send"));
+        controllersForChat.put("edit", controllers.get("message_edit"));
+        controllersForChat.put("search", controllers.get("message_search"));
+        controllersForChat.put("delete", controllers.get("message_delete"));
+        controllersForChat.put("audio_record", controllers.get("audio_record"));
+        controllersForChat.put("audio_convert", controllers.get("audio_convert"));
+        controllersForChat.put("message_translate", controllers.get("message_translate"));
+        new ChatScreen(currUserID, contactID, chatID, this.currUser.getName(),
+                controllersForChat, this.currUser.getDefault_lang());
     }
 }

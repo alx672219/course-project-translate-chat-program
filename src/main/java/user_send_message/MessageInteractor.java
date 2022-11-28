@@ -6,6 +6,7 @@ import entities.User;
 import gateways.SendMessageGatewayImplementation;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -35,10 +36,20 @@ public class MessageInteractor implements MessageInputBoundary {
 
         Message messsageToSend = messageFactory.createMessage(chatID, nextMessageID, message, sender, receiver, timestamp);
         // Gateway
-        SendMessageGatewayImplementation sendMessageGateway = new SendMessageGatewayImplementation();
+        sendMessageGateway = new SendMessageGatewayImplementation();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
         SendMessageResponse response = new SendMessageResponse(messsageToSend, true, null);
         return response;
+    }
+
+    @Override
+    public ArrayList<Message> getAllMessages(int chatID) {
+        return sendMessageGateway.getMessagesByChat(chatID);
+    }
+
+    @Override
+    public int getChatIDByUsers(int userID, int contactID) {
+        return sendMessageGateway.getChatIDByUsers(userID, contactID);
     }
 
 }
