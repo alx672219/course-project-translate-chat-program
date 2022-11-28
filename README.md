@@ -1,39 +1,78 @@
-# Project Template
+# How to run this project (for Milestone 4)
+This README file will contain instructions on how to run our project specifically for Milestone 4.
+For Milestone 4, we were not able to integrate our UI in time. However, each use case's separate UI exists on its own. You will need to run 4 different files to see the 4 different UIs.
 
-This is a template repository for CSC 207 projects. 
-This repository contains starter code for a gradle project.
-It also contains workflow documents that give instructions on how to manage your Github repository and how to use Github Projects for efficient collaboration.
+## AudioMessageAndTranslate.java
+When this file is run, you will be able to see the present UI for the use case that concerns the recording of audio messages, and translating of messages.
 
-## Checklist For Your Project
-- [ ] Verify the correct settings for your project repository
-- [ ] Set up Github Projects
-- [ ] Create the implementation plan using issues and Github Projects
-- [ ] Create deveopment branches for your features
-- [ ] Use pull requests to merge finished features into main branch
-- [ ] Conduct code reviews
+- Run the file
+- A window should open up, consisting of a text field, a button, and a label.
+  - The button is the record button. You press it once to start recording. If you want to stop recording, press it again. Note that the audio will stop recording automatically once 15 seconds has elapsed. The audio will then be converted to text and displayed in the text field.
+  - The label tells you the time in seconds you have been recording for. Due to the Google Cloud API we are using, you will have to keep your message 15 seconds long or shorter. 
+  - The text field will contain the text version of what you recorded.
+- Some more features:
+  - If you click on the text field (right click or left click, both work) a new window will open up with the text translated to French
 
-**If your team has trouble with any of these steps, please ask on Piazza. For example, with how GitHub Classroom works, your team *may* not have permissions to do some of the first few steps, in which case we'll post alternative instructions as needed.**
+- What we'll need to change by Milestone 5
+  - Incorporate this UI with the rest
+  - Have the messages be translated to the language that the user has in their profile, not just French
+  - Get rid of the label that tells you how much time has elapsed
+  - Have AudioMessageAndTranslate extend JPanel instead of JFrame
 
-## Workflow Documents
+## ChatScreen.java
+- Run the file
+- A window should open up with a label, a text field and a button. 
+- Enter any name you want in the text field. Press the "Enter Chat Server" button
+- A new window should open up with a text field and a button on the top and on the bottom of the window and a blank area in the middle
+  - The text field at the bottom is where you type in messages
+  - The button at the bottom is to send messages. When this is pressed the message is added to the database at a specific chatID (for now this ID is 3). A message is also added to the UI.
+  - You can keep on sending more messages and more will be added to the UI and database.
+  - Once a message is added to the text area in the middle, you can right click on that message and a popup menu will open up with two actions: "Edit" and "Delete"
+  - If you click the edit action a new window will open up with a text field and a button. Type in the text wou want to change the message to and then click the Edit button. This change will be reflected in the database and the UI.
+  - If you click the delete action, the message will be deleted from the database. But this will not be reflected in the UI (we will try to do this by Milestone 5)
+  - Back to the main Chat screen, the text field and button at the top of the screen are for searching messages. If you type in the text you want to search and then click the button, a new window will open up displaying the results. To test this out, send a few messages through the UI and then search those messages. Note the search query must be more than 5 characters.
 
-* Github Workflow: Please refer to the workflow that was introduced in the first lab. You should follow this when working on your code. The following document provides additional details too.
+- What we'll need to change by Milestone 5:
+  - Incorporate this UI with the rest
+  - Get rid of the "Enter Chat Server" screen. The username should be the one that the user has in their profile
+  - Make it so that these messages will be added to the database at the correct chatID, depending on which contact you're chatting with
+  - Pre-populate the message area in the middle with the messages that exist in the database at that specific chatID
+  - Get the UI working for the Delete Message use case
+  - Have ChatScreen extend JPanel
 
-* [Project Planning and Development Guide](project_plan_dev.md): This document helps you to understand how to create and maintain a project plan for your class project. **This document helps you to complete the Implementation Plan Milestone.**
+## ContactScreen.java
+- Run the file
+- A window should open up with a table of user IDs. These are the IDs of the current contacts a user has. Right now, this is for the user with ID 1.
+- At the bottom, there is a text field with "Add" and "Delete" buttons.
+- If you type in a user ID (needs to be a number) and click "Add", a new contact will be added to this user in the Database, and this change will also be reflected in the UI. The next time you run this file, this new contact will still be there in the table.
+- If you select a row and then click "Delete" that row of the table will be deleted (We will reflect this change in the database for Milestone 5)
 
-## Gradle Project
-Import this project into your Intellij editor. It should automatically recognise this as a gradle repository.
-The starter code was built using SDK version 11.0.1. Ensure that you are using this version for this project. (You can, of course, change the SDK version as per your requirement if your team has all agreed to use a different version)
+- What we'll need to change by Milestone 5:
+  - Incorporate this UI with the rest
+  - Add some checks so a message dialog opens up when something goes wrong (eg. you click "Add" without typing anything in the field, you click "Delete" wihtout selecting a row, etc.)
+  - Have it so this doesn't show the contacts of a specific user. Instead it should update the database for the user that is running the program.
+  - Have the delete button also update the database.
+  - Have ContactScreen extend JPanel instead of JFrame
 
-You have been provided with two starter files for demonstration: HelloWorld and HelloWorldTest.
+## Main.java
+- Run the file
+- A window opens up with four text fields.
+- Each text field is for information the program needs to register a user.
+- There is also a dropdown menu to select a default language
+- Once you've filled everything, you can click "Register" for this new user to be added to the database
+- You can now click "Login" to switch to the Login screen
+- You can fill in the username and password that you gave when you registered and then click Login. A message dialog will open up infomring you that either the user doesn't exist, the password is incorrect, or if the login was successful
+- If you stop and run this file again, and then immediate switch to the login screen, you will note that the information you registered with in the first run was saved correctly and you can still successfully log in.
 
-You will find HelloWorld in `src/main/java/tutorial` directory. Right click on the HelloWorld file and click on `Run HelloWorld.main()`.
-This should run the program and print on your console.
+- What we'll need to change by Milestone 5
+  - Incorporate this UI with the rest
+  - Namely, have it so that when you click the "Login" button at the Login screen, you are taken to a "Home Screen", that has the other screens (eg. ChatScreen, ContactScreen, etc) incorporated into it
 
-You will find HelloWorldTest in `src/test/java/tutorial` directory. Right click on the HelloWorldTest file and click on `Run HelloWorldTest`.
-All tests should pass. Your team can remove this sample of how testing works once you start adding your project code to the repo.
+This concludes the instructions you need to run this program.
 
-Moving forward, we expect you to maintain this project structure. You *should* use Gradle as the build environment, but it is fine if your team prefers to use something else -- just remove the gradle files and push your preferred project setup. Assuming you stick with Gradle, your source code should go into `src/main/java` (you can keep creating more subdirectories as per your project requirement). Every source class can auto-generate a test file for you. For example, open HelloWorld.java file and click on the `HelloWorld` variable as shown in the image below. You should see an option `Generate` and on clicking this your should see an option `Test`. Clicking on this will generate a JUnit test file for `HelloWorld` class. This was used to generate the `HelloWorldTest`.
-
-![image](https://user-images.githubusercontent.com/5333020/196066655-d3c97bf4-fdbd-46b0-b6ae-aeb8dbcf351d.png)
-
-You can create another simple class and try generating a test for this class.
+## Package Structure
+- All our use cases are organized into their own packages. However:
+  - The controllers and presenters of each use case are in the "views" package
+  - The gateway implementations for each use case are in their own "gateways" package
+  - There is also an "entities" package that contains all the entities
+  - There is also a "shared" package that contains the Response superclass. All repsonse models for the use cases are subclasses of this.
