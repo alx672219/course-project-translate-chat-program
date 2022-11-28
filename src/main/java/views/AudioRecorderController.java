@@ -1,7 +1,6 @@
 package views;
 
 import audio_recorder_use_case.AudioRecorderInputBoundary;
-import audio_recorder_use_case.AudioRecorderResponse;
 
 
 public class AudioRecorderController {
@@ -11,7 +10,7 @@ public class AudioRecorderController {
         this.audioRecorderInputBoundary = audioRecorderInputBoundary;
     }
 
-    public AudioRecorderResponse record() {
-        return this.audioRecorderInputBoundary.record();
+    public void record() {
+        this.audioRecorderInputBoundary.record();
     }
 }

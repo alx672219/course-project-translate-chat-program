@@ -1,6 +1,5 @@
 package user_send_message;
 
-import entities.Chat;
 import entities.Message;
 import entities.User;
 
@@ -10,8 +9,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface SendMessageGateway {
-    void addChat(Chat chat) throws ExecutionException, InterruptedException;
-
     void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException;
 
     User getUserDetails(int userID) throws ExecutionException, InterruptedException;

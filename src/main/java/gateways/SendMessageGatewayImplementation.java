@@ -8,25 +8,14 @@ import user_send_message.SendMessageGateway;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class SendMessageGatewayImplementation implements SendMessageGateway {
-    /** Gets Chat corresponding to chatID
-     *
-     * @param chatID
-     * @return Chat with id of the passed parameter chatID
-     */
     DBService dbService;
 
     public SendMessageGatewayImplementation() {
         dbService = new DBService();
-    }
-
-    @Override
-    public void addChat(Chat chat) throws ExecutionException, InterruptedException {
-        dbService.addChat(chat);
     }
 
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
@@ -34,7 +23,7 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
     }
 
     public List<Integer> getAllMessages() {
-        List<Integer> messageIDs = null;
+        List<Integer> messageIDs;
 
         try {
             messageIDs = dbService.getAllIDs("messages");
@@ -62,8 +51,8 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
 
     /** Stores the message to the database
      *
-     * @param chatID
-     * @param message
+     * @param chatID the ID of the Chat that this message should be added to
+     * @param message the actual Message that should be added
      */
     public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException {
         Chat targetChat = dbService.getChatDetails(chatID);

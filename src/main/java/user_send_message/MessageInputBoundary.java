@@ -1,12 +1,11 @@
 package user_send_message;
 
-import entities.Chat;
-//import entities.TextMessage;
+
 import entities.Message;
-import entities.User;
+
 
 import java.text.ParseException;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;

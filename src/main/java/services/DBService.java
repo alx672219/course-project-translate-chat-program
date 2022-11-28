@@ -3,19 +3,11 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firestore.v1.Document;
-import com.google.firestore.v1.Write;
 import entities.User;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import entities.Chat;
 import entities.Message;
-import org.apache.arrow.flatbuf.Int;
-import org.checkerframework.checker.units.qual.A;
-
-import javax.print.Doc;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -75,31 +67,30 @@ public class DBService {
         String docInfo = "id" + user.getUser_id();
         user.setDefault_lang(newDefaultLang);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("default_lang", user.getDefault_lang());
+        docRef.update("default_lang", user.getDefault_lang());
     }
     public void updateName(User user, String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
         user.setName(name);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("name", user.getName());
+        docRef.update("name", user.getName());
     }
     public void updatePassword(User user, String password) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
         user.setPassword(password);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("password", user.getPassword());
+        docRef.update("password", user.getPassword());
     }
 
     public boolean existName(User user) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference usersReference = dbFirestore.collection("users");
-        String userID = "id" + user.getUser_id();
 
         try {
             for (DocumentReference ref : usersReference.listDocuments()) {
-                if (ref.get().get().getData().get("name").equals(user.getName())) {
+                if (Objects.requireNonNull(ref.get().get().getData()).get("name").equals(user.getName())) {
                     return true;
                 }
             }
@@ -124,7 +115,7 @@ public class DBService {
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot query : documents) {
-            int uid = Integer.parseInt(query.get("user_id").toString());
+            int uid = Integer.parseInt(Objects.requireNonNull(query.get("user_id")).toString());
             ret.add(uid);
         }
         return ret;
@@ -148,13 +139,13 @@ public class DBService {
         return null;
     }
 
-    public void addContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+    public void addContact(User user, Long contactID) {
         Firestore dbFireStore = FirestoreClient.getFirestore();
         String docName = "id" + user.getUser_id();
         user.getContacts().add(contactID);
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
-        WriteResult result = future.get();
+        docRef.update("contacts", user.getContacts());
+
     }
 
 
@@ -163,8 +154,7 @@ public class DBService {
         String docName = "id" + user.getUser_id();
         user.getContacts().remove(contactID);
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
-        WriteResult result = future.get();
+        docRef.update("contacts", user.getContacts());
     }
 
     public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException, ParseException {
@@ -175,26 +165,25 @@ public class DBService {
 
         DocumentSnapshot document = future.get();
 
-        Chat chat = null;
         if (document.exists()) {
             // Convert documentReference to class
-            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) document.getData().get("messages");
+            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) Objects.requireNonNull(document.getData()).get("messages");
             ArrayList<Message> messages = new ArrayList<>();
             for (DocumentReference messageRef: messageRefs) {
                 // Get the document reference of the message's receiver object instance
-                DocumentReference receiverRef = (DocumentReference) messageRef.get().get().getData().get("receiver");
+                DocumentReference receiverRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("receiver");
                 // Convert it into a User class
                 User receiver = receiverRef.get().get().toObject(User.class);
 
                 // Get the document reference of the message's receiver object instance
-                DocumentReference recipientRef = (DocumentReference) messageRef.get().get().getData().get("recipient");
+                DocumentReference recipientRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("recipient");
                 // Convert it into a User class
                 User recipient = recipientRef.get().get().toObject(User.class);
 
-                Integer id = ((Long) messageRef.get().get().getData().get("id")).intValue();
-                String messageText = (String) messageRef.get().get().getData().get("message");
+                int id = ((Long) Objects.requireNonNull(messageRef.get().get().getData()).get("id")).intValue();
+                String messageText = (String) Objects.requireNonNull(messageRef.get().get().getData()).get("message");
 
-                String timestamp = messageRef.get().get().getData().get("timestamp").toString();
+                String timestamp = Objects.requireNonNull(messageRef.get().get().getData()).get("timestamp").toString();
                 Date date = new SimpleDateFormat("dd-MM-yyyy").parse(timestamp);
 
                 Message message = new Message(id, messageText, receiver, recipient, date);
@@ -239,27 +228,26 @@ public class DBService {
 
         DocumentSnapshot document = future.get();
 
-        Chat chat = null;
 
         if (document.exists()) {
             // Convert document reference to class
-            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) document.getData().get("messages");
+            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) Objects.requireNonNull(document.getData()).get("messages");
             ArrayList<Message> messages = new ArrayList<>();
             for (DocumentReference messageRef: messageRefs) {
                 // Get the document reference of the message's receiver object instance
-                DocumentReference receiverRef = (DocumentReference) messageRef.get().get().getData().get("receiver");
+                DocumentReference receiverRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("receiver");
                 // Convert it into a User class
                 User receiver = receiverRef.get().get().toObject(User.class);
 
                 // Get the document reference of the message's receiver object instance
-                DocumentReference recipientRef = (DocumentReference) messageRef.get().get().getData().get("recipient");
+                DocumentReference recipientRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("recipient");
                 // Convert it into a User class
                 User recipient = recipientRef.get().get().toObject(User.class);
 
-                Integer id = ((Long) messageRef.get().get().getData().get("id")).intValue();
-                String messageText = (String) messageRef.get().get().getData().get("message");
+                int id = ((Long) Objects.requireNonNull(messageRef.get().get().getData()).get("id")).intValue();
+                String messageText = (String) Objects.requireNonNull(messageRef.get().get().getData()).get("message");
 
-                String timestamp = messageRef.get().get().getData().get("timestamp").toString();
+                String timestamp = Objects.requireNonNull(messageRef.get().get().getData()).get("timestamp").toString();
                 Date date = new SimpleDateFormat("dd-MM-yyyy").parse(timestamp);
 
                 Message message = new Message(id, messageText, receiver, recipient, date);
@@ -324,7 +312,7 @@ public class DBService {
         String chatDocName = "id" + chat.getId();
         DocumentReference chatRef = dbFirestore.collection("chats").document(chatDocName);
 
-        ApiFuture<WriteResult> arrayUnion = chatRef.update("messages", FieldValue.arrayUnion(messageRef));
+        chatRef.update("messages", FieldValue.arrayUnion(messageRef));
     }
 
     public void deleteChat(Integer userID, Integer contactID) {

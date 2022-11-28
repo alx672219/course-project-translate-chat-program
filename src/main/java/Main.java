@@ -39,14 +39,11 @@ import user_register_use_case.UserRegisterInputBoundary;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException {
+    public static void main(String[] args) {
         // Set up Database
         try {
             new DBInitializer().init();

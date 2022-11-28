@@ -1,19 +1,12 @@
 package views;
 
 import entities.User;
-import gateways.CustomizationGatewayImplementation;
-import profile_customization_use_case.CustomizationGateway;
-import profile_customization_use_case.CustomizationInputBoundary;
-import profile_customization_use_case.CustomizationInteractor;
-import profile_customization_use_case.CustomizationOutputBoundary;
-import services.DBInitializer;
+
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.security.Permission;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -115,19 +108,5 @@ public class ProfileScreen extends JPanel implements ActionListener{
                 user.setDefault_lang(default_lang);
             }
         }
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        JFrame application  = new JFrame("application");
-        DBInitializer initializer = new DBInitializer();
-        initializer.init();
-        CustomizationOutputBoundary cPresenter = new CustomizationPresenter();
-        CustomizationGateway cGateway = new CustomizationGatewayImplementation();
-        CustomizationInputBoundary cInteractor = new CustomizationInteractor(cGateway, cPresenter);
-        CustomizationController cController = new CustomizationController(cInteractor);
-        //application.add(new ProfileScreen(cController, new User("Muzammil", "English",
-        //        "muhammad.muzammil789@gmail.com", "789", 1)));
-        application.pack();
-        application.setVisible(true);
     }
 }

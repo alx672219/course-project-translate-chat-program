@@ -39,39 +39,6 @@ public class ChatScreen extends JPanel {
 
     String lang;
 
-//    public static void main(String[] args) throws ParseException, ExecutionException, InterruptedException, FileNotFoundException {
-//
-//        MessageEditGateway eGateway = new MessageEditFirebaseSystem();
-//        MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
-//        MessageEditInputBoundary eInteractor  = new MessageEditInteractor(eGateway, ePresenter);
-//        MessageEditController eController = new MessageEditController(eInteractor);
-//
-//        MessageDeleteGateway dGateway = new MessageDeleteFirebaseSystem();
-//        MessageDeleteOutputBoundary dPresenter = new MessageDeletePresenter();
-//        MessageDeleteInputBoundary dInteractor  = new MessageDeleteInteractor(dGateway, dPresenter);
-//        MessageDeleteController dController = new MessageDeleteController(dInteractor);
-//
-//        MessageSearchGateway sGateway = new MessageSearchFirebaseSystem();
-//        MessageSearchOutputBoundary sPresenter = new MessageSearchPresenter();
-//        MessageSearchInputBoundary sInteractor  = new MessageSearchInteractor(sGateway, sPresenter);
-//        MessageSearchController sController = new MessageSearchController(sInteractor);
-//
-//        MessageInputBoundary messageInteractor = new MessageInteractor();
-//        SendMessageController sendMessageController = new SendMessageController(messageInteractor);
-//
-//        DBInitializer dbInitializer = new DBInitializer();
-//        dbInitializer.init();
-//        DBService dbService = new DBService();
-//        ArrayList<Message> messages = dbService.getAllMessages(3);
-//
-//        User sender = dbService.getUserDetails(4);
-//        String senderName = sender.getName();
-//
-//
-//
-//        new ChatScreen(4, 5, 3, senderName, eController, dController, sController, sendMessageController, messages);
-//    }
-
     public ChatScreen(int senderID, int receiverID, int chatID, String senderName,
                       Map<String, Object> controllers, String lang) {
         this.controllers = controllers;
@@ -85,18 +52,15 @@ public class ChatScreen extends JPanel {
     }
 
     public void runChatScreen() {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        UIManager.setLookAndFeel(UIManager
-                                .getSystemLookAndFeelClassName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    mainGUI.display();
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    UIManager.setLookAndFeel(UIManager
+                            .getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                mainGUI.display();
             });
         }
 

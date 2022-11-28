@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class MessageTranslateGoogleCloud implements MessageTranslateGateway {
     String keyPath;
-    private Translate translate;
+    private final Translate translate;
 
     public MessageTranslateGoogleCloud(String keyPath) throws IOException {
         this.keyPath = keyPath;
@@ -34,9 +34,8 @@ public class MessageTranslateGoogleCloud implements MessageTranslateGateway {
         return translation.getTranslatedText();
     }
     public Translate createTranslate(String keyPath) throws IOException {
-        Translate translate = TranslateOptions.newBuilder().setCredentials(ServiceAccountCredentials
-                .fromStream(new FileInputStream(keyPath))).build().getService();
 
-        return translate;
+        return TranslateOptions.newBuilder().setCredentials(ServiceAccountCredentials
+                .fromStream(new FileInputStream(keyPath))).build().getService();
     }
 }

@@ -2,13 +2,10 @@ package views;
 
 import entities.Message;
 //import entities.TextMessage;
-import entities.User;
 import user_send_message.MessageInputBoundary;
-import user_send_message.MessageOutputBoundary;
 import user_send_message.SendMessageResponse;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;

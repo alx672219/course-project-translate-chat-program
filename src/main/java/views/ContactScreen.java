@@ -3,14 +3,12 @@ package views;
 import contact_usecases.add_contact_use_case.AddContactData;
 import contact_usecases.delete_contact_use_case.DeleteContactData;
 import entities.User;
-import services.DBInitializer;
 import services.DBService;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -146,14 +144,5 @@ public class ContactScreen extends JPanel implements ActionListener {
         }
 
 
-    }
-
-    public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
-        DBInitializer initializer = new DBInitializer();
-        initializer.init();
-        JFrame app = new JFrame("app");
-        //app.add(new ContactScreen(1));
-        app.pack();
-        app.setVisible(true);
     }
 }

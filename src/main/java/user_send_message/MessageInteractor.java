@@ -1,6 +1,5 @@
 package user_send_message;
 
-import entities.Chat;
 import entities.Message;
 import entities.User;
 import gateways.SendMessageGatewayImplementation;
@@ -34,12 +33,11 @@ public class MessageInteractor implements MessageInputBoundary {
 
         int nextMessageID = Collections.max(messageIDs) + 1;
 
-        Message messsageToSend = messageFactory.createMessage(chatID, nextMessageID, message, sender, receiver, timestamp);
+        Message messsageToSend = messageFactory.createMessage(nextMessageID, message, sender, receiver, timestamp);
         // Gateway
         sendMessageGateway = new SendMessageGatewayImplementation();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
-        SendMessageResponse response = new SendMessageResponse(messsageToSend, true, null);
-        return response;
+        return new SendMessageResponse(messsageToSend, true, null);
     }
 
     @Override
