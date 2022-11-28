@@ -11,6 +11,8 @@ import entities.User;
 import services.DBService;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class SendMessageGateway {
@@ -29,6 +31,22 @@ public class SendMessageGateway {
         dbService.addChat(chat);
     }
 
+    public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
+        return dbService.getUserDetails(userID);
+    }
+
+    public List<Integer> getAllMessages() {
+        List<Integer> messageIDs = null;
+
+        try {
+            messageIDs = dbService.getAllMessageIDs();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return messageIDs;
+    }
+
 
     /** Stores the message to the database
      *
@@ -39,6 +57,11 @@ public class SendMessageGateway {
         Chat targetChat = dbService.getChatDetails(chatID);
         targetChat.addMessage(message);
         dbService.addMessage(message, targetChat);
-    }
+//        dbService.addMessage(message, targetChat);
 
+
+        //                User sender = new User("Billy", "en", "billy@gmail.com", "123", 6);
+//                User receiver = new User("Howard", "en", "howard@gmail.com", "123", 7);
+//
+    }
 }
