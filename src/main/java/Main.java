@@ -10,8 +10,6 @@ import contact_usecases.delete_contact_use_case.DeleteContactInputBoundary;
 import contact_usecases.delete_contact_use_case.DeleteContactInteractor;
 import contact_usecases.delete_contact_use_case.DeleteContactOutputBoundary;
 import contact_usecases.delete_contact_use_case.UserDeleteContactGateway;
-import entities.Message;
-import entities.User;
 import gateways.*;
 import message_edit_delete_use_case.*;
 import message_search_use_case.MessageSearchGateway;
@@ -72,12 +70,6 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        JPanel chatScreen;
-//        try {
-//            chatScreen = initChatScreen(nav, dbs, 3, 3, 4);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
         // Add screens to the card layout
         screens.add(registerScreen, "register");
         screens.putClientProperty("register", registerScreen);
@@ -85,7 +77,7 @@ public class Main {
         screens.putClientProperty("login", loginScreen);
         screens.add(homeScreen, "home");
         screens.putClientProperty("home", homeScreen);
-//        screens.add(chatScreen, "chat");
+
 
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setSize(640, 640);
@@ -208,59 +200,6 @@ public class Main {
 
         return new LoginScreen(userLoginController, nav);
     }
-
-//    @NotNull
-//    private static JPanel initChatScreen(Navigator nav, DBService db, int chatID,
-//                                         int senderID, int receiverID) throws ParseException, ExecutionException, InterruptedException, IOException {
-//
-//        MessageEditGateway eGateway = new MessageEditFirebaseSystem();
-//        MessageEditOutputBoundary ePresenter = new MessageEditPresenter();
-//        MessageEditInputBoundary eInteractor = new MessageEditInteractor(eGateway, ePresenter);
-//        MessageEditController eController = new MessageEditController(eInteractor);
-//
-//        MessageDeleteGateway dGateway = new MessageDeleteFirebaseSystem();
-//        MessageDeleteOutputBoundary dPresenter = new MessageDeletePresenter();
-//        MessageDeleteInputBoundary dInteractor = new MessageDeleteInteractor(dGateway, dPresenter);
-//        MessageDeleteController dController = new MessageDeleteController(dInteractor);
-//
-//        MessageSearchGateway sGateway = new MessageSearchFirebaseSystem();
-//        MessageSearchOutputBoundary sPresenter = new MessageSearchPresenter();
-//        MessageSearchInputBoundary sInteractor = new MessageSearchInteractor(sGateway, sPresenter);
-//        MessageSearchController sController = new MessageSearchController(sInteractor);
-//
-//        SendMessageGateway gateway = new SendMessageGatewayImplementation();
-//        MessageInputBoundary messageInteractor = new MessageInteractor(gateway);
-//        SendMessageController sendMessageController = new SendMessageController(messageInteractor);
-//
-//        AudioConvertPresenter ACP = new AudioConvertPresenter();
-//        AudioConvertGoogleCloud ACGC = new AudioConvertGoogleCloud("speech-key.json");
-//        AudioConvertInteractor ACI = new AudioConvertInteractor(ACGC, ACP);
-//
-//        AudioRecorderPresenter ARP = new AudioRecorderPresenter();
-//        AudioRecorder AR = new AudioRecorder();
-//        AudioRecorderInteractor ARI = new AudioRecorderInteractor(AR, ARP);
-//
-//        MessageTranslateGoogleCloud MTGC = new MessageTranslateGoogleCloud("speech-key.json");
-//        MessageTranslatePresenter MTP = new MessageTranslatePresenter();
-//        MessageTranslateInteractor MTI = new MessageTranslateInteractor(MTGC, MTP);
-//        MessageTranslateController MTC = new MessageTranslateController(MTI);
-//
-//        AudioConvertController ACC = new AudioConvertController(ACI);
-//        AudioRecorderController ARC = new AudioRecorderController(ARI);
-//
-//        User sender = db.getUserDetails(senderID);
-//        String senderName = sender.getName();
-//        Map<String, Object> controllers = new HashMap<>();
-//        controllers.put("send", sendMessageController);
-//        controllers.put("edit", eController);
-//        controllers.put("search", sController);
-//        controllers.put("delete", dController);
-//        controllers.put("audio_record", ARC);
-//        controllers.put("audio_convert", ACC);
-//        controllers.put("message_translate", MTC);
-//
-//        return new ChatScreen(4, 5, 3, senderName, controllers, "fr");
-//    }
 }
 
 
