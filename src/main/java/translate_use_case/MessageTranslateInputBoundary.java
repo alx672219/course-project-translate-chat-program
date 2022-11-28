@@ -1,4 +1,4 @@
-package atranslate_use_case;
+package translate_use_case;
 
 import java.io.IOException;
 
@@ -8,5 +8,5 @@ public interface MessageTranslateInputBoundary {
      * @return translate String, the translated text
      */
 
-    MessageTranslateResponse convert(MessageTranslateData data) throws IOException;
+    MessageTranslateResponse translate(MessageTranslateData data) throws IOException;
 }

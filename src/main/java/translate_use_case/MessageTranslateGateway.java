@@ -1,4 +1,4 @@
-package atranslate_use_case;
+package translate_use_case;
 
 import java.io.IOException;
 

@@ -75,7 +75,9 @@ public class ContactScreen extends JPanel{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
+
         //Input Panel at the bottom of the screen
+
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2,1));
@@ -108,6 +110,11 @@ public class ContactScreen extends JPanel{
 
 
 
+        //members.add(new MemberVO(0L));
+
+
+
+
 
         tfUserid.setText("");
 
@@ -124,6 +131,7 @@ public class ContactScreen extends JPanel{
 
                 Long contactID = Long.parseLong(rows[0]);
                 try {
+
                     contactController.addContact(userID, contactID);
                 } catch (ExecutionException | InterruptedException ex) {
                     throw new RuntimeException(ex);
@@ -142,6 +150,8 @@ public class ContactScreen extends JPanel{
 
 
                 int rowIndex = table.getSelectedRow();
+
+
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
 
@@ -154,6 +164,7 @@ public class ContactScreen extends JPanel{
                 }
 
                 members.remove(rowIndex);
+
             }
         });
 

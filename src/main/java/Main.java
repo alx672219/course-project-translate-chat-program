@@ -79,4 +79,9 @@ public class Main {
         return new LoginScreen(userLoginController, nav);
     }
 
+    @NotNull
+    private static JPanel initChatScreen(Navigator nav, DBService db) {
+        return new JPanel();
+    }
+
 }

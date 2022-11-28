@@ -17,8 +17,8 @@ public class AudioRecorderInteractor implements AudioRecorderInputBoundary {
     }
 
     @Override
-    public AudioRecorderResponse record(AudioRecorderData data) throws IOException {
+    public AudioRecorderResponse record() {
         gateway.record();
-        return new AudioRecorderResponse(true, true, null);
+        return new AudioRecorderResponse(gateway.isRecording(), true, null);
     }
 }

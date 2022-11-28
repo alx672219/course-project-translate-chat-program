@@ -22,7 +22,8 @@ class UserLoginFirebaseSystemTest {
 
     static private UserLoginFirebaseSystem loginFirebaseSystem;
     static private DBService db;
-    static private final User danny = new User("danny", "en", "danny@gmail.com", " 123");
+    static private final User danny = new User("danny", "en", "danny@gmail.com", "123",
+            17);
     static private LoginData goodData;
     static private LoginData badData1;
     static private LoginData badData2;
