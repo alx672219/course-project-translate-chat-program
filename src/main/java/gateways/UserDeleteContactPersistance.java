@@ -16,14 +16,17 @@ public class UserDeleteContactPersistance implements UserDeleteContactGateway {
 
     @Override
     public List<Integer> deleteContact(Integer userID, Integer contactID) {
-        User targetUser;
+        User mainUser;
+        User contactUser;
         try {
-            targetUser = dbService.getUserDetails(userID);
+            mainUser = dbService.getUserDetails(userID);
+            contactUser = dbService.getUserDetails(contactID);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
         try {
-            dbService.deleteContact(targetUser, Long.valueOf(contactID));
+            dbService.deleteContact(mainUser, Long.valueOf(contactID));
+            dbService.deleteContact(contactUser, Long.valueOf(userID));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -142,15 +142,19 @@ public class ChatScreen extends JPanel {
             messageArea.setLineWrap(true);
             messageArea.setEditable(false);
             messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
-            messageArea.setText("<" + senderName + ">:  " + currMessage.getMessage());
+            messageArea.setText("<" + currMessage.getReceiver().getName() + ">:  " + currMessage.getMessage());
             List<Integer> ids = new ArrayList<>();
             ids.add(currMessage.getId());
             ids.add(chatID);
             List<Object> conts = new ArrayList<>();
             conts.add(controllers.get("edit"));
             conts.add(controllers.get("delete"));
-            messageArea.addMouseListener(new messageAreaListener(ids, conts, messageArea,
-                    (JPanel) messageBox.getParent(), chatBox, senderName, lang));
+            if (currMessage.getReceiver().getUser_id() == senderID) {
+                messageArea.addMouseListener(new EditDeletePopupListener(ids, conts, messageArea,
+                        (JPanel) messageBox.getParent(), chatBox, currMessage.getReceiver().getName()));
+            }
+            messageArea.addMouseListener(new TranslateListener(lang));
+
             //chatBox.setCaretPosition(chatBox.getDocument().getLength());
             chatBox.insertComponent(messageArea);
 
@@ -224,41 +228,38 @@ public class ChatScreen extends JPanel {
                 conts.add(controllers.get("edit"));
                 conts.add(controllers.get("delete"));
 
-                messageArea.addMouseListener(new messageAreaListener(ids, conts, messageArea,
-                        (JPanel) messageBox.getParent(), chatBox, senderName, lang));
+                messageArea.addMouseListener(new EditDeletePopupListener(ids, conts, messageArea,
+                        (JPanel) messageBox.getParent(), chatBox, senderName));
+                messageArea.addMouseListener(new TranslateListener(lang));
 
             }
 
             messageBox.requestFocusInWindow();
         }
     }
-    static class messageAreaListener extends MouseAdapter {
+    static class EditDeletePopupListener extends MouseAdapter {
         List<Integer> ids;
         List<Object> controllers;
         JTextArea message;
         JPanel parentPanel;
         JTextPane chatBox;
         String userName;
-        String lang;
 
 
-        public messageAreaListener(List<Integer> ids, List<Object> controllers, JTextArea message, JPanel parentPanel, JTextPane
-            chatBox, String userName, String lang){
+
+        public EditDeletePopupListener(List<Integer> ids, List<Object> controllers, JTextArea message, JPanel parentPanel, JTextPane
+            chatBox, String userName){
             this.ids = ids;
             this.controllers = controllers;
             this.message = message;
             this.parentPanel = parentPanel;
             this.chatBox = chatBox;
             this.userName = userName;
-            this.lang = lang;
 
         }
         public void mousePressed(MouseEvent e){
-            if (e.isPopupTrigger()){
+            if (SwingUtilities.isRightMouseButton(e)){
                 doPop(e);
-            } else {
-                LabelAdapter labelAdapter = new LabelAdapter(lang);
-                labelAdapter.mouseClicked(e);
             }
         }
 
@@ -274,5 +275,18 @@ public class ChatScreen extends JPanel {
         }
 
 
+    }
+    static class TranslateListener extends MouseAdapter {
+        public TranslateListener(String lang) {
+            this.lang = lang;
+        }
+
+        String lang;
+        public void mousePressed(MouseEvent e){
+            if (SwingUtilities.isLeftMouseButton(e)){
+                LabelAdapter labelAdapter = new LabelAdapter(lang);
+                labelAdapter.mouseClicked(e);
+            }
+        }
     }
 }

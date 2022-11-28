@@ -3,7 +3,6 @@ package gateways;
 import contact_usecases.add_contact_use_case.UserAddContactGateway;
 import entities.Chat;
 import entities.User;
-import org.checkerframework.checker.units.qual.C;
 import services.DBService;
 
 import java.util.ArrayList;
@@ -21,15 +20,18 @@ public class UserAddContactPersistance implements UserAddContactGateway {
     @Override
     public void addContact(Integer userID, Integer contactID) throws ExecutionException, InterruptedException {
 
-        User targetUser = dbService.getUserDetails(userID);
-        dbService.addContact(targetUser, Long.valueOf(contactID));
+        User mainUser = dbService.getUserDetails(userID);
+        User contactUser = dbService.getUserDetails(contactID);
 
-        List<Integer> chatIDs = null;
-        chatIDs = dbService.getAllIDs("chats");
+        dbService.addContact(mainUser, Long.valueOf(contactID));
+        dbService.addContact(contactUser, Long.valueOf(userID));
+
+
+        List<Integer> chatIDs = dbService.getAllIDs("chats");
         int nextChatID = Collections.max(chatIDs) + 1;
         List<User> users = new ArrayList<>();
-        users.add(dbService.getUserDetails(userID));
-        users.add(dbService.getUserDetails(contactID));
+        users.add(mainUser);
+        users.add(contactUser);
         Chat chatToAdd = new Chat(nextChatID, users);
         dbService.addChat(chatToAdd);
     }
