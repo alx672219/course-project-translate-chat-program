@@ -5,9 +5,9 @@ import java.io.IOException;
 
 public interface AudioConvertGateway {
     /**
-     * @param filePath String, the audio file being converted
-     * @param languageCode, the language of the audio file
-     * @return a string of text from the audio file
+     * @param audioConvertData
+     *      A bundle containing the path and details of an audio file
+     * @return A string of text extracted from the audio convert data
      */
 
     String convert(AudioConvertData audioConvertData) throws IOException;
