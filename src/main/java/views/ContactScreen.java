@@ -1,5 +1,9 @@
 package views;
 
+import contact_usecases.add_contact_use_case.AddContactInputBoundary;
+import contact_usecases.add_contact_use_case.AddContactInteractor;
+import contact_usecases.delete_contact_use_case.DeleteContactInputBoundary;
+import contact_usecases.delete_contact_use_case.DeleteContactInteractor;
 import entities.User;
 import services.DBInitializer;
 import services.DBService;
@@ -9,6 +13,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -25,22 +30,41 @@ import javax.swing.table.DefaultTableModel;
 
 
 
-public class ContactScreen extends JFrame{
+public class ContactScreen extends JPanel{
     ArrayList<MemberVO>members = new ArrayList<MemberVO>();
-    DBService dbService;
 
-    public ContactScreen() throws ExecutionException, InterruptedException {
-        this.dbService = new DBService();
+    Long userID;
+
+    ArrayList<Long> contacts;
+
+    ContactController contactController;
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException, FileNotFoundException {
+        AddContactInputBoundary addContactInteractor = new AddContactInteractor();
+        DeleteContactInputBoundary deleteContactInteractor = new DeleteContactInteractor();
+        ContactController contactController1 = new ContactController(addContactInteractor, deleteContactInteractor);
         DBInitializer dbInitializer = new DBInitializer();
-        try {
-            dbInitializer.init();
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
+        dbInitializer.init();
 
-        setTitle("Contacts");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setAlwaysOnTop(true);
+        DBService dbService = new DBService();
+        User targetUser = dbService.getUserDetails(1);
+        ArrayList<Long> contacts = targetUser.getContacts();
+
+        JFrame application = new JFrame("Application");
+        application.add(new ContactScreen(1L, contacts, contactController1));
+        application.pack();
+        application.setVisible(true);
+    }
+
+    public ContactScreen(Long userID, ArrayList<Long> contacts,
+                         ContactController contactController) throws ExecutionException, InterruptedException {
+
+        this.userID = userID;
+
+        this.contacts = contacts;
+
+        this.contactController = contactController;
+
         setBounds(200, 100, 400, 200);
 
         //Columns
@@ -74,22 +98,15 @@ public class ContactScreen extends JFrame{
 
         String[] rows = new String[2];
 
-        // Fetch list of all users from database
-        User targetUser = dbService.getUserDetails(1);
-        ArrayList<Long> contacts = targetUser.getContacts();
-        System.out.println(contacts);
 
-        for (int i = 0; i < contacts.size(); i++) {
+        for (int i = 0; i < this.contacts.size(); i++) {
             rows[0] = String.valueOf(contacts.get(i));
             model.addRow(rows);
             members.add(new MemberVO(contacts.get(i)));
 
+
+
         }
-
-
-        model.addRow(rows);
-
-        tfUserid.setText("");
 
 
 
@@ -99,18 +116,12 @@ public class ContactScreen extends JFrame{
 
 
 
+        tfUserid.setText("");
 
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 //Add
-
-
-
-
-
-
                 String[] rows = new String[2];
                 rows[0] = tfUserid.getText();
                 model.addRow(rows);
@@ -118,30 +129,16 @@ public class ContactScreen extends JFrame{
                 tfUserid.setText("");
 
 
-                Long userid = Long.parseLong(rows[0]);
-
-
-                User targetUser = null;
+                Long contactID = Long.parseLong(rows[0]);
                 try {
 
-                    targetUser = dbService.getUserDetails(1);
-
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                try {
-                    dbService.addContact(targetUser, userid);
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
+                    contactController.addContact(userID, contactID);
+                } catch (ExecutionException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
 
 
-                members.add(new MemberVO(userid));
+                members.add(new MemberVO(contactID));
 
 
             }
@@ -150,26 +147,6 @@ public class ContactScreen extends JFrame{
         btnDel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Delete
-
-
-                int rowIndex = table.getSelectedRow();
-                // If rowIndex is not selected, then rowIndex is -1
-
-
-            }
-        });
-        btnDel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-//                DBInitializer dbInitializer = new DBInitializer();
-//                try {
-//                    dbInitializer.init();
-//                } catch (FileNotFoundException ex) {
-//                    throw new RuntimeException(ex);
-//                }
 
 
                 int rowIndex = table.getSelectedRow();
@@ -177,22 +154,11 @@ public class ContactScreen extends JFrame{
 
                 if (rowIndex == -1) return;
                 model.removeRow(rowIndex);
-                System.out.println(members.size());
-                Long userid = members.get(rowIndex).userid;
 
-                DBService dbService = new DBService();
-                User targetUser = null;
-                try {
-                    targetUser = dbService.getUserDetails(1);
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-
+                Long contactID = members.get(rowIndex).userid;
 
                 try {
-                    dbService.deleteContact(targetUser, userid);
+                    contactController.deleteContact(userID, contactID);
                 } catch (ExecutionException | InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -216,9 +182,8 @@ public class ContactScreen extends JFrame{
         }
 
 
+
+
     }
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new ContactScreen();
-    }
 }

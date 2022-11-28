@@ -1,12 +1,10 @@
-package contact_usecases.delete_contact_use_case;
+package gateways;
 
-
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public interface DeleteContactInputBoundary {
-    /**
-     * Add a contact
-     */
-
+public interface UserDeleteContactGateway {
     void deleteContact(Long userID, Long contactID) throws ExecutionException, InterruptedException;
+
+
 }

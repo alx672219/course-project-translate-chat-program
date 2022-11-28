@@ -1,12 +1,10 @@
-package contact_usecases.add_contact_use_case;
+package gateways;
 
-
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public interface AddContactInputBoundary {
-    /**
-     * Add a contact
-     */
-
+public interface UserAddContactGateway {
     void addContact(Long userID, Long contactID) throws ExecutionException, InterruptedException;
+
+
 }
