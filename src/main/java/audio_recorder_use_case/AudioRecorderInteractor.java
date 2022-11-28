@@ -1,12 +1,5 @@
 package audio_recorder_use_case;
 
-import audio_converter_use_case.AudioConvertData;
-import audio_converter_use_case.AudioConvertGateway;
-import audio_converter_use_case.AudioConvertOutputBoundary;
-import audio_converter_use_case.AudioConvertPresenter;
-
-import java.io.IOException;
-//#TODO
 public class AudioRecorderInteractor implements AudioRecorderInputBoundary {
     final AudioRecorderGateway gateway;
     final AudioRecorderOutputBoundary presenter;
@@ -16,6 +9,12 @@ public class AudioRecorderInteractor implements AudioRecorderInputBoundary {
         this.presenter = presenter;
     }
 
+    /**
+     * Begins or stops the recording process
+     * @return
+     *      Returns an AudioRecorderResponse containing the current state of whether or not
+     *      the gateway is recording.
+     */
     @Override
     public AudioRecorderResponse record() {
         gateway.record();
