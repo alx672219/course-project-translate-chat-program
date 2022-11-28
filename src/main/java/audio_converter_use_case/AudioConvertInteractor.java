@@ -1,5 +1,7 @@
 package audio_converter_use_case;
 
+import audio_recorder_use_case.AudioRecorderFailed;
+
 import java.io.IOException;
 
 public class AudioConvertInteractor implements AudioConvertInputBoundary {

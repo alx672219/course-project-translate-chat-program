@@ -3,6 +3,13 @@ package translate_use_case;
 import shared.Response;
 
 public class MessageTranslateResponse extends Response {
+    /**
+     * Response class containing
+     * original, the original untranslated text
+     * targetLanguage, the language to be translated into
+     * sourceLanguage, the original language of the untranslated text
+     * result, the translated text
+     */
     private String original;
     private String targetLanguage;
     private String sourceLanguage;
