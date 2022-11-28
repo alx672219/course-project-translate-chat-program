@@ -2,8 +2,10 @@ package audio_converter_use_case;
 
 public class AudioConvertData {
     /**
-     * @param filePath String, the audio file being converted
-     * @param languageCode, the language of the audio file
+     * @param filePath
+     *      The string containing the path to the audio file
+     * @param languageCode
+     *      The language spoken in the audio file
      */
     private final String filePath;
     private final String languageCode;
