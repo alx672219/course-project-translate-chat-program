@@ -1,34 +1,21 @@
 package gateways;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
 import entities.Chat;
 import entities.Message;
 import entities.User;
 import services.DBService;
+import user_send_message.SendMessageGateway;
 
 import java.text.ParseException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class SendMessageGateway {
-    /** Gets Chat corresponding to chatID
-     *
-     * @param chatID
-     * @return Chat with id of the passed parameter chatID
-     */
+public class SendMessageGatewayImplementation implements SendMessageGateway {
     DBService dbService;
 
-    public SendMessageGateway() {
+    public SendMessageGatewayImplementation() {
         dbService = new DBService();
-    }
-
-    public void addChat(Chat chat) throws ExecutionException, InterruptedException {
-        dbService.addChat(chat);
     }
 
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
@@ -36,10 +23,10 @@ public class SendMessageGateway {
     }
 
     public List<Integer> getAllMessages() {
-        List<Integer> messageIDs = null;
+        List<Integer> messageIDs;
 
         try {
-            messageIDs = dbService.getAllMessageIDs();
+            messageIDs = dbService.getAllIDs("messages");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -47,11 +34,25 @@ public class SendMessageGateway {
         return messageIDs;
     }
 
+    @Override
+    public ArrayList<Message> getMessagesByChat(int chatID) {
+        try {
+            return dbService.getAllMessages(chatID);
+        } catch (ExecutionException | InterruptedException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int getChatIDByUsers(int userID, int contactID) {
+        return dbService.getChatIDByUsers(userID, contactID);
+    }
+
 
     /** Stores the message to the database
      *
-     * @param chatID
-     * @param message
+     * @param chatID the ID of the Chat that this message should be added to
+     * @param message the actual Message that should be added
      */
     public void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException {
         Chat targetChat = dbService.getChatDetails(chatID);

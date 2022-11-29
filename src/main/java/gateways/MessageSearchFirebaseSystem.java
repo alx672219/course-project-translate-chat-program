@@ -12,6 +12,7 @@ import message_search_use_case.MessageSearchGateway;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MessageSearchFirebaseSystem implements MessageSearchGateway {
@@ -34,11 +35,12 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
             Map<String, Object> chatDocumentData = chatDocument.getData(); // getting data from the document
             // Getting the value associated with "messages", which is a List of Document References to the messages in
             // the chat
+            assert chatDocumentData != null;
             ArrayList<DocumentReference> references = (ArrayList<DocumentReference>) chatDocumentData.get("messages");
             List<Message> listMsg = new ArrayList<>();
             for (DocumentReference ref : references) {
                 DocumentSnapshot msgDoc = ref.get().get(); // getting the message Document
-                String msgText = (String) msgDoc.getData().get("message"); // getting the text of the message
+                String msgText = (String) Objects.requireNonNull(msgDoc.getData()).get("message"); // getting the text of the message
                 if (msgText.toLowerCase().contains(query)) { // if query is a substring of message
                     // Creating the Message object based on the data from msgDoc
                     Message msg = createMessageFromDoc(msgDoc);
@@ -53,9 +55,9 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
 
     private Message createMessageFromDoc(DocumentSnapshot msgDoc) throws ExecutionException, InterruptedException {
         // CREATING USER ENTITY THAT IS THE RECEIVER OF THE MESSAGE
-        DocumentReference receiverRef = (DocumentReference) msgDoc.getData().get("receiver");
+        DocumentReference receiverRef = (DocumentReference) Objects.requireNonNull(msgDoc.getData()).get("receiver");
         DocumentSnapshot receiverDoc = receiverRef.get().get();
-        User receiver = new User((String) receiverDoc.getData().get("name"),
+        User receiver = new User((String) Objects.requireNonNull(receiverDoc.getData()).get("name"),
                 (String) receiverDoc.getData().get("default_lang"),
                 (String) receiverDoc.getData().get("email"),
                 (String) receiverDoc.getData().get("password"),
@@ -64,7 +66,7 @@ public class MessageSearchFirebaseSystem implements MessageSearchGateway {
         //CREATING A USER ENTITY THAT IS THE RECIPIENT OF THE MESSAGE
         DocumentReference recipientRef = (DocumentReference) msgDoc.getData().get("recipient");
         DocumentSnapshot recipientDoc = recipientRef.get().get();
-        User recipient = new User((String) recipientDoc.getData().get("name"),
+        User recipient = new User((String) Objects.requireNonNull(recipientDoc.getData()).get("name"),
                 (String) receiverDoc.getData().get("default_lang"),
                 (String) receiverDoc.getData().get("email"),
                 (String) receiverDoc.getData().get("password"),

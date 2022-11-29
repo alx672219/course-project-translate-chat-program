@@ -35,7 +35,7 @@ public class TranslateScreenTest {
         MessageTranslateController MTC = new MessageTranslateController(MTI);
 
 
-        RecordButton rc = new RecordButton(ARC, ACC, MTC);
+        RecordButton rc = new RecordButton(ARC, ACC, MTC,"fr", new JTextField());
 
 
     }

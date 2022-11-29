@@ -1,8 +1,5 @@
 package message_edit_delete_use_case;
 
-import entities.Message;
-import message_search_use_case.MessageSearchOutputBoundary;
-
 public class MessageEditInteractor implements MessageEditInputBoundary {
     private final MessageEditGateway gateway;
     private final MessageEditOutputBoundary presenter;

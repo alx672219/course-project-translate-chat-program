@@ -8,7 +8,6 @@ import java.util.Arrays;
 /**
  * An editable dropdown menu of Strings, with the added functionality that
  * typing and pressing enter will select the closest choice in the dropdown list.
- *
  * For example, if the choices are "apple", "orange", "banana" and the user types
  * "appjfe" and presses enter, "apple" will automatically be selected. If two choices are
  * equally similar to the entered text, it selects the last one in the list.
@@ -17,7 +16,7 @@ public class AutoFillDropdown extends JComboBox<String> implements ActionListene
     /**
      * List of choices in the dropdown menu.
      */
-    private String[] choices;
+    private final String[] choices;
 
     public AutoFillDropdown(String[] choices) {
         super(choices);
@@ -35,6 +34,7 @@ public class AutoFillDropdown extends JComboBox<String> implements ActionListene
             int maxSame = 0;
 
             for (String choice : choices) {
+                assert item != null;
                 int smaller = Math.min(item.length(), choice.length());
                 int numSame = 0;
                 // Calculate the number of positions that are the same

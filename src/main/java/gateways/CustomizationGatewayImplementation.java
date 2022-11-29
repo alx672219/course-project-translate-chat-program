@@ -6,6 +6,11 @@ import services.DBService;
 
 public class CustomizationGatewayImplementation implements CustomizationGateway {
     DBService dbService;
+
+    public CustomizationGatewayImplementation() {
+        this.dbService = new DBService();
+    }
+
     @Override
     public void updateDefaultLang(User user, String default_lang) {
         dbService.updateDefaultLang(user, default_lang);
