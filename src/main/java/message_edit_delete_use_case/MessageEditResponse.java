@@ -1,7 +1,9 @@
 package message_edit_delete_use_case;
 
 import shared.Response;
-
+/**
+ * The response class for the message edit use case.
+ */
 public class MessageEditResponse extends Response {
 
     private final String editedText;
