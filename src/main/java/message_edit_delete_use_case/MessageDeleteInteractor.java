@@ -26,7 +26,7 @@ public class MessageDeleteInteractor  implements MessageDeleteInputBoundary{
     /**
      * Message deleting method for MessageDeleteInteractor.
      *
-     * @param data   the date class of the message to be deleted
+     * @param data   the data class of the message to be deleted
      * @return  the response of deletion.
      */
     @Override
