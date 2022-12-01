@@ -1,5 +1,6 @@
 package message_edit_delete_use_case;
 
+
 /**
  * A data for message to be edited with a message id and chat id.
  */

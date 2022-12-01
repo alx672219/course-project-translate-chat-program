@@ -1,11 +1,12 @@
 package user_send_message;
 
-import entities.Chat;
-//import entities.TextMessage;
-import entities.User;
+
+import entities.Message;
+
 
 import java.text.ParseException;
-import java.time.LocalDate;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -13,11 +14,13 @@ public interface MessageInputBoundary {
     /**
      * Creates a message
      *
-     * @param data needed to create message instance
+     * @param senderID needed to create message instance
      * @return the message created
      */
 
-    void createChat(int chatID) throws ExecutionException, InterruptedException;
+    SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException;
 
-    void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException, ParseException;
+    ArrayList<Message> getAllMessages(int chatID);
+
+    int getChatIDByUsers(int userID, int contactID);
 }

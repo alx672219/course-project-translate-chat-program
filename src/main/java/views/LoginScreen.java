@@ -82,7 +82,10 @@ public class LoginScreen extends JPanel implements ActionListener {
                 LoginData data = resp.getData();
                 if (resp.isSuccess()) {
                     JOptionPane.showMessageDialog(this, "Log into account with paramters: \n" +
-                            data.getUsername() + "\n" + data.getPassword() + "\n" + resp.getTime());
+                            data.getUsername() + "\n" + data.getPassword() + "\n" + resp.getTime() + "\n" +
+                            resp.getUser().getUser_id());
+                    ((HomeScreen) nav.getScreen("home")).finalizeScreen(resp.getUser());
+                    nav.showScreen("home");
                 } else {
                     JOptionPane.showMessageDialog(this, resp.getException().getMessage());
                 }

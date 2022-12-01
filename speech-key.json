@@ -1,7 +1,12 @@
-/*
-
-This is where the google cloud key will go,
-I currently dont have it because
-google sends me emails if i put it on github
-
-*/
+{
+  "type": "service_account",
+  "project_id": "neat-motif-367904",
+  "private_key_id": "5e6074e2ec155c6e2c3185f924056b0142291dd7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCna71b7GHH3Oa/\ndYemLu+0Oyhm/hcosSATGD1W+UpOL2WB2rVPUMfwxru+ieigIIFVkxZVAM/Ggcmt\nNmI4GZj1TvsruDNNmTRymyi0MASSFQXNZmNPDJf4huvbjmjkbev8D9/bogl1ncAj\nZKL4JYnNS872VxbeWv3pPW47OwmXbWhYBu1LxtI4LJ0pGLdITdzq0HJuAxMbwSRA\nnBtboII9VS5QKP6FqBs6hjYcdeyqpdU7n1R2izI7C83y0xAwkTtqezj+Eu/IJ6La\n2h3pQMTXQjJcC9foi7INuL6qgDDtz1qNAuhxMAqbWjUHFUN9wh3RA/G4gOcNN9Id\nAow1xlt9AgMBAAECggEAE9QDBHrJttu++WBwTRqEeaZC+fWwZPmbWJ+XjjAuoHVl\nEnzGWesxjt7el+mp4yMOZkXqEG2s7e/rpIfLGKVRdAYjYbFqZA+XwlYFe1evhuSW\nABZW/yL48a57CxEB88Hf/8Wah97YO3WQLrDpyzVY7XdDvvGgC/wfU8safcnXcDdM\nCxTalUuBPHzWzx/a6NVdp0I5DkOOaHgwEOkCcf/KUg9TxCQ3t5AZKMbWMKMMcv+7\ntz/rtzhHGl8S4sCWkxLoh6Dpuc1dTbFzE+HGPj8+OvqHV7AVXCYgf4+t1vEfO8d+\nhYlJCEShNtXDJz23dI1g/f2w6+fc5zoxaBu7ldp4MQKBgQDd5nffm9iNEYyvukKB\nx//bo5/GMumVvY02icj1GwuWZvS2Ha8P3xjtvTMCLv4A0q51kuL9BX+/EAl6fdv4\nXYs9Fen1JoPESeML4rfxFt3o+rO5kBCqu4MZRyg0buJ03OQgE9ZBWIuRVA2RN1kw\nFEl/w+yz8X6RnQVN+6g7Wm8tzQKBgQDBJg69I8DWBpJcqrPOsHU84ZNtgd4XXHwP\nQP5DEfpwNVgnzdCjlP58R7AQwtsSQhSnopztV15GLvxhdq5fdvQ6p1aaRe5vhoWK\nEg3e0W4dYbjaCa9l7kKyytzp5NdS+K15yCHOux2vIaah4cOF+aiWrxO7ScQglMvU\naEsDkXu0cQKBgQCuZliIkkAcf1KHOmjS/5GD2pHUgGc9nQDDgH9ExMDSsJBcIfBZ\nFQrOrwjMCorvsqYTGiL0ocHJNJ1+fDTKexrYI8UBPAgL2dZsnP/cqBA47/EZQrUW\nutFKqLZcn1m0Z3eUDoMyUJlA20LegxXBx/AMTrxWoNLNNw/YPpX2MBl5cQKBgQCw\nClPcp72WVJ8JvrvrYoE4YBDS+k7F1BFuhbo4vyYXJ0eV38yNi7r24w/h9vdciMXy\nlA+bcsoGBcUZv+XmNLEc1G/mZF6RX3ZPBW2G7DMErJCiiblHmgVImAUJWP24LddO\n682Ecp73hCAv42klrwqtbBz70pvjZjrw+a2FLxAkwQKBgEyduFt5Nr/DX9pqLTox\n75Rvlo9xlKlt8fvn1S3ygG7itLHRhB9iY8FNWibKu+qNxtxx/KA/OFW5hoWEZnpu\nPt+8RdtfjKE8O9l32wSQQjop3iWMqXQkeQIi9c6B3p76XjGcs/7Q1GmbFWkasWG2\n/tzsupfeYSTm17dYpQHUqWrb\n-----END PRIVATE KEY-----\n",
+  "client_email": "speech-translator@neat-motif-367904.iam.gserviceaccount.com",
+  "client_id": "109954909661617511450",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/speech-translator%40neat-motif-367904.iam.gserviceaccount.com"
+}

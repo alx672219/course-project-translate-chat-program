@@ -3,25 +3,11 @@ package services;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-
-import com.google.firestore.v1.Write;
 import entities.User;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import entities.User;
-
-import javax.swing.text.Document;
-import java.util.HashMap;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import entities.Chat;
 import entities.Message;
-import entities.User;
-
-import javax.swing.text.Document;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,26 +17,35 @@ import java.util.concurrent.ExecutionException;
 
 public class DBService {
 
-    /**
+    /** Write the data of a given user to Firestore.
      *
-     * @param user
-     * @return
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @param user The User to write to the database
+     * @return The time at which the data was written
+     * @throws ExecutionException If execution is interrupted
+     * @throws InterruptedException If execution is interrupted
      */
     public String saveUserDetails(User user) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String docName = "id" + String.valueOf(user.getUser_id());
+        String docName = "id" + user.getUser_id();
         ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("users").document(docName).set(user);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
 
+    /**
+     * Returns the given User object corresponding to the given user id if
+     * one exists, otherwise returns null.
+     *
+     * @param userID The user id which corresponds to the user.
+     * @return The User object corresponding to the given user id
+     * @throws ExecutionException If execution is interrupted
+     * @throws InterruptedException If execution is interrupted
+     */
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         // First get document reference from specified collection and document
         // Then get the APIFuture of that document
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String documentName = "id" + String.valueOf(userID);
+        String documentName = "id" + userID;
         DocumentReference documentReference = dbFirestore.collection("users").document(documentName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
@@ -72,42 +67,45 @@ public class DBService {
         String docInfo = "id" + user.getUser_id();
         user.setDefault_lang(newDefaultLang);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("default_lang", user.getDefault_lang());
+
+        docRef.update("default_lang", user.getDefault_lang());
+
     }
     public void updateName(User user, String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
         user.setName(name);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("name", user.getName());
+        docRef.update("name", user.getName());
     }
     public void updatePassword(User user, String password) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
         user.setPassword(password);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        ApiFuture future = docRef.update("password", user.getPassword());
+        docRef.update("password", user.getPassword());
     }
 
     public boolean existName(User user) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference usersReference = dbFirestore.collection("users");
-        String userID = "id" + user.getUser_id();
 
         try {
             for (DocumentReference ref : usersReference.listDocuments()) {
-                if (ref.get().get().getData().get("user_id").equals(user.getUser_id())) {
-                    return false;
+                if (Objects.requireNonNull(ref.get().get().getData()).get("name").equals(user.getName())) {
+                    return true;
                 }
             }
-            return true;
+            return false;
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-/**
+
+
+    /**
      * Returns a list of all the user ids that are currently registered for the app.
      * @return a list of all user ids currently registered for the app.
      * @throws ExecutionException If firebase cannot execute properly
@@ -121,7 +119,7 @@ public class DBService {
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot query : documents) {
-            int uid = Integer.parseInt(query.get("user_id").toString());
+            int uid = Integer.parseInt(Objects.requireNonNull(query.get("user_id")).toString());
             ret.add(uid);
         }
         return ret;
@@ -145,71 +143,63 @@ public class DBService {
         return null;
     }
 
-    public void addContact(User user, Long contactID) throws ExecutionException, InterruptedException {
+    public void addContact(User user, Long contactID) {
         Firestore dbFireStore = FirestoreClient.getFirestore();
-        //System.out.println(user.getContacts());
         String docName = "id" + user.getUser_id();
-        //System.out.println(docName);
         user.getContacts().add(contactID);
-        //System.out.println(user.getContacts());
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        //System.out.println(docRef);
-        //System.out.println(user.getContacts());
-        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
-        WriteResult result = future.get();
+        docRef.update("contacts", user.getContacts());
+
     }
 
 
     public void deleteContact(User user, Long contactID) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
-        //System.out.println(user.getContacts());
         String docName = "id" + user.getUser_id();
-        //System.out.println(docName);
-        //System.out.println(user.getContacts().getClass().getName());
-        //System.out.println(user.getContacts());
         user.getContacts().remove(contactID);
-        //System.out.println(user.getContacts());
         DocumentReference docRef = dbFireStore.collection("users").document(docName);
-        //System.out.println(docRef);
-        //System.out.println(user.getContacts());
-        ApiFuture<WriteResult> future = docRef.update("contacts", user.getContacts());
-        WriteResult result = future.get();
+        docRef.update("contacts", user.getContacts());
     }
 
     public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String documentName = "id" + String.valueOf(chatID);
+        String documentName = "id" + chatID;
         DocumentReference documentReference = dbFirestore.collection("chats").document(documentName);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
         DocumentSnapshot document = future.get();
 
-        Chat chat = null;
         if (document.exists()) {
             // Convert documentReference to class
-            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) document.getData().get("messages");
+            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) Objects.requireNonNull(document.getData()).get("messages");
             ArrayList<Message> messages = new ArrayList<>();
             for (DocumentReference messageRef: messageRefs) {
                 // Get the document reference of the message's receiver object instance
-                DocumentReference receiverRef = (DocumentReference) messageRef.get().get().getData().get("receiver");
+                DocumentReference receiverRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("receiver");
                 // Convert it into a User class
                 User receiver = receiverRef.get().get().toObject(User.class);
 
                 // Get the document reference of the message's receiver object instance
-                DocumentReference recipientRef = (DocumentReference) messageRef.get().get().getData().get("recipient");
+                DocumentReference recipientRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("recipient");
                 // Convert it into a User class
                 User recipient = recipientRef.get().get().toObject(User.class);
 
-                Integer id = Integer.parseInt((String) messageRef.get().get().getData().get("id"));
-                String messageText = (String) messageRef.get().get().getData().get("message");
+                int id = ((Long) Objects.requireNonNull(messageRef.get().get().getData()).get("id")).intValue();
+                String messageText = (String) Objects.requireNonNull(messageRef.get().get().getData()).get("message");
 
-                String timestamp = messageRef.get().get().getData().get("timestamp").toString();
+                String timestamp = Objects.requireNonNull(messageRef.get().get().getData()).get("timestamp").toString();
                 Date date = new SimpleDateFormat("dd-MM-yyyy").parse(timestamp);
 
                 Message message = new Message(id, messageText, receiver, recipient, date);
                 messages.add(message);
             }
-            Chat targetChat = new Chat(chatID);
+            ArrayList<DocumentReference> usersRef = (ArrayList<DocumentReference>) document.getData().get("users");
+            ArrayList<User> users = new ArrayList<>();
+            for (DocumentReference userRef : usersRef) {
+                users.add(userRef.get().get().toObject(User.class));
+            }
+
+            Chat targetChat = new Chat(chatID, users);
             targetChat.setMessages(messages);
             return targetChat;
 
@@ -218,11 +208,11 @@ public class DBService {
         }
     }
 
-    public List<Integer> getAllMessageIDs() throws ExecutionException, InterruptedException {
+    public List<Integer> getAllIDs(String collection) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         ArrayList<Integer> ret = new ArrayList<>();
         // asynchronously retrieve all documents
-        ApiFuture<QuerySnapshot> future = db.collection("messages").get();
+        ApiFuture<QuerySnapshot> future = db.collection(collection).get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot query : documents) {
@@ -232,21 +222,70 @@ public class DBService {
         return ret;
     }
 
+
+
+    public ArrayList<Message> getAllMessages(int chatID) throws ExecutionException, InterruptedException, ParseException {
+        Firestore dbFireStore = FirestoreClient.getFirestore();
+        String documentName = "id" + chatID;
+        DocumentReference documentReference = dbFireStore.collection("chats").document(documentName);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        DocumentSnapshot document = future.get();
+
+
+        if (document.exists()) {
+            // Convert document reference to class
+            ArrayList<DocumentReference> messageRefs = (ArrayList<DocumentReference>) Objects.requireNonNull(document.getData()).get("messages");
+            ArrayList<Message> messages = new ArrayList<>();
+            for (DocumentReference messageRef: messageRefs) {
+                // Get the document reference of the message's receiver object instance
+                DocumentReference receiverRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("receiver");
+                // Convert it into a User class
+                User receiver = receiverRef.get().get().toObject(User.class);
+
+                // Get the document reference of the message's receiver object instance
+                DocumentReference recipientRef = (DocumentReference) Objects.requireNonNull(messageRef.get().get().getData()).get("recipient");
+                // Convert it into a User class
+                User recipient = recipientRef.get().get().toObject(User.class);
+
+                int id = ((Long) Objects.requireNonNull(messageRef.get().get().getData()).get("id")).intValue();
+                String messageText = (String) Objects.requireNonNull(messageRef.get().get().getData()).get("message");
+
+                String timestamp = Objects.requireNonNull(messageRef.get().get().getData()).get("timestamp").toString();
+                Date date = new SimpleDateFormat("dd-MM-yyyy").parse(timestamp);
+
+                Message message = new Message(id, messageText, receiver, recipient, date);
+                messages.add(message);
+            }
+
+            return messages;
+        } else {
+            return null;
+        }
+    }
+
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
 
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", String.valueOf(chat.getId()));
-        ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
 
+        ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
         for (Message message: chat.getMessages()) {
-            String messageID = "id" + String.valueOf(message.getId());
+            String messageID = "id" + message.getId();
             DocumentReference messageRef = dbFireStore.collection("messages").document(messageID);
             listMessagePaths.add(messageRef);
         }
+        ArrayList<DocumentReference> listUserPaths = new ArrayList<>();
+        for (User user : chat.getUsers()) {
+            String userID = "id" + user.getUser_id();
+            DocumentReference userRef = dbFireStore.collection("users").document(userID);
+            listUserPaths.add(userRef);
+        }
 
+        docData.put("users", listUserPaths);
         docData.put("messages", listMessagePaths);
-        String docName = "id" + String.valueOf(chat.getId());
+        String docName = "id" + chat.getId();
         ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
         collectionsApiFuture.get();
     }
@@ -256,8 +295,8 @@ public class DBService {
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", message.getId());
 
-        String receiverID = "id" + String.valueOf(message.getReceiver().getUser_id());
-        String recipientID = "id" + String.valueOf(message.getRecipient().getUser_id());
+        String receiverID = "id" + message.getReceiver().getUser_id();
+        String recipientID = "id" + message.getRecipient().getUser_id();
 
         DocumentReference receiverRef = dbFirestore.collection("users").document(receiverID);
         DocumentReference recipientRef = dbFirestore.collection("users").document(recipientID);
@@ -267,16 +306,65 @@ public class DBService {
         docData.put("recipient", recipientRef);
         docData.put("timestamp", message.getTimestamp());
 
-        String docName = "id" + String.valueOf(message.getId());
+        String docName = "id" + message.getId();
         DocumentReference messageRef = dbFirestore.collection("messages").document(docName);
 
         ApiFuture<WriteResult> collectionsApiFuture = messageRef.set(docData);
         collectionsApiFuture.get();
 
         // Add the message to the chat
-        String chatDocName = "id" + String.valueOf(chat.getId());
+        String chatDocName = "id" + chat.getId();
         DocumentReference chatRef = dbFirestore.collection("chats").document(chatDocName);
 
-        ApiFuture<WriteResult> arrayUnion = chatRef.update("messages", FieldValue.arrayUnion(messageRef));
+        chatRef.update("messages", FieldValue.arrayUnion(messageRef));
+    }
+
+    public void deleteChat(Integer userID, Integer contactID) {
+
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        try {
+            List<QueryDocumentSnapshot> docs = dbFirestore.collection("chats").get().get().getDocuments();
+            for (QueryDocumentSnapshot query : docs) {
+                List<Integer> ids = this.getUserIDsOfChat(query);
+                if (ids.contains(userID) && ids.contains(contactID)) {
+                    query.getReference().delete();
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public List<Integer> getUserIDsOfChat(QueryDocumentSnapshot query) {
+        List<DocumentReference> userRefs = (List<DocumentReference>) query.get("users");
+        List<Integer> ids = new ArrayList<>();
+        assert userRefs != null;
+        for (DocumentReference userRef : userRefs) {
+            int id;
+            try {
+                id = ((Long) Objects.requireNonNull(userRef.get().get().getData()).get("user_id")).intValue();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            ids.add(id);
+        }
+        return ids;
+    }
+
+    public int getChatIDByUsers(int userID, int contactID) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        try {
+            List<QueryDocumentSnapshot> docs = dbFirestore.collection("chats").get().get().getDocuments();
+            for (QueryDocumentSnapshot query : docs) {
+                List<Integer> ids = this.getUserIDsOfChat(query);
+                if (ids.contains(userID) && ids.contains(contactID)) {
+                    return Integer.parseInt((String) Objects.requireNonNull(query.get("id")));
+                }
+            }
+            return -1;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

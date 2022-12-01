@@ -2,38 +2,43 @@ package views;
 
 import entities.Message;
 //import entities.TextMessage;
-import entities.User;
 import user_send_message.MessageInputBoundary;
-import user_send_message.MessageOutputBoundary;
+import user_send_message.SendMessageResponse;
 
 import java.text.ParseException;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 public class SendMessageController {
     private final MessageInputBoundary messageInputBoundary;
-    private final MessageOutputBoundary messageOutputBoundary;
+//    private final MessageOutputBoundary messageOutputBoundary;
 
-    public SendMessageController(MessageInputBoundary messageInputBoundary, MessageOutputBoundary messageOutputBoundary) {
+    public SendMessageController(MessageInputBoundary messageInputBoundary) {
         this.messageInputBoundary = messageInputBoundary;
-        this.messageOutputBoundary = messageOutputBoundary;
+//        this.messageOutputBoundary = messageOutputBoundary;
     }
 
-    public void createChat(int chatID) throws ExecutionException, InterruptedException {
-        this.messageInputBoundary.createChat(chatID);
-    }
+
 
     /** Sends the created message
      *
-     * @param id
+     * @param chatID
      * @param message
-     * @param receiver
-     * @param recipient
+     * @param receiverID
+     * @param senderID
      * @param timestamp
      */
-    public void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
-        this.messageInputBoundary.sendMessage(chatID, id, message, receiver, recipient, timestamp);
+    public SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
+        return this.messageInputBoundary.sendMessage(chatID, message, senderID, receiverID, timestamp);
+    }
+
+    public ArrayList<Message> getAllMessages(int chatID) {
+        return this.messageInputBoundary.getAllMessages(chatID);
+    }
+
+    public int getChatIDByUsers(int userID, int contactID) {
+        return this.messageInputBoundary.getChatIDByUsers(userID, contactID);
     }
 
 }

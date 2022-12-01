@@ -1,7 +1,9 @@
 package message_edit_delete_use_case;
+
 /**
  * The interactor class for the message edit use case.
  */
+
 public class MessageEditInteractor implements MessageEditInputBoundary {
     /**
      * The gateway class for the message edit use case.

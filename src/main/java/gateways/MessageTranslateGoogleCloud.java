@@ -1,7 +1,7 @@
 package gateways;
 
-import atranslate_use_case.MessageTranslateData;
-import atranslate_use_case.MessageTranslateGateway;
+import translate_use_case.MessageTranslateData;
+import translate_use_case.MessageTranslateGateway;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;
@@ -10,12 +10,11 @@ import com.google.cloud.translate.Translation;
 
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MessageTranslateGoogleCloud implements MessageTranslateGateway {
     String keyPath;
-    private Translate translate;
+    private final Translate translate;
 
     public MessageTranslateGoogleCloud(String keyPath) throws IOException {
         this.keyPath = keyPath;
@@ -35,9 +34,8 @@ public class MessageTranslateGoogleCloud implements MessageTranslateGateway {
         return translation.getTranslatedText();
     }
     public Translate createTranslate(String keyPath) throws IOException {
-        Translate translate = TranslateOptions.newBuilder().setCredentials(ServiceAccountCredentials
-                .fromStream(new FileInputStream(keyPath))).build().getService();
 
-        return translate;
+        return TranslateOptions.newBuilder().setCredentials(ServiceAccountCredentials
+                .fromStream(new FileInputStream(keyPath))).build().getService();
     }
 }

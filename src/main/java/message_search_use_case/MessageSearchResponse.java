@@ -6,8 +6,8 @@ import shared.Response;
 import java.util.List;
 
 public class MessageSearchResponse extends Response {
-    private String text;
-    private List<Message> messages;
+    private final String text;
+    private final List<Message> messages;
 
     /**
      * Constructor for MessageSearchResponse.
