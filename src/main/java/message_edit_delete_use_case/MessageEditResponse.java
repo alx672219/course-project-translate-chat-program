@@ -11,7 +11,7 @@ public class MessageEditResponse extends Response {
 
     private final String editedText;
     /**
-     * Message ID to be deleted.
+     * Edited version of the message.
      */
     private final int id;
     /**
