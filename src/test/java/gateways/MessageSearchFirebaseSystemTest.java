@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageSearchFirebaseSystemTest {
-    private final MessageSearchFirebaseSystem gateway = new MessageSearchFirebaseSystem();
+    private MessageSearchFirebaseSystem gateway = new MessageSearchFirebaseSystem();
     DBInitializer dbInitializer = new DBInitializer();
 
 
