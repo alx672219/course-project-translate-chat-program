@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class MessageEditFirebaseSystem implements MessageEditGateway {
     /**
-     * Message deleting method for MessageEditFirebaseSystem.
+     * Message editing method for MessageEditFirebaseSystem.
      *
      * @param data the data class of the message to be edited.
      */
