@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ *View class for Edit, Delete pop up menu
+ */
 public class EditDeletePopupMenu extends JPopupMenu {
     JMenuItem edit;
     JMenuItem delete;
