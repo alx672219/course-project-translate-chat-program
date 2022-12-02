@@ -58,11 +58,5 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
         Chat targetChat = dbService.getChatDetails(chatID);
         targetChat.addMessage(message);
         dbService.addMessage(message, targetChat);
-//        dbService.addMessage(message, targetChat);
-
-
-        //                User sender = new User("Billy", "en", "billy@gmail.com", "123", 6);
-//                User receiver = new User("Howard", "en", "howard@gmail.com", "123", 7);
-//
     }
 }
