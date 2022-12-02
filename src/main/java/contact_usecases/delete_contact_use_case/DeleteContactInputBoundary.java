@@ -8,5 +8,5 @@ public interface DeleteContactInputBoundary {
      * Add a contact
      */
 
-    void deleteContact(Integer userID, Integer contactID) throws ExecutionException, InterruptedException;
+    DeleteContactResponse deleteContact(DeleteContactData data);
 }

@@ -20,7 +20,6 @@ public class TranslateScreen extends JFrame {
         translatedText = new JLabel(MTC.translate(data).getResult());
         this.add(translatedText);
         this.setVisible(true);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
     }

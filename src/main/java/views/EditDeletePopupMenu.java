@@ -2,7 +2,6 @@ package views;
 
 import message_edit_delete_use_case.MessageDeleteData;
 import message_edit_delete_use_case.MessageEditData;
-import org.apache.arrow.flatbuf.Int;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ *View class for Edit, Delete pop up menu
+ */
 public class EditDeletePopupMenu extends JPopupMenu {
     JMenuItem edit;
     JMenuItem delete;
@@ -67,15 +69,13 @@ public class EditDeletePopupMenu extends JPopupMenu {
             }
         }
     }
-    class DeleteActionListener implements  ActionListener{
+    class DeleteActionListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
                 ((MessageDeleteController) controllers.get(1)).delete(new MessageDeleteData(ids.get(0), ids.get(1)));
-                //chatBox.remove(message);
-                //chatBox.revalidate();
-                //chatBox.repaint();
+                message.setText("");
             } catch (ExecutionException | InterruptedException ex){
 
                 JOptionPane.showMessageDialog(parentPanel, "Something went wrong! Please try again!");

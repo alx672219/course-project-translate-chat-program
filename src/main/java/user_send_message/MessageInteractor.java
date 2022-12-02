@@ -1,36 +1,52 @@
 package user_send_message;
 
-import entities.Chat;
 import entities.Message;
 import entities.User;
-import gateways.SendMessageGateway;
+import gateways.SendMessageGatewayImplementation;
 
 import java.text.ParseException;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
-//import entities.TextMessage;
 
 public class MessageInteractor implements MessageInputBoundary {
     SendMessageGateway sendMessageGateway;
 
-    public MessageInteractor() {
-        sendMessageGateway = new SendMessageGateway();
+    public MessageInteractor(SendMessageGateway sendMessageGateway) {
+        this.sendMessageGateway = sendMessageGateway;
     }
 
     @Override
-    public void createChat(int chatID) throws ExecutionException, InterruptedException {
-        Chat chat = new Chat(chatID);
-        sendMessageGateway.addChat(chat);
-    }
+    public SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
+//        Chat currChat = dbService.getChatDetails(chatID);
 
-    @Override
-    public void sendMessage(int chatID, int id, String message, User receiver, User recipient, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
+        User sender = sendMessageGateway.getUserDetails(senderID);
+        User receiver = sendMessageGateway.getUserDetails(receiverID);
+
         MessageFactory messageFactory = new MessageFactory();
-        Message messsageToSend = messageFactory.createMessage(chatID, id, message, receiver, recipient, timestamp);
+
+
+        List<Integer> messageIDs = sendMessageGateway.getAllMessages();
+
+        int nextMessageID = Collections.max(messageIDs) + 1;
+
+        Message messsageToSend = messageFactory.createMessage(nextMessageID, message, sender, receiver, timestamp);
         // Gateway
-        SendMessageGateway sendMessageGateway = new SendMessageGateway();
+        sendMessageGateway = new SendMessageGatewayImplementation();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
+        return new SendMessageResponse(messsageToSend, true, null);
+    }
+
+    @Override
+    public ArrayList<Message> getAllMessages(int chatID) {
+        return sendMessageGateway.getMessagesByChat(chatID);
+    }
+
+    @Override
+    public int getChatIDByUsers(int userID, int contactID) {
+        return sendMessageGateway.getChatIDByUsers(userID, contactID);
     }
 
 }

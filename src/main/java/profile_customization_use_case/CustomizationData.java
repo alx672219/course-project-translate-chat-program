@@ -4,10 +4,10 @@ import entities.User;
 
 public class CustomizationData {
 
-    private String name;
-    private String default_lang;
-    private String password;
-    private User user;
+    private final String name;
+    private final String default_lang;
+    private final String password;
+    private final User user;
 
     /**
      * Constructor for CustomizationData

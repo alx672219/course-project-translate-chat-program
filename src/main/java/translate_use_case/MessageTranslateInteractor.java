@@ -17,7 +17,7 @@ public class MessageTranslateInteractor implements MessageTranslateInputBoundary
         //Do failure cases
 
         String result = gateway.translate(data);
-        MessageTranslateResponse response = new MessageTranslateResponse(data.getOriginal(), data.getTargetLanguage(), data.getSourceLanguage(),
+        MessageTranslateResponse response = new MessageTranslateResponse(
                 result, true, null);
         return presenter.prepareSuccessView(response);
     }
