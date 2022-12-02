@@ -2,6 +2,9 @@ package user_register_use_case;
 
 import shared.Response;
 
+/**
+ * Transient class modelling the response from a registration request.
+ */
 public class RegisterResponse extends Response {
 
     public CreationData data;

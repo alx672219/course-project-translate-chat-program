@@ -1,7 +1,16 @@
 package user_register_use_case;
 
+/**
+ * The use case interactor for registering new users.
+ */
 public class UserRegistrationInteractor implements UserRegisterInputBoundary{
+    /**
+     * The gateway through which new users will be created and stored.
+     */
     private final UserRegistrationGateway factory;
+    /**
+     * The presenter that is updated after the request.
+     */
     private final UserRegisterOutputBoundary presenter;
 
     public UserRegistrationInteractor(UserRegistrationGateway factory, UserRegisterOutputBoundary presenter) {
@@ -9,6 +18,11 @@ public class UserRegistrationInteractor implements UserRegisterInputBoundary{
         this.presenter = presenter;
     }
 
+    /**
+     * Attemps to create a new user using the given data.
+     * @param data the information used to create the User
+     * @return a response indicating whether the new user was successfully created
+     */
     @Override
     public RegisterResponse create(CreationData data) {
         try {

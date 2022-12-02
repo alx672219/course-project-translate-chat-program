@@ -19,6 +19,10 @@ class DBServiceTest {
     private static Firestore db;
     private static DBService dbs;
 
+    /**
+     * Intializes the database before any of the tests run.
+     * @throws FileNotFoundException if the database cannot be accessed.
+     */
     @BeforeAll
     static void init() throws FileNotFoundException {
         DBInitializer init = new DBInitializer();
@@ -27,32 +31,46 @@ class DBServiceTest {
         dbs = new DBService();
     }
 
-    // Sets up a fake user in the database before each test
+    /**
+     * Creates some fake data in the database for testing purposes.
+     * @throws InterruptedException in case the database request is interrupted before it finishes.
+     */
     @BeforeEach
     void setup() throws InterruptedException {
-        User newUser = new User("NewUser", "english", "email@email.com", "password",1);
-        newUser.setUser_id(6);
+        User newUser = new User("NewUser", "english", "email@email.com", "password", 6);
         db.collection("users").document("id6").set(newUser);
         // This just pauses execution for 1 second so that the database
         // can actually update, otherwise the tests run before the database
         // actually reflects the changes
         Thread.sleep(1000);
     }
-    // Tears down the fake user after each test is completed.
+
+    /**
+     * Deletes the users which were added during the setUp method.
+     */
     @AfterEach
-    void tearDown() throws ExecutionException, InterruptedException {
+    void tearDown() {
         db.collection("users").document("id6").delete();
         db.collection("users").document("id7").delete();
     }
 
+    /**
+     * Tests that user data is successfully saved.
+     * @throws ExecutionException in case the database cannot be accessed
+     * @throws InterruptedException in case the database cannot be accessed
+     */
     @Test
     void saveUserDetails() throws ExecutionException, InterruptedException {
-        User newUser = new User("NewUser2", "english", "email", "password",1);
-        newUser.setUser_id(7);
+        User newUser = new User("NewUser2", "english", "email", "password", 7);
         dbs.saveUserDetails(newUser);
         assert !db.collection("users").whereEqualTo("name", "NewUser").get().get().isEmpty();
     }
 
+    /**
+     * Tests that getAllUserId works correctly
+     * @throws ExecutionException in case the database cannot be accessed
+     * @throws InterruptedException in case the database cannot be accessed
+     */
     @Test
     void getAllUserId() throws ExecutionException, InterruptedException {
         List<Integer> ids = dbs.getAllUserId();
@@ -60,6 +78,11 @@ class DBServiceTest {
         assertTrue(ids.contains(6));
     }
 
+    /**
+     * Tests a successful getByUsername call
+     * @throws ExecutionException in case the database cannot be accessed
+     * @throws InterruptedException in case the database cannot be accessed
+     */
     @Test
     void getByUsername() throws ExecutionException, InterruptedException {
         User user = dbs.getByUsername("NewUser");
