@@ -69,4 +69,7 @@ class DBServiceTest {
         assertEquals(user.getPassword(), "password");
         assertEquals(user.getUser_id(), 6);
     }
+
+
+
 }

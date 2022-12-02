@@ -32,6 +32,7 @@ class UserLoginFirebaseSystemTest {
     public static void setup() throws ExecutionException, InterruptedException {
         db = mock(DBService.class);
         loginFirebaseSystem = new UserLoginFirebaseSystem(db);
+
         goodData = new LoginData("danny", " 123");
         badData1 = new LoginData("danny", "356");
         badData2 = new LoginData("Doesn't exist", "password");
