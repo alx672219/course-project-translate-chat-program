@@ -85,7 +85,7 @@ public class Main {
     private static JPanel initHomeScreen(Navigator nav) throws IOException {
         Map<String, Object> controllers = new HashMap<>();
 
-        CustomizationGateway customizationGateway = new CustomizationGatewayImplementation();
+        CustomizationGateway customizationGateway = new CustomizationFirebaseSystem();
         CustomizationOutputBoundary customizationPresenter = new CustomizationPresenter();
         CustomizationInputBoundary customizationInteractor = new CustomizationInteractor(customizationGateway,
                 customizationPresenter);
