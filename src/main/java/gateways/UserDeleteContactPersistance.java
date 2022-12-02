@@ -36,4 +36,12 @@ public class UserDeleteContactPersistance implements UserDeleteContactGateway {
         ids.add(contactID);
         return ids;
     }
+
+    public User getUserDetails(int userID) {
+        try {
+            return dbService.getUserDetails(userID);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
