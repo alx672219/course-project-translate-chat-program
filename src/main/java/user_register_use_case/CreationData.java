@@ -1,5 +1,8 @@
 package user_register_use_case;
 
+/**
+ * A transient class storing all the data required for a registration.
+ */
 public class CreationData {
     private final String username;
     private final String password;

@@ -1,5 +1,8 @@
 package user_login_use_case;
 
+/**
+ * Transient class that stores the data required for a login.
+ */
 public class LoginData {
     private final String username;
     private final String password;
