@@ -60,8 +60,11 @@ public class User {
         this.user_id = s;
     }
 
-//    public void setContacts(Long s) {
-//        this.contacts.add(s);
-//    }
-    // TODO: Add remaining User attributes as needed.
+    public void addContact(Long contactID) {
+        this.contacts.add(contactID);
+    }
+
+    public void setContacts(ArrayList<Long> contacts) {
+        this.contacts = contacts;
+    }
 }
