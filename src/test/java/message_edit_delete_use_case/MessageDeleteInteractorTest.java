@@ -4,8 +4,6 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import gateways.MessageDeleteFirebaseSystem;
-import message_search_use_case.MessageSearchResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.DBInitializer;
 import views.MessageDeletePresenter;

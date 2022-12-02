@@ -62,13 +62,26 @@ public class DBService {
 
     }
 
+    /**
+     * Change user's default language to the new language
+     * @param user the user whose default language is to be changed
+     * @param newDefaultLang the new language to change to
+     */
     public void updateDefaultLang(User user, String newDefaultLang) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
         user.setDefault_lang(newDefaultLang);
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
+
         docRef.update("default_lang", user.getDefault_lang());
+
     }
+
+    /**
+     * Change user's name to the new name
+     * @param user the user whose name is to be changed
+     * @param name the new name to change to
+     */
     public void updateName(User user, String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
@@ -76,6 +89,12 @@ public class DBService {
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
         docRef.update("name", user.getName());
     }
+
+    /**
+     * Change user's password to the new password
+     * @param user the user whose password is to be changed
+     * @param password the new password to change to
+     */
     public void updatePassword(User user, String password) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String docInfo = "id" + user.getUser_id();
@@ -84,6 +103,11 @@ public class DBService {
         docRef.update("password", user.getPassword());
     }
 
+    /**
+     * Returns true if user's name exist and false otherwise
+     * @param user to check user's name
+     * @return true or false
+     */
     public boolean existName(User user) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         CollectionReference usersReference = dbFirestore.collection("users");
@@ -99,6 +123,7 @@ public class DBService {
             throw new RuntimeException(e);
         }
     }
+
 
 
 

@@ -7,17 +7,26 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
     CustomizationGateway gateway;
     CustomizationOutputBoundary presenter;
 
+    /**
+     * Constructor for CustomizationInteractor
+     * @param gateway to access database
+     * @param presenter to inform UI what to show
+     */
     public CustomizationInteractor(CustomizationGateway gateway, CustomizationOutputBoundary presenter) {
         this.gateway = gateway;
         this.presenter = presenter;
     }
 
+    /**
+     *Change language to the new language provided in data and return a response
+     * @param data on what language to change to
+     * @return CustomizationResponse class on what to display to user
+     */
     @Override
-    public void changeLanguage(CustomizationData data) {
+    public CustomizationResponse changeLanguage(CustomizationData data) {
         // Update the database such that the user's "default_lang" field is updated
-        if (data.getDefaultLang().isEmpty()) {
-            presenter.prepareFailView("Please enter a language");
-            return;
+        if (data.getDefaultLang().isBlank()) {
+            return presenter.prepareFailView("Please enter a language");
         }
 
         String default_lang = data.getDefaultLang();
@@ -26,20 +35,23 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
         CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null);
 
         gateway.updateDefaultLang(data.getUser(), data.getDefaultLang());
-        presenter.prepareSuccessView(response);
+        return presenter.prepareSuccessView(response);
     }
 
+    /**
+     * Change name to the new name provided in data and return a response
+     * @param data on what name to change to
+     * @return CustomizationResponse class on what to display to user
+     */
     @Override
-    public void changeName(CustomizationData data) {
+    public CustomizationResponse changeName(CustomizationData data) {
         // Update the database such that the user's "name" field is updated
         User updatedUser = new User(data.getName(), data.getUser().getDefault_lang(), data.getUser().getEmail(),
                 data.getUser().getPassword(), data.getUser().getUser_id());
-        if (data.getName().isEmpty()) {
-            presenter.prepareFailView("Please enter a name");
-            return;
+        if (data.getName().isBlank()) {
+            return presenter.prepareFailView("Please enter a name");
         } else if (gateway.existName(updatedUser)) {
-            presenter.prepareFailView("Name already taken, please enter another name");
-            return;
+            return presenter.prepareFailView("Name already taken, please enter another name");
         }
 
         String default_lang = data.getDefaultLang();
@@ -48,18 +60,21 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
         CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null);
 
         gateway.updateName(data.getUser(), data.getName());
-        presenter.prepareSuccessView(response);
+        return presenter.prepareSuccessView(response);
     }
 
+    /**
+     * Change password to the new password provided in data and return a response
+     * @param data on what password to change to
+     * @return CustomizationResponse class on what to display to user
+     */
     @Override
-    public void changePassword(CustomizationData data) {
+    public CustomizationResponse changePassword(CustomizationData data) {
         // Update the database such that the user's "password" field is updated
-        if (data.getPassword().isEmpty()) {
-            presenter.prepareFailView("Please enter a password");
-            return;
+        if (data.getPassword().isBlank()) {
+            return presenter.prepareFailView("Please enter a password");
         } else if (data.getPassword().length() < 7) {
-            presenter.prepareFailView("Please enter a password longer than 7 characters");
-            return;
+            return presenter.prepareFailView("Please enter a password longer than 7 characters");
         }
 
         String default_lang = data.getDefaultLang();
@@ -69,6 +84,6 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
 
 
         gateway.updatePassword(data.getUser(), data.getPassword());
-        presenter.prepareSuccessView(response);
+        return presenter.prepareSuccessView(response);
     }
 }

@@ -3,6 +3,17 @@ package views;
 import entities.Message;
 
 
+
+import gateways.MessageSearchFirebaseSystem;
+import message_search_use_case.MessageSearchGateway;
+import message_search_use_case.MessageSearchInputBoundary;
+import message_search_use_case.MessageSearchInteractor;
+import message_search_use_case.MessageSearchOutputBoundary;
+
+import services.DBInitializer;
+import services.DBService;
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
