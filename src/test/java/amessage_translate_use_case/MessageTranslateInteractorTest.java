@@ -26,7 +26,7 @@ class MessageTranslateInteractorTest
     }
 
     @Test
-    void messageTranslateEnglishToFrench(){
+    void messageTranslateEnglishToFrench() throws IOException {
         //Testing translating from English to another Latin alphabet language
 
         MessageTranslateData data = new MessageTranslateData(
@@ -39,7 +39,7 @@ class MessageTranslateInteractorTest
     }
 
     @Test
-    void messageTranslateEnglishToSpanish(){
+    void messageTranslateEnglishToSpanish() throws IOException {
 
         //Translating from a Latin language to English
         MessageTranslateData data = new MessageTranslateData(
@@ -52,7 +52,7 @@ class MessageTranslateInteractorTest
     }
 
     @Test
-    void messageTranslateSpanishToFrench(){
+    void messageTranslateSpanishToFrench() throws IOException {
 
         //Translating from 2 Latin Languages
         MessageTranslateData data = new MessageTranslateData(
@@ -65,7 +65,7 @@ class MessageTranslateInteractorTest
     }
 
     @Test
-    void messageTranslateEnglishToChinese(){
+    void messageTranslateEnglishToChinese() throws IOException {
 
         //Java seems to have some trouble with non latin characters
         //Represent using unicode

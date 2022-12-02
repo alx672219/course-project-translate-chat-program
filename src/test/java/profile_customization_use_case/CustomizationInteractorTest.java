@@ -25,12 +25,10 @@ public class CustomizationInteractorTest {
     void setUp() {
         CustomizationGateway gateway = new CustomizationFirebaseSystem();
         CustomizationOutputBoundary presenter = new CustomizationPresenter();
-        this.interactor = new CustomizationInteractor(gateway, presenter);
-    }
+        this.interactor = new CustomizationInteractor(gateway, presenter);}
 
     @Test
-    void changeLanguageSuccess() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changeLanguageSuccess() throws ExecutionException, InterruptedException, FileNotFoundException {
         User user = dbService.getUserDetails(8);
         CustomizationData data = new CustomizationData(user.getName(), "fr", user.getPassword(), user);
         CustomizationResponse response = interactor.changeLanguage(data);
@@ -38,8 +36,7 @@ public class CustomizationInteractorTest {
     }
 
     @Test
-    void changeLanguageFailBlank() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changeLanguageFailBlank() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
         CustomizationData data = new CustomizationData(user.getName(), " ", user.getPassword(), user);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
@@ -49,17 +46,15 @@ public class CustomizationInteractorTest {
     }
 
     @Test
-    void changeNameSuccess() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changeNameSuccess() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        CustomizationData data = new CustomizationData("Jojo", user.getDefault_lang(), user.getPassword(), user);
+        CustomizationData data = new CustomizationData("name23", user.getDefault_lang(), user.getPassword(), user);
         CustomizationResponse response = interactor.changeName(data);
-        assertEquals("Jojo", response.getName());
+        assertEquals("name23", response.getName());
     }
 
     @Test
-    void changeNameFailBlank() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changeNameFailBlank() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
         CustomizationData data = new CustomizationData(" ", user.getDefault_lang(), user.getPassword(), user);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
@@ -69,8 +64,7 @@ public class CustomizationInteractorTest {
     }
 
     @Test
-    void changeNameFailExist() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changeNameFailExist() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
         CustomizationData data = new CustomizationData("danny", user.getDefault_lang(), user.getPassword(), user);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
@@ -80,8 +74,7 @@ public class CustomizationInteractorTest {
     }
 
     @Test
-    void changePasswordSuccess() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changePasswordSuccess() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
         CustomizationData data = new CustomizationData(user.getName(), user.getDefault_lang(), "qwertyui", user);
         CustomizationResponse response = interactor.changePassword(data);
@@ -100,8 +93,7 @@ public class CustomizationInteractorTest {
     }
 
     @Test
-    void changePasswordFailTooShort() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
+    void changePasswordFailTooShort() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
         CustomizationData data = new CustomizationData(user.getName(), user.getDefault_lang(), "qwe", user);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {

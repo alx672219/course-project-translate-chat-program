@@ -26,7 +26,6 @@ public class CustomizationFirebaseSystemTest {
 
     @Test
     void notExistName() throws ExecutionException, InterruptedException, FileNotFoundException {
-        dbInitializer.init();
         User user = dbService.getUserDetails(8);
         User newUser = new User("Jonathan", user.getDefault_lang(), user.getEmail(), user.getPassword());
         assertEquals(false, gateway.existName(newUser));

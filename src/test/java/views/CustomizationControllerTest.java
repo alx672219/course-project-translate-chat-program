@@ -21,7 +21,7 @@ public class CustomizationControllerTest {
     DBService dbService = new DBService();
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws FileNotFoundException {
         CustomizationGateway gateway = new CustomizationFirebaseSystem();
         CustomizationOutputBoundary presenter = new CustomizationPresenter();
         CustomizationInputBoundary interactor = new CustomizationInteractor(gateway, presenter);
@@ -30,7 +30,6 @@ public class CustomizationControllerTest {
 
     @Test
     void changeLanguageSuccess() throws ExecutionException, InterruptedException, FileNotFoundException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
         CustomizationResponse response = controller.changeLanguage(user.getName(), "fr", user.getPassword(), user);
         assertEquals("fr", response.getDefaultLanguage());
@@ -38,7 +37,6 @@ public class CustomizationControllerTest {
 
     @Test
     void changeLanguageFailBlank() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
             controller.changeLanguage(user.getName(), " ", user.getPassword(), user);
@@ -48,15 +46,13 @@ public class CustomizationControllerTest {
 
     @Test
     void changeNameSuccess() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
-        CustomizationResponse response = controller.changeName("Jojo", user.getDefault_lang(), user.getPassword(), user);
-        assertEquals("Jojo", response.getName());
+        CustomizationResponse response = controller.changeName("name", user.getDefault_lang(), user.getPassword(), user);
+        assertEquals("name", response.getName());
     }
 
     @Test
     void changeNameFailBlank() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
             controller.changeName(" ", user.getDefault_lang(), user.getPassword(), user);
@@ -66,7 +62,6 @@ public class CustomizationControllerTest {
 
     @Test
     void changeNameFailExist() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
             controller.changeName("danny", user.getDefault_lang(), user.getPassword(), user);
@@ -76,7 +71,6 @@ public class CustomizationControllerTest {
 
     @Test
     void changePasswordSuccess() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
         CustomizationResponse response = controller.changePassword(user.getName(), user.getDefault_lang(), "qwertyui", user);
         assertEquals("qwertyui", response.getPassword());
@@ -94,7 +88,6 @@ public class CustomizationControllerTest {
 
     @Test
     void changePasswordFailTooShort() throws FileNotFoundException, ExecutionException, InterruptedException {
-        initializer.init();
         User user = dbService.getUserDetails(8);
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> {
             controller.changePassword(user.getName(), user.getDefault_lang(), "qwe", user);
