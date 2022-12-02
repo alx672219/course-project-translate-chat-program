@@ -71,13 +71,7 @@ public class ProfileScreen extends JPanel implements ActionListener{
             System.out.println(user.getName());
         } else if (source.equals("set password")) {
             System.out.println(password.length());
-            try {
-                controller.changePassword(name, default_lang, password, user);
-            } catch (ExecutionException ex) {
-                throw new RuntimeException(ex);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+            controller.changePassword(name, default_lang, password, user);
             System.out.println(user.getPassword());
         } else if (source.equals("set default language")) {
             controller.changeLanguage(name, default_lang, password, user);

@@ -3,26 +3,55 @@ package views;
 import entities.User;
 import profile_customization_use_case.CustomizationData;
 import profile_customization_use_case.CustomizationInputBoundary;
-
-import java.util.concurrent.ExecutionException;
+import profile_customization_use_case.CustomizationResponse;
 
 public class CustomizationController {
     private final CustomizationInputBoundary cib;
 
+    /**
+     * Constructor for CustomizationController
+     * @param cib instance of CustomizationInputBoundary
+     */
     public CustomizationController(CustomizationInputBoundary cib) {
         this.cib = cib;
     }
 
-    public void changeLanguage(String name, String default_lang, String password, User user) {
+    /**
+     * Calls the changeLanguage method from CustomizationInputBoundary
+     * @param name the name attribute from CustomizationData
+     * @param default_lang the default language attribute from CustomizationData
+     * @param password the password attribute from CustomizationData
+     * @param user the user attribute from CustomizationData
+     * @return CustomizationResponse class that displays to the user
+     */
+    CustomizationResponse changeLanguage(String name, String default_lang, String password, User user) {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
-        this.cib.changeLanguage(data);
+        return this.cib.changeLanguage(data);
     }
-    public void changeName(String name, String default_lang, String password, User user) {
+
+    /**
+     * Calls the changeName method from CustomizationInputBoundary
+     * @param name the name attribute from CustomizationData
+     * @param default_lang the default language attribute from CustomizationData
+     * @param password the password attribute from CustomizationData
+     * @param user the user attribute from CustomizationData
+     * @return CustomizationResponse class that displays to the user
+     */
+    CustomizationResponse changeName(String name, String default_lang, String password, User user) {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
-        this.cib.changeName(data);
+        return this.cib.changeName(data);
     }
-    public void changePassword(String name, String default_lang, String password, User user) throws ExecutionException, InterruptedException {
+
+    /**
+     * Calls the changePassword method from CustomizationInputBoundary
+     * @param name the name attribute from CustomizationData
+     * @param default_lang the default language attribute from CustomizationData
+     * @param password the password attribute from CustomizationData
+     * @param user the user attribute from CustomizationData
+     * @return CustomizationResponse class that displays to the user
+     */
+    CustomizationResponse changePassword(String name, String default_lang, String password, User user) {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
-        this.cib.changePassword(data);
+        return this.cib.changePassword(data);
     }
 }
