@@ -3,12 +3,10 @@ package contact_use_case;
 
 import contact_usecases.add_contact_use_case.*;
 import gateways.UserAddContactPersistance;
-import message_search_use_case.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.DBInitializer;
-import views.AddContactPresenter;
-import views.MessageSearchPresenter;
+import presenters.AddContactPresenter;
 
 import java.io.FileNotFoundException;
 import java.util.concurrent.ExecutionException;
@@ -29,7 +27,8 @@ public class AddContactInteractorTest {
 
 
     @Test
-    void searchSuccess() throws ExecutionException, InterruptedException {
+    void searchSuccess() throws ExecutionException, InterruptedException, FileNotFoundException {
+        initializer.init();
         AddContactResponse actualResponse = interactor.addContact(new AddContactData(1,2));
         assertEquals(1, actualResponse.getUserID());
         assertEquals(2, actualResponse.getContactID());

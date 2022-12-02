@@ -1,4 +1,4 @@
-package views;
+package controllers;
 
 import entities.Message;
 //import entities.TextMessage;
@@ -23,11 +23,11 @@ public class SendMessageController {
 
     /** Sends the created message
      *
-     * @param chatID
-     * @param message
-     * @param receiverID
-     * @param senderID
-     * @param timestamp
+     * @param chatID ID of chat that message is sent in
+     * @param message actual text of the message
+     * @param receiverID ID of the receiver
+     * @param senderID ID of the sender
+     * @param timestamp timestamp of the message
      */
     public SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
         return this.messageInputBoundary.sendMessage(chatID, message, senderID, receiverID, timestamp);

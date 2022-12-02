@@ -2,7 +2,6 @@ package contact_usecases.add_contact_use_case;
 
 import entities.User;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public interface UserAddContactGateway {
@@ -13,7 +12,6 @@ public interface UserAddContactGateway {
      * @param contactID AddContactData object that tells method which contactID to add
      */
     void addContact(Integer userID, Integer contactID) throws ExecutionException, InterruptedException;
-    User getUserDetails(int userID);
 
     /**
      * Gets userIDs that match userID in data

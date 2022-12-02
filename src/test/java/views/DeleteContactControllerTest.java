@@ -1,17 +1,11 @@
 package views;
 
-import contact_usecases.add_contact_use_case.AddContactData;
-import contact_usecases.add_contact_use_case.AddContactResponse;
 import contact_usecases.delete_contact_use_case.*;
-import gateways.MessageSearchFirebaseSystem;
-import gateways.UserDeleteContactFirebaseSystemTest;
+import controllers.DeleteContactController;
 import gateways.UserDeleteContactPersistance;
-import message_search_use_case.MessageSearchGateway;
-import message_search_use_case.MessageSearchInputBoundary;
-import message_search_use_case.MessageSearchInteractor;
-import message_search_use_case.MessageSearchOutputBoundary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import presenters.DeleteContactPresenter;
 import services.DBInitializer;
 
 import java.io.FileNotFoundException;
@@ -32,6 +26,7 @@ public class DeleteContactControllerTest {
 
     @Test
     void deleteContactSuccess() throws FileNotFoundException {
+        initializer.init();
         DeleteContactResponse actualResponse = controller.deleteContact(new DeleteContactData(1, 9L));
         assertEquals(1, actualResponse.getUserID());
         assertEquals(9, actualResponse.getContactID());
