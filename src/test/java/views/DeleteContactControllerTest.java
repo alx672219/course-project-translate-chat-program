@@ -32,7 +32,7 @@ public class DeleteContactControllerTest {
 
     @Test
     void deleteContactSuccess() throws FileNotFoundException {
-        DeleteContactResponse actualResponse = controller.deleteContact(new DeleteContactData(1, 9));
+        DeleteContactResponse actualResponse = controller.deleteContact(new DeleteContactData(1, 9L));
         assertEquals(1, actualResponse.getUserID());
         assertEquals(9, actualResponse.getContactID());
     }
