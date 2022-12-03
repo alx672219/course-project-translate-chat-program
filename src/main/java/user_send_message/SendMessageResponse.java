@@ -3,6 +3,9 @@ package user_send_message;
 import entities.Message;
 import shared.Response;
 
+/**
+ * Class that models the response received from send message request
+ */
 public class SendMessageResponse extends Response {
     public Message getMessage() {
         return message;

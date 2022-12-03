@@ -183,6 +183,14 @@ public class DBService {
         docRef.update("contacts", user.getContacts());
     }
 
+    /**
+     * Gets the chat instance corresponding to the given chat ID
+     * @param chatID
+     * @return The chat instance of the specific chatID
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws ParseException
+     */
     public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         String documentName = "id" + chatID;
@@ -215,6 +223,7 @@ public class DBService {
                 Message message = new Message(id, messageText, receiver, recipient, date);
                 messages.add(message);
             }
+            // List of the document reference of all users
             ArrayList<DocumentReference> usersRef = (ArrayList<DocumentReference>) document.getData().get("users");
             ArrayList<User> users = new ArrayList<>();
             for (DocumentReference userRef : usersRef) {
@@ -229,6 +238,7 @@ public class DBService {
             return null;
         }
     }
+
 
     public List<Integer> getAllIDs(String collection) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
@@ -245,7 +255,14 @@ public class DBService {
     }
 
 
-
+    /**
+     * Gets all the messages in a chat
+     * @param chatID
+     * @return List of all messages in the given chatID
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws ParseException
+     */
     public ArrayList<Message> getAllMessages(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
         String documentName = "id" + chatID;
@@ -286,18 +303,26 @@ public class DBService {
         }
     }
 
+    /**
+     * Adds a chat to the database
+     * @param chat
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
 
         Map<String, Object> docData = new HashMap<>();
         docData.put("id", String.valueOf(chat.getId()));
 
+        // List of all the message document references in the database
         ArrayList<DocumentReference> listMessagePaths = new ArrayList<>();
         for (Message message: chat.getMessages()) {
             String messageID = "id" + message.getId();
             DocumentReference messageRef = dbFireStore.collection("messages").document(messageID);
             listMessagePaths.add(messageRef);
         }
+        // List of all the user document references in the database
         ArrayList<DocumentReference> listUserPaths = new ArrayList<>();
         for (User user : chat.getUsers()) {
             String userID = "id" + user.getUser_id();
@@ -308,10 +333,18 @@ public class DBService {
         docData.put("users", listUserPaths);
         docData.put("messages", listMessagePaths);
         String docName = "id" + chat.getId();
+        // Add the chat to the database
         ApiFuture<WriteResult> collectionsApiFuture = dbFireStore.collection("chats").document(docName).set(docData);
         collectionsApiFuture.get();
     }
 
+    /**
+     * Adds a message to a chat in the database
+     * @param message
+     * @param chat
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void addMessage(Message message, Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
@@ -320,6 +353,7 @@ public class DBService {
         String receiverID = "id" + message.getReceiver().getUser_id();
         String recipientID = "id" + message.getRecipient().getUser_id();
 
+        // Gets the document reference of the receiver and recipient users in a message instance
         DocumentReference receiverRef = dbFirestore.collection("users").document(receiverID);
         DocumentReference recipientRef = dbFirestore.collection("users").document(recipientID);
 
