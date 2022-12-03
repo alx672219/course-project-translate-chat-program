@@ -3,6 +3,7 @@ package profile_customization_use_case;
 import entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import shared.UserDetails;
 
 public class CustomizationDataTest {
 
@@ -11,7 +12,8 @@ public class CustomizationDataTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-        this.data = new CustomizationData("John", "English", "hello123", user);
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        this.data = new CustomizationData("John", "English", "hello123", details);
     }
 
     @Test

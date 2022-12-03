@@ -28,7 +28,7 @@ class DBServiceTest {
         DBInitializer init = new DBInitializer();
         init.init();
         db = FirestoreClient.getFirestore();
-        dbs = new DBService();
+        dbs = DBService.getInstance();
     }
 
     /**

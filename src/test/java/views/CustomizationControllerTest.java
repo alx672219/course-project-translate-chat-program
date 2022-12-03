@@ -19,7 +19,7 @@ public class CustomizationControllerTest {
 
     private CustomizationController controller;
     DBInitializer initializer = new DBInitializer();
-    DBService dbService = new DBService();
+    DBService dbService = DBService.getInstance();
 
     @BeforeEach
     void setUp() throws FileNotFoundException {
