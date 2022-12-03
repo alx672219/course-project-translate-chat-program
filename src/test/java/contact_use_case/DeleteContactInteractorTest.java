@@ -3,13 +3,10 @@ package contact_use_case;
 
 import contact_usecases.delete_contact_use_case.*;
 import gateways.UserDeleteContactPersistance;
-import message_search_use_case.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.DBInitializer;
-import views.AddContactPresenter;
-import views.DeleteContactPresenter;
-import views.MessageSearchPresenter;
+import presenters.DeleteContactPresenter;
 
 import java.io.FileNotFoundException;
 import java.util.concurrent.ExecutionException;
@@ -30,9 +27,10 @@ public class DeleteContactInteractorTest {
 
 
     @Test
-    void searchSuccess() throws ExecutionException, InterruptedException {
+    void searchSuccess() throws FileNotFoundException {
+        initializer.init();
         DeleteContactResponse actualResponse = interactor.deleteContact(new DeleteContactData(1,2L));
         assertEquals(1, actualResponse.getUserID());
-        assertEquals(null, actualResponse.getContactID());
+        assertEquals(2, actualResponse.getContactID());
     }
 }

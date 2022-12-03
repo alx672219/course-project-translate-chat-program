@@ -2,11 +2,11 @@ package views;
 
 import entities.Message;
 import entities.User;
-import message_search_use_case.MessageSearchData;
 import message_search_use_case.MessageSearchFailed;
 import message_search_use_case.MessageSearchResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import presenters.MessageSearchPresenter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,9 +36,7 @@ class MessageSearchPresenterTest {
     @Test
     void prepareFailView() {
         String error = "There has been an error!";
-        Exception e = assertThrows(MessageSearchFailed.class, () -> {
-            presenter.prepareFailView(error);
-        });
+        Exception e = assertThrows(MessageSearchFailed.class, () -> presenter.prepareFailView(error));
         assertEquals(error, e.getMessage());
     }
 }
