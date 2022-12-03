@@ -4,6 +4,8 @@ import entities.User;
 import profile_customization_use_case.CustomizationGateway;
 import services.DBService;
 
+import java.util.concurrent.ExecutionException;
+
 public class CustomizationFirebaseSystem implements CustomizationGateway {
     DBService dbService;
 
@@ -16,41 +18,41 @@ public class CustomizationFirebaseSystem implements CustomizationGateway {
 
     /**
      * Change user's default language in the database
-     * @param user the user whose language will be changed
+     * @param uid the id of the user whose language will be changed
      * @param default_lang the new language to change to
      */
     @Override
-    public void updateDefaultLang(User user, String default_lang) {
-        dbService.updateDefaultLang(user, default_lang);
+    public void updateDefaultLang(int uid, String default_lang) {
+        dbService.updateDefaultLang(uid, default_lang);
     }
 
     /**
      * Change user's name in the database
-     * @param user the user whose name will be changed
+     * @param uid the id of the  user whose name will be changed
      * @param name the new name to change to
      */
     @Override
-    public void updateName(User user, String name) {
-        dbService.updateName(user, name);
+    public void updateName(int uid, String name) {
+        dbService.updateName(uid, name);
     }
 
     /**
      * Change user's password in the database
-     * @param user the user whose password will be changed
+     * @param uid the id of the user whose password will be changed
      * @param password the new password to change to
      */
     @Override
-    public void updatePassword(User user, String password) {
-        dbService.updatePassword(user, password);
+    public void updatePassword(int uid, String password) {
+        dbService.updatePassword(uid, password);
     }
 
     /**
      * Check if user's new name already exists in the database
-     * @param user the user's whose name new name needs to be checked
-     * @return true if the new name exist and false otherwise
+     * @param username the user's whose name new name needs to be checked
+     * @return the user with the given name if it exists and null otherwise
      */
     @Override
-    public boolean existName(User user) {
-        return dbService.existName(user);
+    public User getByUsername(String username) throws ExecutionException, InterruptedException {
+        return dbService.getByUsername(username);
     }
 }
