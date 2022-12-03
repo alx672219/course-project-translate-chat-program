@@ -77,12 +77,12 @@ public class ChatScreen extends JPanel {
 
     /**
      * A chat screen with a title and JPanels
-     * @param senderID
-     * @param receiverID
-     * @param chatID
-     * @param senderName
-     * @param controllers
-     * @param lang
+     * @param senderID ID of the sender
+     * @param receiverID ID of the receiver
+     * @param chatID ID of the chat
+     * @param senderName Name of the sender
+     * @param controllers all controllers that ChatScreen needs
+     * @param lang language to translate to (main user's default language)
      */
     public ChatScreen(int senderID, int receiverID, int chatID, String senderName,
                       Map<String, Object> controllers, String lang) {
