@@ -1,7 +1,7 @@
 package user_login_use_case;
 
-import entities.User;
 import shared.Response;
+import shared.UserDetails;
 
 /**
  * Transient class that models the response received from a
@@ -9,7 +9,7 @@ import shared.Response;
  */
 public class LoginResponse extends Response {
     private final LoginData data;
-    private final User user;
+    private final UserDetails details;
 
     public Exception getException() {
         return super.e;
@@ -19,14 +19,14 @@ public class LoginResponse extends Response {
         return data;
     }
 
-    public User getUser() {
-        return this.user;
+    public UserDetails getDetails() {
+        return this.details;
     }
 
     public boolean isSuccess() { return success; }
 
-    public LoginResponse(User user, LoginData data, boolean success, Exception e) {
-        this.user = user;
+    public LoginResponse(UserDetails details, LoginData data, boolean success, Exception e) {
+        this.details = details;
         this.data = data;
         this.success = success;
         this.e = e;

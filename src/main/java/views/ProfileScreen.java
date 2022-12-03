@@ -1,8 +1,8 @@
 package views;
 
 import controllers.CustomizationController;
-import entities.User;
-
+import profile_customization_use_case.CustomizationResponse;
+import shared.UserDetails;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,16 +19,18 @@ public class ProfileScreen extends JPanel implements ActionListener{
     JLabel langLabel = new JLabel("Default Language");
 
     JTextField nameField = new JTextField(50);
-    JPasswordField passField = new JPasswordField(50);
+    HintPasswordField passField = new HintPasswordField("Enter new password");
     JComboBox<String> langBox;
-    User user;
+    UserDetails user;
+    Navigator nav;
     HashMap<String, String> langs;
 
 
-    public ProfileScreen(HashMap<String, String> languages, CustomizationController controller, User user) {
+    public ProfileScreen(HashMap<String, String> languages, CustomizationController controller, UserDetails user, Navigator nav) {
         this.controller = controller;
         this.user = user;
         this.langs = languages;
+        this.nav = nav;
         String[] langsAsString = languages.keySet().toArray(new String[0]);
         Arrays.sort(langsAsString);
 
@@ -43,8 +45,7 @@ public class ProfileScreen extends JPanel implements ActionListener{
         passButton.addActionListener(this);
         langButton.addActionListener(this);
 
-        nameField.setText(user.getName());
-        passField.setText(user.getPassword());
+        nameField.setText(user.getUsername());
 
         JPanel nameSection = new JPanel();
         nameSection.add(nameLabel);
@@ -80,33 +81,34 @@ public class ProfileScreen extends JPanel implements ActionListener{
         switch (source) {
             case "set name" -> {
                 try {
-                    controller.changeName(name, default_lang, password, user);
+                    CustomizationResponse resp = controller.changeName(name, default_lang, password, user);
                     JOptionPane.showMessageDialog(this, "Updated name!");
+                    HomeScreen home = (HomeScreen) nav.getScreen("home");
+                    home.setState( new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage()));
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(this, exception.getMessage());
                 }
-                user.setName(name);
-                System.out.println(user.getName());
             }
             case "set password" -> {
                 System.out.println(password.length());
                 try {
-                    controller.changePassword(name, default_lang, password, user);
+                    CustomizationResponse resp = controller.changePassword(name, default_lang, password, user);
                     JOptionPane.showMessageDialog(this, "Updated password!");
+                    HomeScreen home = (HomeScreen) nav.getScreen("home");
+                    home.setState( new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage()));
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(this, exception.getMessage());
                 }
-                user.setPassword(password);
-                System.out.println(user.getPassword());
             }
             case "set default language" -> {
                 try {
-                    controller.changeLanguage(name, default_lang, password, user);
+                    CustomizationResponse resp = controller.changeLanguage(name, default_lang, password, user);
                     JOptionPane.showMessageDialog(this, "Updated default language!");
+                    HomeScreen home = (HomeScreen) nav.getScreen("home");
+                    home.setState( new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage()));
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(this, exception.getMessage());
                 }
-                user.setDefault_lang(default_lang);
             }
         }
     }

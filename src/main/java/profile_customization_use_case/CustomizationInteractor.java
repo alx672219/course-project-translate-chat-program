@@ -2,6 +2,8 @@ package profile_customization_use_case;
 
 import entities.User;
 
+import java.util.concurrent.ExecutionException;
+
 public class CustomizationInteractor implements CustomizationInputBoundary{
 
     CustomizationGateway gateway;
@@ -32,9 +34,16 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
         String default_lang = data.getDefaultLang();
         String name = data.getName();
         String password = data.getPassword();
-        CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null);
+        CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null, data.getUser().getUserId());
 
-        gateway.updateDefaultLang(data.getUser(), data.getDefaultLang());
+        try {
+            User user = gateway.getByUsername(data.getUser().getUsername());
+            user.setDefault_lang(default_lang);
+            gateway.updateDefaultLang(data.getUser().getUserId(), default_lang);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new CustomizationFailed("Could not find user");
+        }
+
         return presenter.prepareSuccessView(response);
     }
 
@@ -45,21 +54,33 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
      */
     @Override
     public CustomizationResponse changeName(CustomizationData data) {
-        // Update the database such that the user's "name" field is updated
-        User updatedUser = new User(data.getName(), data.getUser().getDefault_lang(), data.getUser().getEmail(),
-                data.getUser().getPassword(), data.getUser().getUser_id());
+        // Check that the new name is not blank
         if (data.getName().isBlank()) {
             return presenter.prepareFailView("Please enter a name");
-        } else if (gateway.existName(updatedUser)) {
-            return presenter.prepareFailView("Name already taken, please enter another name");
+        } else {
+            try {
+                // Check to see if the new username is already in use
+                User userWithNewName = gateway.getByUsername(data.getName());
+                if (userWithNewName != null) {
+                    return presenter.prepareFailView("Name already taken, please enter another name");
+                }
+                User user = gateway.getByUsername(data.getUser().getUsername());
+                if (user == null) {
+                    return presenter.prepareFailView("Something went wrong");
+                }
+                gateway.updateName(data.getUser().getUserId(), data.getName());
+                user.setName(data.getName());
+            } catch (ExecutionException | InterruptedException e) {
+                // If the database cannot be accessed return this generic error message
+                return presenter.prepareFailView("Something went wrong.");
+            }
         }
 
         String default_lang = data.getDefaultLang();
         String name = data.getName();
         String password = data.getPassword();
-        CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null);
+        CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null, data.getUser().getUserId());
 
-        gateway.updateName(data.getUser(), data.getName());
         return presenter.prepareSuccessView(response);
     }
 
@@ -80,10 +101,16 @@ public class CustomizationInteractor implements CustomizationInputBoundary{
         String default_lang = data.getDefaultLang();
         String name = data.getName();
         String password = data.getPassword();
-        CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null);
 
+        CustomizationResponse response = new CustomizationResponse(name, default_lang, password, true, null, data.getUser().getUserId());
 
-        gateway.updatePassword(data.getUser(), data.getPassword());
+        try {
+            User user = gateway.getByUsername(data.getUser().getUsername());
+            user.setPassword(password);
+            gateway.updatePassword(user.getUser_id(), data.getPassword());
+        } catch (ExecutionException | InterruptedException e) {
+            return presenter.prepareFailView("Could not find user");
+        }
         return presenter.prepareSuccessView(response);
     }
 }

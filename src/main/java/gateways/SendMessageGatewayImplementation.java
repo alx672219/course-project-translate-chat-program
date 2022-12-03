@@ -19,7 +19,7 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
     DBService dbService;
 
     public SendMessageGatewayImplementation() {
-        dbService = new DBService();
+        dbService = DBService.getInstance();
     }
 
     /**
