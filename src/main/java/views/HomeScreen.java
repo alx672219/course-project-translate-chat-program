@@ -33,6 +33,10 @@ public class HomeScreen extends JPanel implements ActionListener{
 //        JLabel label = new JLabel(String.valueOf(currUser.getUser_id()));
 //        this.add(label);
         //TODO: Add all the screens (ChatScreen, ProfileScreen, ContactScreen)
+
+    }
+
+    public void finalizeScreen() {
         BorderLayout borderLayout = new BorderLayout();
         this.setLayout(borderLayout);
         addLeftPanel();
