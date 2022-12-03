@@ -12,15 +12,24 @@ import java.util.concurrent.ExecutionException;
 
 public interface MessageInputBoundary {
     /**
-     * Creates a message
-     *
+     * Creates and sends a message
      * @param senderID needed to create message instance
-     * @return the message created
+     * @return the response from the interactor
      */
-
     SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException;
 
+    /**
+     * Fetches all the messages in a specific chat ID
+     * @param chatID
+     * @return List of all messages in a chat
+     */
     ArrayList<Message> getAllMessages(int chatID);
 
+    /**
+     * Fetches the chatID given two user IDs
+     * @param userID
+     * @param contactID
+     * @return The chatID of the chat used by two users
+     */
     int getChatIDByUsers(int userID, int contactID);
 }

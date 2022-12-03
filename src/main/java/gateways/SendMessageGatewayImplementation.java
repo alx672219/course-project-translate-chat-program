@@ -11,17 +11,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The gateway class for the send message use case
+ */
 public class SendMessageGatewayImplementation implements SendMessageGateway {
+    // Instance of the DB service to use for send message use case
     DBService dbService;
 
     public SendMessageGatewayImplementation() {
         dbService = DBService.getInstance();
     }
 
+    /**
+     * Fetches the user instance corresponding to a user id from the database
+     * @param userID
+     * @return the user instance corresponding to the given user id
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         return dbService.getUserDetails(userID);
     }
 
+    /**
+     * Fetches all the messages from the database
+     * @return A list of all the messages in the database
+     */
     public List<Integer> getAllMessages() {
         List<Integer> messageIDs;
 
@@ -34,6 +49,11 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
         return messageIDs;
     }
 
+    /**
+     * Fetches all the messages in a chat from the database
+     * @param chatID
+     * @return A list of all the messages in the given chat
+     */
     @Override
     public ArrayList<Message> getMessagesByChat(int chatID) {
         try {
@@ -43,14 +63,14 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
         }
     }
 
+
     @Override
     public int getChatIDByUsers(int userID, int contactID) {
         return dbService.getChatIDByUsers(userID, contactID);
     }
 
-
-    /** Stores the message to the database
-     *
+    /**
+     * Stores the message to the database
      * @param chatID the ID of the Chat that this message should be added to
      * @param message the actual Message that should be added
      */
