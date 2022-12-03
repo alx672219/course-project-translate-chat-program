@@ -16,6 +16,25 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
+    static DBService db;
+
+    /**
+     * Private default constructor so that DBService cannot be constructed using the
+     * new keyword from outside the class
+     */
+    private DBService() {}
+
+    /**
+     * Singleton getInstance method that returns the static instance of DBService or creates
+     * an instance if it doesn't exist.
+     * @return the single instance of DBService.
+     */
+    public static DBService getInstance() {
+        if (db == null) {
+            db = new DBService();
+        }
+        return db;
+    }
 
     /** Write the data of a given user to Firestore.
      *

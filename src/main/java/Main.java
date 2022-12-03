@@ -58,7 +58,7 @@ public class Main {
         application.add(screens);
 
         Navigator nav = new CardLayoutNavigator(cardLayout, screens);
-        DBService dbs = new DBService();
+        DBService dbs = DBService.getInstance();
 
         // Initialize screens
         JPanel registerScreen = initRegisterScreen(nav, dbs);

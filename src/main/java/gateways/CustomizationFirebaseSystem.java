@@ -13,7 +13,7 @@ public class CustomizationFirebaseSystem implements CustomizationGateway {
      * Constructor for CustomizationFirebaseSystem
      */
     public CustomizationFirebaseSystem() {
-        this.dbService = new DBService();
+        this.dbService = DBService.getInstance();
     }
 
     /**
