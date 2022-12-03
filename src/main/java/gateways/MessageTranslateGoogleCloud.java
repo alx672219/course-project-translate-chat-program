@@ -24,11 +24,11 @@ public class MessageTranslateGoogleCloud implements MessageTranslateGateway {
     public String translate(MessageTranslateData data){
         String original = data.getOriginal();
         String targetLanguage = data.getTargetLanguage();
-        String sourceLanguage = data.getSourceLanguage();
+//        String sourceLanguage = data.getSourceLanguage();
 
         Translation translation = translate.translate(
                 original,
-                TranslateOption.sourceLanguage(sourceLanguage),
+//                TranslateOption.sourceLanguage(sourceLanguage),
                 TranslateOption.targetLanguage(targetLanguage));
 
         return translation.getTranslatedText();

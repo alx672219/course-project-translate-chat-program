@@ -4,7 +4,7 @@ import gateways.MessageSearchFirebaseSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.DBInitializer;
-import views.MessageSearchPresenter;
+import presenters.MessageSearchPresenter;
 
 import java.io.FileNotFoundException;
 
@@ -24,30 +24,24 @@ class MessageSearchInteractorTest {
     @Test
     void searchFailedNoMatch() throws FileNotFoundException {
         initializer.init();
-        Exception e = assertThrows(MessageSearchFailed.class, () -> {
-            interactor.search(new MessageSearchData("jkiojgfhhg", 0));
-        });
+        Exception e = assertThrows(MessageSearchFailed.class, () -> interactor.search(new MessageSearchData("jkiojgfhhg", 0)));
         assertEquals("No messages match that search query.", e.getMessage());
     }
 
     @Test
     void searchFailedBlank() {
-        Exception e = assertThrows(MessageSearchFailed.class, () -> {
-            interactor.search(new MessageSearchData("   ", 0));
-        });
+        Exception e = assertThrows(MessageSearchFailed.class, () -> interactor.search(new MessageSearchData("   ", 0)));
         assertEquals("Search query can't be blank.", e.getMessage());
     }
 
     @Test
     void searchFailedLessThanOrEqualToFive() {
-        Exception e = assertThrows(MessageSearchFailed.class, () -> {
-            interactor.search(new MessageSearchData("Bonj", 0));
-        });
+        Exception e = assertThrows(MessageSearchFailed.class, () -> interactor.search(new MessageSearchData("Bonj", 0)));
         assertEquals("Search query must be more than 5 characters.", e.getMessage());
     }
 
     @Test
-    void searchSuccess() throws FileNotFoundException {
+    void searchSuccess() {
         MessageSearchResponse actualResponse = interactor.search(new MessageSearchData("Hello!", 0));
         assertEquals(1, actualResponse.getMessages().size());
         assertEquals("Hello!", actualResponse.getMessages().get(0).getMessage());

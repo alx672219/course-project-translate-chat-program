@@ -3,6 +3,10 @@ package user_login_use_case;
 import entities.User;
 import shared.Response;
 
+/**
+ * Transient class that models the response received from a
+ * login request.
+ */
 public class LoginResponse extends Response {
     private final LoginData data;
     private final User user;
