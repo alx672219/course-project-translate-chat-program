@@ -1,22 +1,22 @@
 package profile_customization_use_case;
 
-import entities.User;
+import shared.UserDetails;
 
 public class CustomizationData {
 
     private final String name;
     private final String default_lang;
     private final String password;
-    private final User user;
+    private final UserDetails user;
 
     /**
      * Constructor for CustomizationData
      * @param name the new name to change to
      * @param default_lang the new default language to change to
      * @param password the new password to change to
-     * @param user the user whose attributes will be changed
+     * @param user the details of the user whose attributes will be changed
      */
-    public CustomizationData(String name, String default_lang, String password, User user) {
+    public CustomizationData(String name, String default_lang, String password, UserDetails user) {
         this.name = name;
         this.default_lang = default_lang;
         this.password = password;
@@ -48,10 +48,10 @@ public class CustomizationData {
     }
 
     /**
-     * Getter method for the user
-     * @return the user whose attributes will be changed
+     * Getter method for the user's details
+     * @return the details of the user whose attributes will be changed
      */
-    public User getUser() {
+    public UserDetails getUser() {
         return user;
     }
 }

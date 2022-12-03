@@ -16,6 +16,25 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DBService {
+    static DBService db;
+
+    /**
+     * Private default constructor so that DBService cannot be constructed using the
+     * new keyword from outside the class
+     */
+    private DBService() {}
+
+    /**
+     * Singleton getInstance method that returns the static instance of DBService or creates
+     * an instance if it doesn't exist.
+     * @return the single instance of DBService.
+     */
+    public static DBService getInstance() {
+        if (db == null) {
+            db = new DBService();
+        }
+        return db;
+    }
 
     /** Write the data of a given user to Firestore.
      *
@@ -64,67 +83,41 @@ public class DBService {
 
     /**
      * Change user's default language to the new language
-     * @param user the user whose default language is to be changed
+     * @param uid the id of the user whose default language is to be changed
      * @param newDefaultLang the new language to change to
      */
-    public void updateDefaultLang(User user, String newDefaultLang) {
+    public void updateDefaultLang(int uid, String newDefaultLang) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String docInfo = "id" + user.getUser_id();
-        user.setDefault_lang(newDefaultLang);
+        String docInfo = "id" + uid;
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
 
-        docRef.update("default_lang", user.getDefault_lang());
+        docRef.update("default_lang", newDefaultLang);
 
     }
 
     /**
      * Change user's name to the new name
-     * @param user the user whose name is to be changed
+     * @param uid the id of the user whose name is to be changed
      * @param name the new name to change to
      */
-    public void updateName(User user, String name) {
+    public void updateName(int uid, String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String docInfo = "id" + user.getUser_id();
-        user.setName(name);
+        String docInfo = "id" + uid;
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        docRef.update("name", user.getName());
+        docRef.update("name", name);
     }
 
     /**
      * Change user's password to the new password
-     * @param user the user whose password is to be changed
+     * @param uid the id of the user whose password is to be changed
      * @param password the new password to change to
      */
-    public void updatePassword(User user, String password) {
+    public void updatePassword(int uid, String password) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        String docInfo = "id" + user.getUser_id();
-        user.setPassword(password);
+        String docInfo = "id" + uid;
         DocumentReference docRef = dbFirestore.collection("users").document(docInfo);
-        docRef.update("password", user.getPassword());
+        docRef.update("password", password);
     }
-
-    /**
-     * Returns true if user's name exist and false otherwise
-     * @param user to check user's name
-     * @return true or false
-     */
-    public boolean existName(User user) {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        CollectionReference usersReference = dbFirestore.collection("users");
-
-        try {
-            for (DocumentReference ref : usersReference.listDocuments()) {
-                if (Objects.requireNonNull(ref.get().get().getData()).get("name").equals(user.getName())) {
-                    return true;
-                }
-            }
-            return false;
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
 
 
     /**

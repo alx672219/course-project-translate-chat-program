@@ -8,7 +8,6 @@ import presenters.CustomizationPresenter;
 import profile_customization_use_case.CustomizationFailed;
 import profile_customization_use_case.CustomizationResponse;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CustomizationPresenterTest {
@@ -24,7 +23,7 @@ public class CustomizationPresenterTest {
     void prepareSuccessView() {
         User user = new User("James", "en", "james@gmail.com", "password", 23);
         CustomizationResponse response = new CustomizationResponse(user.getName(), user.getDefault_lang(),
-                                                                   user.getPassword(), true, null);
+                                                                   user.getPassword(), true, null, 23);
         Assertions.assertEquals(response, presenter.prepareSuccessView(response));
     }
 

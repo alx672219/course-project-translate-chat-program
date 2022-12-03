@@ -1,9 +1,9 @@
 package controllers;
 
-import entities.User;
 import profile_customization_use_case.CustomizationData;
 import profile_customization_use_case.CustomizationInputBoundary;
 import profile_customization_use_case.CustomizationResponse;
+import shared.UserDetails;
 
 public class CustomizationController {
     private final CustomizationInputBoundary cib;
@@ -24,7 +24,7 @@ public class CustomizationController {
      * @param user the user attribute from CustomizationData
      * @return CustomizationResponse class that displays to the user
      */
-    public CustomizationResponse changeLanguage(String name, String default_lang, String password, User user) {
+    public CustomizationResponse changeLanguage(String name, String default_lang, String password, UserDetails user) {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
         return this.cib.changeLanguage(data);
     }
@@ -37,7 +37,7 @@ public class CustomizationController {
      * @param user the user attribute from CustomizationData
      * @return CustomizationResponse class that displays to the user
      */
-    public CustomizationResponse changeName(String name, String default_lang, String password, User user) {
+    public CustomizationResponse changeName(String name, String default_lang, String password, UserDetails user) {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
         return this.cib.changeName(data);
     }
@@ -50,7 +50,7 @@ public class CustomizationController {
      * @param user the user attribute from CustomizationData
      * @return CustomizationResponse class that displays to the user
      */
-    public CustomizationResponse changePassword(String name, String default_lang, String password, User user) {
+    public CustomizationResponse changePassword(String name, String default_lang, String password, UserDetails user) {
         CustomizationData data = new CustomizationData(name, default_lang, password, user);
         return this.cib.changePassword(data);
     }

@@ -14,7 +14,7 @@ public class UserAddContactPersistance implements UserAddContactGateway {
     DBService dbService;
 
     public UserAddContactPersistance() {
-        this.dbService = new DBService();
+        this.dbService = DBService.getInstance();
     }
 
     @Override

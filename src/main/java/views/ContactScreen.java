@@ -31,7 +31,7 @@ public class ContactScreen extends JPanel implements ActionListener {
     JTextField tfUserid;
     public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController) throws ExecutionException, InterruptedException {
         this.userID = userID;
-        this.dbService = new DBService();
+        this.dbService = DBService.getInstance();
         this.dcController = dcController;
         this.acController = acController;
         //Columns
