@@ -43,6 +43,7 @@ public class ContactScreen extends JPanel implements ActionListener {
 
         this.table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
+        this.table.setDefaultEditor(Object.class, null);
         this.add(scrollPane, BorderLayout.CENTER);
 
 
