@@ -1,6 +1,5 @@
-package views;
+package controllers;
 
-import controllers.CustomizationController;
 import entities.User;
 import gateways.CustomizationFirebaseSystem;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +21,7 @@ public class CustomizationControllerTest {
     DBService dbService = DBService.getInstance();
 
     @BeforeEach
-    void setUp() throws FileNotFoundException {
+    void setUp() {
         CustomizationGateway gateway = new CustomizationFirebaseSystem();
         CustomizationOutputBoundary presenter = new CustomizationPresenter();
         CustomizationInputBoundary interactor = new CustomizationInteractor(gateway, presenter);

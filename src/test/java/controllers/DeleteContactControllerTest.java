@@ -1,7 +1,6 @@
-package views;
+package controllers;
 
 import contact_usecases.delete_contact_use_case.*;
-import controllers.DeleteContactController;
 import gateways.UserDeleteContactPersistance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

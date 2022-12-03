@@ -1,10 +1,9 @@
-package views;
+package presenters;
 
 import entities.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import presenters.CustomizationPresenter;
 import profile_customization_use_case.CustomizationFailed;
 import profile_customization_use_case.CustomizationResponse;
 

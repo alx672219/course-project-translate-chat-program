@@ -1,7 +1,6 @@
-package views;
+package controllers;
 
 import contact_usecases.add_contact_use_case.*;
-import controllers.AddContactController;
 import gateways.UserAddContactPersistance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

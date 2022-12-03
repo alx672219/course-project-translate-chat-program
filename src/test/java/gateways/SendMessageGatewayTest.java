@@ -6,23 +6,17 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import entities.Message;
 import entities.User;
-import gateways.SendMessageGatewayImplementation;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import services.DBInitializer;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
-import javax.swing.text.Document;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class SendMessageGatewayTest {
     private final SendMessageGatewayImplementation gateway = new SendMessageGatewayImplementation();
@@ -30,7 +24,7 @@ public class SendMessageGatewayTest {
 
 
     @Test
-    void getUserDetails() throws ExecutionException, InterruptedException, FileNotFoundException {
+    void getUserDetails() throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
 
         User expectedUser = gateway.getUserDetails(1);
@@ -39,11 +33,8 @@ public class SendMessageGatewayTest {
 
         Map<String, Object> userData = userRef.get().get().getData();
 
+        assert userData != null;
         ArrayList<Long> contacts = (ArrayList<Long>) userData.get("contacts");
-
-        ArrayList<Long> expectedContacts = new ArrayList<Long>();
-        expectedContacts.add(2L);
-        expectedContacts.add(3L);
 
 
         String default_lang = (String) userData.get("default_lang");
@@ -72,18 +63,12 @@ public class SendMessageGatewayTest {
         assertEquals(expectedSize, actualSize);
     }
 
-    private void assertArrayEquals(List<Integer> expectedMessageIDs, List<Integer> messageIDs) {
-        for (int i = 0; i < expectedMessageIDs.size(); i++) {
-            assertEquals(expectedMessageIDs.get(i), messageIDs.get(i));
-        }
-    }
-
     @Test
-    void getMessagesByChat() throws FileNotFoundException, ExecutionException, InterruptedException {
+    void getMessagesByChat() throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
 
         DocumentReference chatref = dbFirestore.collection("chats").document("id"+9);
-        List<DocumentReference> expectedMessages = (List<DocumentReference>) chatref.get().get().getData().get("messages");
+        List<DocumentReference> expectedMessages = (List<DocumentReference>) Objects.requireNonNull(chatref.get().get().getData()).get("messages");
 
         int expectedSize = expectedMessages.size();
         int actualSize = gateway.getMessagesByChat(9).size();
@@ -93,7 +78,7 @@ public class SendMessageGatewayTest {
     }
 
     @Test
-    void sendMessage() throws FileNotFoundException, ExecutionException, InterruptedException, ParseException {
+    void sendMessage() throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
 
         List<Integer> messageIDs = gateway.getAllMessages();
@@ -106,13 +91,13 @@ public class SendMessageGatewayTest {
         Message message = new Message(nextMessageID, "hi this is danny", receiver, recipient, new Date());
 
         DocumentReference chatref = dbFirestore.collection("chats").document("id"+2);
-        List<DocumentReference> expectedMessages = (List<DocumentReference>) chatref.get().get().getData().get("messages");
+        List<DocumentReference> expectedMessages = (List<DocumentReference>) Objects.requireNonNull(chatref.get().get().getData()).get("messages");
         int expectedSize = expectedMessages.size() + 1;
 
 
         gateway.sendMessage(2, message);
         chatref = dbFirestore.collection("chats").document("id"+2);
-        List<DocumentReference> messagesAfterSend = (List<DocumentReference>) chatref.get().get().getData().get("messages");
+        List<DocumentReference> messagesAfterSend = (List<DocumentReference>) Objects.requireNonNull(chatref.get().get().getData()).get("messages");
         int actualSize = messagesAfterSend.size() + 1;
 
         assertEquals(expectedSize, actualSize);

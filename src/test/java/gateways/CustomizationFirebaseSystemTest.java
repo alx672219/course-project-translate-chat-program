@@ -1,10 +1,8 @@
 package gateways;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import services.DBInitializer;
-import services.DBService;
 
 import java.io.FileNotFoundException;
 import java.util.concurrent.ExecutionException;

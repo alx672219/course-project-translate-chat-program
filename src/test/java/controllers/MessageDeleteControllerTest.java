@@ -1,9 +1,8 @@
-package views;
+package controllers;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
-import controllers.MessageDeleteController;
 import gateways.MessageDeleteFirebaseSystem;
 import message_edit_delete_use_case.*;
 import org.junit.jupiter.api.BeforeEach;
