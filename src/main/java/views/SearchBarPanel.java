@@ -2,8 +2,6 @@ package views;
 
 
 import controllers.MessageSearchController;
-import entities.Message;
-
 import message_search_use_case.MessageSearchData;
 import message_search_use_case.MessageSearchResponse;
 
@@ -13,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Map;
 
 public class SearchBarPanel extends JPanel implements ActionListener {
 
@@ -39,7 +38,7 @@ public class SearchBarPanel extends JPanel implements ActionListener {
 
         try {
             MessageSearchResponse response = this.messageSearchController.search(data);
-            List<Message> messages = response.getMessages();
+            List<Map<String, String>> messages = response.getMessages();
             JFrame application = new JFrame("Application");
             JPanel mainPanel = new JPanel();
             mainPanel.setLayout(new BorderLayout());
@@ -48,8 +47,8 @@ public class SearchBarPanel extends JPanel implements ActionListener {
             messagesBox.setFont(new Font("Serif", Font.PLAIN, 15));
             messagesBox.setLineWrap(true);
 
-            for (Message message : messages) {
-                messagesBox.append("<" + message.getReceiver().getName() + ">: " + message.getMessage() + "\n");
+            for (Map<String, String> message : messages) {
+                messagesBox.append("<" + message.get("sender_name") + ">: " + message.get("message") + "\n");
             }
 
             mainPanel.add(new JScrollPane(messagesBox), BorderLayout.CENTER);

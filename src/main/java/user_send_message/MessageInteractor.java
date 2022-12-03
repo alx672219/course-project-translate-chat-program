@@ -5,10 +5,7 @@ import entities.User;
 import gateways.SendMessageGatewayImplementation;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -26,15 +23,15 @@ public class MessageInteractor implements MessageInputBoundary {
 
     /**
      * Attempts to send a message with the given today
-     * @param chatID
-     * @param message
+     * @param chatID ID of the chat
+     * @param message Text of the message
      * @param senderID needed to create message instance
-     * @param receiverID
-     * @param timestamp
+     * @param receiverID ID of the receiver
+     * @param timestamp Timestamp of the message
      * @return The response indicating whether a message was sent successfully
-     * @throws ExecutionException
-     * @throws InterruptedException
-     * @throws ParseException
+     * @throws ExecutionException if data cannot be retrieved from database
+     * @throws InterruptedException if the process of getting data is interrupted
+     * @throws ParseException if timestamp cannot be parsed
      */
     @Override
     public SendMessageResponse sendMessage(int chatID, String message, int senderID, int receiverID, Date timestamp) throws ExecutionException, InterruptedException, ParseException {
@@ -54,23 +51,33 @@ public class MessageInteractor implements MessageInputBoundary {
         // Gateway
         sendMessageGateway = new SendMessageGatewayImplementation();
         sendMessageGateway.sendMessage(chatID, messsageToSend);
-        return new SendMessageResponse(messsageToSend, true, null);
+        return new SendMessageResponse(messsageToSend.getId(), true, null);
     }
 
     /**
      * Retrieves all the messages in a chat
-     * @param chatID
+     * @param chatID ID of the chat
      * @return List of all messages in a chat
      */
     @Override
-    public ArrayList<Message> getAllMessages(int chatID) {
-        return sendMessageGateway.getMessagesByChat(chatID);
+    public ArrayList<Map<String, Object>> getAllMessages(int chatID) {
+        ArrayList<Message> messages = sendMessageGateway.getMessagesByChat(chatID);
+        ArrayList<Map<String, Object>> messageMaps = new ArrayList<>();
+        for (Message message : messages) {
+            Map<String, Object> messageMap = new HashMap<>();
+            messageMap.put("sender_name", message.getReceiver().getName());
+            messageMap.put("sender_id", message.getReceiver().getUser_id());
+            messageMap.put("message", message.getMessage());
+            messageMap.put("id", message.getId());
+            messageMaps.add(messageMap);
+        }
+        return messageMaps;
     }
 
     /**
      * Retrieves the chatID used by the given two users
-     * @param userID
-     * @param contactID
+     * @param userID ID of the main user
+     * @param contactID ID of the other user
      * @return ChatID corresponding to two users
      */
     @Override

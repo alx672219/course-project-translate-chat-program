@@ -4,7 +4,6 @@ import contact_usecases.add_contact_use_case.AddContactData;
 import contact_usecases.delete_contact_use_case.DeleteContactData;
 import controllers.AddContactController;
 import controllers.DeleteContactController;
-import entities.User;
 import services.DBService;
 
 import java.awt.BorderLayout;
@@ -70,8 +69,7 @@ public class ContactScreen extends JPanel implements ActionListener {
         String[] rows = new String[2];
 
         // Fetch list of all users from database
-        User targetUser = dbService.getUserDetails(userID);
-        ArrayList<Long> contacts = targetUser.getContacts();
+        ArrayList<Long> contacts = dbService.getUserDetails(userID).getContacts();
         System.out.println(contacts);
 
         for (Long contact : contacts) {

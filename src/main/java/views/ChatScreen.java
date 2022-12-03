@@ -1,7 +1,6 @@
 package views;
 
 import controllers.*;
-import entities.Message;
 
 
 import java.awt.BorderLayout;
@@ -154,24 +153,24 @@ public class ChatScreen extends JPanel {
         southPanel.add(recordButton);
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
-        ArrayList<Message> messages = ((SendMessageController) controllers.get("send")).getAllMessages(chatID);
+        ArrayList<Map<String, Object>> messageMaps = ((SendMessageController) controllers.get("send")).getAllMessages(chatID);
 
         // Initialize chatbox with all saved messages from the chat
-        for (Message currMessage : messages) {
+        for (Map<String, Object> messageMap : messageMaps) {
             JTextArea messageArea = new JTextArea();
             messageArea.setLineWrap(true);
             messageArea.setEditable(false);
             messageArea.setFont(new Font("Serif", Font.PLAIN, 15));
-            messageArea.setText("<" + currMessage.getReceiver().getName() + ">:  " + currMessage.getMessage());
+            messageArea.setText("<" + messageMap.get("sender_name") + ">:  " + messageMap.get("message"));
             List<Integer> ids = new ArrayList<>();
-            ids.add(currMessage.getId());
+            ids.add((Integer) messageMap.get("id"));
             ids.add(chatID);
             List<Object> conts = new ArrayList<>();
             conts.add(controllers.get("edit"));
             conts.add(controllers.get("delete"));
-            if (currMessage.getReceiver().getUser_id() == senderID) {
+            if (((int) messageMap.get("sender_id")) == senderID) {
                 messageArea.addMouseListener(new EditDeletePopupListener(ids, conts, messageArea,
-                        (JPanel) messageBox.getParent(), chatBox, currMessage.getReceiver().getName()));
+                        (JPanel) messageBox.getParent(), chatBox, (String) messageMap.get("sender_name")));
             }
             messageArea.addMouseListener(new TranslateListener(lang));
 
@@ -217,7 +216,7 @@ public class ChatScreen extends JPanel {
         Date curr_date = new Date();
 
         try {
-            return ((SendMessageController) controllers.get("send")).sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date).getMessage().getId();
+            return ((SendMessageController) controllers.get("send")).sendMessage(chatID, messageBox.getText(), senderID, receiverID, curr_date).getMessageID();
         } catch (ExecutionException | InterruptedException | ParseException e) {
             throw new RuntimeException(e);
         }

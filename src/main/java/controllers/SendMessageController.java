@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Message;
 //import entities.TextMessage;
 import user_send_message.MessageInputBoundary;
 import user_send_message.SendMessageResponse;
@@ -8,6 +7,7 @@ import user_send_message.SendMessageResponse;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class SendMessageController {
@@ -38,14 +38,14 @@ public class SendMessageController {
      * @param chatID The ID of the chat to fetch all messages from
      * @return ArrayList of messages fetched from the target chatID
      */
-    public ArrayList<Message> getAllMessages(int chatID) {
+    public ArrayList<Map<String, Object>> getAllMessages(int chatID) {
         return this.messageInputBoundary.getAllMessages(chatID);
     }
 
     /**
      * Retrieves the chat ID corresponding to a sender and receiver user
-     * @param userID
-     * @param contactID
+     * @param userID ID of the main user
+     * @param contactID ID of the other user
      * @return The chat ID of the user and contactID chat
      */
     public int getChatIDByUsers(int userID, int contactID) {
