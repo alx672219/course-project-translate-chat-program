@@ -15,8 +15,8 @@ Bosnian 	bs
 Bulgarian 	bg
 Catalan 	ca
 Cebuano 	ceb
-Chinese (Simplified) 	zh-CN
-Chinese (Traditional) 	zh-TW
+Chinese(Simplified) 	zh-CN
+Chinese(Traditional) 	zh-TW
 Corsican 	co
 Croatian 	hr
 Czech 	cs
@@ -28,7 +28,7 @@ English 	en
 Esperanto 	eo
 Estonian 	et
 Ewe* 	ee
-Filipino (Tagalog) 	fil
+Filipino(Tagalog) 	fil
 Finnish 	fi
 French 	fr
 Frisian 	fy
@@ -38,7 +38,7 @@ German 	de
 Greek 	el
 Guarani* 	gn
 Gujarati 	gu
-Haitian Creole 	ht
+HaitianCreole 	ht
 Hausa 	ha
 Hawaiian 	haw
 Hebrew 	he
@@ -61,7 +61,7 @@ Konkani* 	gom
 Korean 	ko
 Krio* 	kri
 Kurdish 	ku
-Kurdish (Sorani)* 	ckb
+Kurdish(Sorani)* 	ckb
 Kyrgyz 	ky
 Lao 	lo
 Latin 	la
@@ -78,19 +78,19 @@ Malayalam 	ml
 Maltese 	mt
 Maori 	mi
 Marathi 	mr
-Meiteilon (Manipuri)* 	mni-Mtei
+Meiteilon(Manipuri)* 	mni-Mtei
 Mizo* 	lus
 Mongolian 	mn
-Myanmar (Burmese) 	my
+Myanmar(Burmese) 	my
 Nepali 	ne
 Norwegian 	no
-Nyanja (Chichewa) 	ny
-Odia (Oriya) 	or
+Nyanja(Chichewa) 	ny
+Odia(Oriya) 	or
 Oromo* 	om
 Pashto 	ps
 Persian 	fa
 Polish 	pl
-Portuguese (Portugal, Brazil) 	pt
+Portuguese(Portugal,Brazil) 	pt
 Punjabi 	pa
 Quechua* 	qu
 Romanian 	ro
@@ -103,7 +103,7 @@ Serbian 	sr
 Sesotho 	st
 Shona 	sn
 Sindhi 	sd
-Sinhala (Sinhalese) 	si
+Sinhala(Sinhalese) 	si
 Slovak 	sk
 Slovenian 	sl
 Somali 	so
@@ -111,7 +111,7 @@ Spanish 	es
 Sundanese 	su
 Swahili 	sw
 Swedish 	sv
-Tagalog (Filipino) 	tl
+Tagalog(Filipino) 	tl
 Tajik 	tg
 Tamil 	ta
 Tatar 	tt
@@ -121,7 +121,7 @@ Tigrinya* 	ti
 Tsonga* 	ts
 Turkish 	tr
 Turkmen 	tk
-Twi (Akan)* 	ak
+Twi(Akan)* 	ak
 Ukrainian 	uk
 Urdu 	ur
 Uyghur 	ug
