@@ -8,7 +8,7 @@ public class User {
     private String email;
     private String password;
     private int user_id;
-    private ArrayList<Long> contacts = new ArrayList<Long>();
+    private ArrayList<Long> contacts = new ArrayList<>();
 
     public User(String name, String default_lang, String email, String password) {
         this.name = name;
@@ -66,5 +66,9 @@ public class User {
 
     public void setContacts(ArrayList<Long> contacts) {
         this.contacts = contacts;
+    }
+
+    public void removeContact(Long contact) {
+        this.contacts.remove(contact);
     }
 }
