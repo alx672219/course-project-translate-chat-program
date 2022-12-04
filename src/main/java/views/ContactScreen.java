@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class ContactScreen extends JPanel implements ActionListener {
     JTable table;
     DefaultTableModel model;
     JTextField tfUserid;
-    public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController) throws ExecutionException, InterruptedException {
+    public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController, List<Long> contacts) throws ExecutionException, InterruptedException {
         this.userID = userID;
         this.dbService = DBService.getInstance();
         this.dcController = dcController;
@@ -67,10 +68,6 @@ public class ContactScreen extends JPanel implements ActionListener {
         bottomPanel.add(panel2);
 
         String[] rows = new String[2];
-
-        // Fetch list of all users from database
-        ArrayList<Long> contacts = dbService.getUserDetails(userID).getContacts();
-        System.out.println(contacts);
 
         for (Long contact : contacts) {
             rows[0] = String.valueOf(contact);

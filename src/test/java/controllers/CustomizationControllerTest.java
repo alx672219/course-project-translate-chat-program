@@ -12,6 +12,7 @@ import services.DBService;
 import shared.UserDetails;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class CustomizationControllerTest {
@@ -31,7 +32,7 @@ public class CustomizationControllerTest {
     @Test
     void changeLanguageSuccess() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         CustomizationResponse response = controller.changeLanguage(user.getName(), "fr", user.getPassword(), details);
         Assertions.assertEquals("fr", response.getDefaultLanguage());
     }
@@ -39,7 +40,7 @@ public class CustomizationControllerTest {
     @Test
     void changeLanguageFailBlank() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> controller.changeLanguage(user.getName(), " ", user.getPassword(), details));
         Assertions.assertEquals("Please enter a language", e.getMessage());
     }
@@ -47,7 +48,7 @@ public class CustomizationControllerTest {
     @Test
     void changeNameSuccess() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         CustomizationResponse response = controller.changeName("name", user.getDefault_lang(), user.getPassword(), details);
         Assertions.assertEquals("name", response.getName());
     }
@@ -55,7 +56,7 @@ public class CustomizationControllerTest {
     @Test
     void changeNameFailBlank() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> controller.changeName(" ", user.getDefault_lang(), user.getPassword(), details));
         Assertions.assertEquals("Please enter a name", e.getMessage());
     }
@@ -63,7 +64,7 @@ public class CustomizationControllerTest {
     @Test
     void changeNameFailExist() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> controller.changeName("danny", user.getDefault_lang(), user.getPassword(), details));
         Assertions.assertEquals("Name already taken, please enter another name", e.getMessage());
     }
@@ -71,7 +72,7 @@ public class CustomizationControllerTest {
     @Test
     void changePasswordSuccess() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         CustomizationResponse response = controller.changePassword(user.getName(), user.getDefault_lang(), "qwertyui", details);
         Assertions.assertEquals("qwertyui", response.getPassword());
     }
@@ -80,7 +81,7 @@ public class CustomizationControllerTest {
     void changePasswordFailBlank() throws FileNotFoundException, ExecutionException, InterruptedException {
         initializer.init();
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> controller.changePassword(user.getName(), user.getDefault_lang(), " ", details));
         Assertions.assertEquals("Please enter a password", e.getMessage());
     }
@@ -88,7 +89,7 @@ public class CustomizationControllerTest {
     @Test
     void changePasswordFailTooShort() throws ExecutionException, InterruptedException {
         User user = dbService.getUserDetails(8);
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         Exception e = Assertions.assertThrows(CustomizationFailed.class, () -> controller.changePassword(user.getName(), user.getDefault_lang(), "qwe", details));
         Assertions.assertEquals("Please enter a password longer than 7 characters", e.getMessage());
     }
