@@ -1,6 +1,10 @@
 package views;
 
-import entities.User;
+import controllers.AddContactController;
+import controllers.CustomizationController;
+import controllers.DeleteContactController;
+import controllers.SendMessageController;
+import shared.UserDetails;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +18,7 @@ public class HomeScreen extends JPanel implements ActionListener{
 
     Map<String, Object> controllers;
     Navigator nav;
-    User currUser;
+    UserDetails currUser;
 
     HashMap<String, String> langs;
 
@@ -24,7 +28,7 @@ public class HomeScreen extends JPanel implements ActionListener{
         this.langs = langs;
     }
 
-    public void finalizeScreen(User user) {
+    public void setState(UserDetails user) {
         this.currUser = user;
 //        JLabel label = new JLabel(String.valueOf(currUser.getUser_id()));
 //        this.add(label);
@@ -72,7 +76,7 @@ public class HomeScreen extends JPanel implements ActionListener{
 
     private void addContactScreen(JPanel panel) {
         try {
-            ContactScreen contactScreen =  new ContactScreen(currUser.getUser_id(),
+            ContactScreen contactScreen =  new ContactScreen(currUser.getUserId(),
                     (DeleteContactController) controllers.get("delete_contact"),
                     (AddContactController) controllers.get("add_contact"));
             panel.add(contactScreen, BorderLayout.SOUTH);
@@ -88,7 +92,7 @@ public class HomeScreen extends JPanel implements ActionListener{
         BorderLayout borderLayout = new BorderLayout();
         topLeftPanel.setLayout(borderLayout);
         panel.add(topLeftPanel, BorderLayout.NORTH);
-        topLeftPanel.add(new JLabel("Your User ID: " + currUser.getUser_id()), BorderLayout.CENTER);
+        topLeftPanel.add(new JLabel("Your User ID: " + currUser.getUserId()), BorderLayout.CENTER);
         addLogout(topLeftPanel);
         addCustomize(topLeftPanel);
     }
@@ -119,7 +123,7 @@ public class HomeScreen extends JPanel implements ActionListener{
             case "Customize" -> {
                 JFrame customizeWindow = new JFrame("Customize");
                 CustomizationController cController = (CustomizationController) this.controllers.get("customization");
-                ProfileScreen profileScreen = new ProfileScreen(this.langs, cController, currUser);
+                ProfileScreen profileScreen = new ProfileScreen(this.langs, cController, currUser, nav);
                 customizeWindow.add(profileScreen);
                 customizeWindow.pack();
                 customizeWindow.setVisible(true);
@@ -142,7 +146,7 @@ public class HomeScreen extends JPanel implements ActionListener{
     }
 
     private void addChatScreen(JPanel panel, int contactID) {
-        int currUserID = this.currUser.getUser_id();
+        int currUserID = this.currUser.getUserId();
         int chatID = ((SendMessageController) this.controllers.get("send")).getChatIDByUsers(currUserID, contactID);
         if (chatID == -1) {
             JOptionPane.showMessageDialog(panel, "Something went wrong!");
@@ -155,7 +159,7 @@ public class HomeScreen extends JPanel implements ActionListener{
         controllersForChat.put("audio_record", controllers.get("audio_record"));
         controllersForChat.put("audio_convert", controllers.get("audio_convert"));
         controllersForChat.put("message_translate", controllers.get("message_translate"));
-        new ChatScreen(currUserID, contactID, chatID, this.currUser.getName(),
+        new ChatScreen(currUserID, contactID, chatID, this.currUser.getUsername(),
                 controllersForChat, this.currUser.getDefault_lang());
     }
 }

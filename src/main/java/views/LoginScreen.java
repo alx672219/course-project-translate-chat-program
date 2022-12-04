@@ -1,5 +1,6 @@
 package views;
 
+import controllers.LoginController;
 import user_login_use_case.LoginData;
 import user_login_use_case.LoginResponse;
 
@@ -83,8 +84,8 @@ public class LoginScreen extends JPanel implements ActionListener {
                 if (resp.isSuccess()) {
                     JOptionPane.showMessageDialog(this, "Log into account with paramters: \n" +
                             data.getUsername() + "\n" + data.getPassword() + "\n" + resp.getTime() + "\n" +
-                            resp.getUser().getUser_id());
-                    ((HomeScreen) nav.getScreen("home")).finalizeScreen(resp.getUser());
+                            resp.getDetails().getUserId());
+                    ((HomeScreen) nav.getScreen("home")).setState(resp.getDetails());
                     nav.showScreen("home");
                 } else {
                     JOptionPane.showMessageDialog(this, resp.getException().getMessage());

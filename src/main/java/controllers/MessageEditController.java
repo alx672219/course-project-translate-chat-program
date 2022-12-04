@@ -1,9 +1,8 @@
-package views;
+package controllers;
 
 import message_edit_delete_use_case.MessageEditData;
 import message_edit_delete_use_case.MessageEditInputBoundary;
 
-import message_edit_delete_use_case.MessageEditResponse;
 /**
  * The controller class for the message edit use case.
  */

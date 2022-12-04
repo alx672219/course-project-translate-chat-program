@@ -2,6 +2,8 @@ package views;
 
 import contact_usecases.add_contact_use_case.AddContactData;
 import contact_usecases.delete_contact_use_case.DeleteContactData;
+import controllers.AddContactController;
+import controllers.DeleteContactController;
 import entities.User;
 import services.DBService;
 
@@ -29,7 +31,7 @@ public class ContactScreen extends JPanel implements ActionListener {
     JTextField tfUserid;
     public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController) throws ExecutionException, InterruptedException {
         this.userID = userID;
-        this.dbService = new DBService();
+        this.dbService = DBService.getInstance();
         this.dcController = dcController;
         this.acController = acController;
         //Columns

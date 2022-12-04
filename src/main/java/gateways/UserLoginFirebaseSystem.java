@@ -2,6 +2,7 @@ package gateways;
 
 import entities.User;
 import services.DBService;
+import shared.UserDetails;
 import user_login_use_case.LoginData;
 import user_login_use_case.LoginResponse;
 import user_login_use_case.UserLoginGateway;
@@ -28,9 +29,11 @@ public class UserLoginFirebaseSystem implements UserLoginGateway {
         if (user == null) {
             return new LoginResponse(null, data, false, new RuntimeException("User not found"));
         } else if (!user.getPassword().equals(password)) {
-            return new LoginResponse(user, data, false, new RuntimeException("Password doesn't match"));
+            UserDetails details = new UserDetails(username, user.getUser_id(), user.getDefault_lang());
+            return new LoginResponse(details, data, false, new RuntimeException("Password doesn't match"));
         } else {
-            return new LoginResponse(user, data, true, null);
+            UserDetails details = new UserDetails(username, user.getUser_id(), user.getDefault_lang());
+            return new LoginResponse(details, data, true, null);
         }
     }
 }

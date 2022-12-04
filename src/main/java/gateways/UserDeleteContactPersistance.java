@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 public class UserDeleteContactPersistance implements UserDeleteContactGateway {
     DBService dbService;
     public UserDeleteContactPersistance() {
-        dbService = new DBService();
+        dbService = DBService.getInstance();
     }
 
     @Override
