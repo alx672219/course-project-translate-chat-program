@@ -47,12 +47,13 @@ public class RecordButton extends JPanel implements ActionListener {
 
         recordButton.addActionListener(this);
 
+        this.micImage = new ImageIcon("src/main/Others/mic.png");
+        recordButton.setIcon(micImage);
         this.add(recordButton);
     }
 public void display() throws IOException {
     String translation = audioConvertController
             .convert(new AudioConvertData("src/main/Others/RecordedAudio.wav", lang))
-            //#TODO this data should be gathered from the chat screen, once everything is put together
             .getResult();
     textBox.setText(translation);
 }
@@ -64,7 +65,7 @@ public void display() throws IOException {
         recording = !recording;
         if (recording) {
 
-            System.out.println("hihihihi");
+
             Thread counter = new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -74,7 +75,7 @@ public void display() throws IOException {
                             }
                             Thread.sleep(1000);//The thread sleeps for as long as we record, this determines how long our recording is
                         }
-                        System.out.println("yyayayay");
+
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
@@ -99,7 +100,7 @@ public void display() throws IOException {
 
             record.start();
         } else {
-            System.out.println("byebyebyebyebe");
+
             try {
 
                 audioRecorderController.record();

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class TranslateScreen extends JFrame {
 
-    JLabel translatedText;
+    JTextArea translatedText;
     MessageTranslateController MTC;
 
     public TranslateScreen(MessageTranslateData data, MessageTranslateController MTC) throws IOException {
@@ -17,7 +17,9 @@ public class TranslateScreen extends JFrame {
         this.setLocation(
                 (int)MouseInfo.getPointerInfo().getLocation().getX() + 10,
                 (int)MouseInfo.getPointerInfo().getLocation().getY());
-        translatedText = new JLabel(MTC.translate(data).getResult());
+        translatedText = new JTextArea(MTC.translate(data).getResult());
+        translatedText.setLineWrap(true);
+        translatedText.setEditable(false);
         this.add(translatedText);
         this.setVisible(true);
 
