@@ -18,7 +18,7 @@ public interface MessageInputBoundary {
     /**
      * Fetches all the messages in a specific chat ID
      * @param chatID ID of the chat
-     * @return List of all messages in a chat
+     * @return Map of all messages in the chat, with sender's name as key and text of the message as the value
      */
     ArrayList<Map<String, Object>> getAllMessages(int chatID);
 

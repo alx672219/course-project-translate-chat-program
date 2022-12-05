@@ -12,6 +12,7 @@ public class MessageSearchResponse extends Response {
     /**
      * Constructor for MessageSearchResponse.
      * @param text text that was searched
+     * @param messages a Map of the messages with the key as the name of the sender and the value as the text of the message
      * @param success whether message search was successful
      * @param e exception that was thrown if success is false, null otherwise
      */
