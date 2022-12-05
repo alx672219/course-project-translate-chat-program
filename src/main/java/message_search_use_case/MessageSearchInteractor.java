@@ -2,7 +2,10 @@ package message_search_use_case;
 
 import entities.Message;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MessageSearchInteractor implements MessageSearchInputBoundary {
 
@@ -32,12 +35,19 @@ public class MessageSearchInteractor implements MessageSearchInputBoundary {
             return presenter.prepareFailView("Search query must be more than 5 characters.");
         }
         List<Message> messages = gateway.search(data);
+        List<Map<String, String>> messageMaps = new ArrayList<>();
+        for (Message message : messages) {
+            Map<String, String> messageMap = new HashMap<>();
+            messageMap.put("sender_name", message.getReceiver().getName());
+            messageMap.put("message", message.getMessage());
+            messageMaps.add(messageMap);
+        }
 
         if (messages.isEmpty()) {
             return presenter.prepareFailView("No messages match that search query.");
         }
 
-        MessageSearchResponse response = new MessageSearchResponse(data.getText(), messages, true, null);
+        MessageSearchResponse response = new MessageSearchResponse(data.getText(), messageMaps, true, null);
         return presenter.prepareSuccessView(response);
     }
 }

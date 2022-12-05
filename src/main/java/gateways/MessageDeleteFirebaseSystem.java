@@ -5,7 +5,9 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.DocumentSnapshot;
+import services.DBService;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -14,6 +16,8 @@ import java.util.concurrent.ExecutionException;
  * The firebase system class for the message delete use case.
  */
 public class MessageDeleteFirebaseSystem implements MessageDeleteGateway {
+    DBService dbService = DBService.getInstance();
+
     /**
      * Message deleting method for MessageDeleteFirebaseSystem.
      *
@@ -35,9 +39,9 @@ public class MessageDeleteFirebaseSystem implements MessageDeleteGateway {
             List<DocumentReference> messages = (List<DocumentReference>) chatData.get("messages");
             messages.remove(messageRef);
             chatRef.set(chatData);
+            dbService.getChatDetails(chatID).removeMessage(dbService.getMessageDetails(messageID));
 
-
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | ParseException e) {
             throw new RuntimeException(e);
         }
     }

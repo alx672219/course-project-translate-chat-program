@@ -1,10 +1,9 @@
-package views;
+package presenters;
 
 import contact_usecases.add_contact_use_case.AddContactResponse;
 import message_search_use_case.MessageSearchFailed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import presenters.AddContactPresenter;
 
 import static org.junit.jupiter.api.Assertions.*;
 

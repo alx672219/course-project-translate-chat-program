@@ -14,20 +14,20 @@ import java.util.concurrent.ExecutionException;
 public interface SendMessageGateway {
     /**
      * Attempts to send a message and persist it to the database
-     * @param chatID
-     * @param message
-     * @throws ExecutionException
-     * @throws InterruptedException
-     * @throws ParseException
+     * @param chatID ID of the chat
+     * @param message message to send
+     * @throws ExecutionException if data cannot be retrieved from database
+     * @throws InterruptedException if the process of getting data is interrupted
+     * @throws ParseException if timestamp cannot be parsed
      */
     void sendMessage(int chatID, Message message) throws ExecutionException, InterruptedException, ParseException;
 
     /**
      * Gets the user instance of a certain user id
-     * @param userID
+     * @param userID ID of the user
      * @return The User instance corresponding to a user id
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @throws ExecutionException if data cannot be retrieved from database
+     * @throws InterruptedException if the process of getting data is interrupted
      */
     User getUserDetails(int userID) throws ExecutionException, InterruptedException;
 
@@ -39,15 +39,15 @@ public interface SendMessageGateway {
 
     /**
      * Gets all the messages corresponding to a chat
-     * @param chatID
+     * @param chatID ID of the chat
      * @return A list of all the messages corresponding to a chat
      */
     ArrayList<Message> getMessagesByChat(int chatID);
 
     /**
      * Gets a chat based on two users ids
-     * @param userID
-     * @param contactID
+     * @param userID ID of the main user
+     * @param contactID ID of the other user
      * @return The chatID given two user IDs
      */
     int getChatIDByUsers(int userID, int contactID);

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import shared.UserDetails;
 
+import java.util.ArrayList;
+
 public class CustomizationDataTest {
 
     private CustomizationData data;
@@ -12,7 +14,7 @@ public class CustomizationDataTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang());
+        UserDetails details = new UserDetails(user.getName(), user.getUser_id(), user.getDefault_lang(), new ArrayList<>());
         this.data = new CustomizationData("John", "English", "hello123", details);
     }
 

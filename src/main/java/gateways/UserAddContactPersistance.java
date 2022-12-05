@@ -25,7 +25,8 @@ public class UserAddContactPersistance implements UserAddContactGateway {
 
         dbService.addContact(mainUser, Long.valueOf(contactID));
         dbService.addContact(contactUser, Long.valueOf(userID));
-
+        mainUser.addContact(Long.valueOf(contactID));
+        contactUser.addContact(Long.valueOf(userID));
 
         List<Integer> chatIDs = dbService.getAllIDs("chats");
         int nextChatID = Collections.max(chatIDs) + 1;

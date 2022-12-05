@@ -42,9 +42,9 @@ public class RecordButton extends JPanel implements ActionListener {
         this.textBox = textBox;
         this.recordButton = new JButton("Record");
 
-        this.setSize(600, 200);
-        this.recordButton.setPreferredSize(new Dimension(50, 50));
-        this.recordButton.setLocation(0, 75);
+        //this.setSize(600, 200);
+        //this.recordButton.setPreferredSize(new Dimension(50, 50));
+        //this.recordButton.setLocation(0, 75);
 
         recordButton.addActionListener(this);
 

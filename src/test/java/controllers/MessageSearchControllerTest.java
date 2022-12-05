@@ -1,6 +1,5 @@
-package views;
+package controllers;
 
-import controllers.MessageSearchController;
 import gateways.MessageSearchFirebaseSystem;
 import message_search_use_case.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,10 +43,9 @@ class MessageSearchControllerTest {
     }
 
     @Test
-    void searchSuccess() throws FileNotFoundException {
+    void searchSuccess() {
         MessageSearchResponse actualResponse = controller.search(new MessageSearchData("Hello!", 0));
         assertEquals(1, actualResponse.getMessages().size());
-        assertEquals("Hello!", actualResponse.getMessages().get(0).getMessage());
-        assertEquals(0, actualResponse.getMessages().get(0).getId());
+        assertEquals("Hello!", actualResponse.getMessages().get(0).get("message"));
     }
 }

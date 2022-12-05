@@ -29,10 +29,10 @@ public class UserLoginFirebaseSystem implements UserLoginGateway {
         if (user == null) {
             return new LoginResponse(null, data, false, new RuntimeException("User not found"));
         } else if (!user.getPassword().equals(password)) {
-            UserDetails details = new UserDetails(username, user.getUser_id(), user.getDefault_lang());
+            UserDetails details = new UserDetails(username, user.getUser_id(), user.getDefault_lang(), user.getContacts());
             return new LoginResponse(details, data, false, new RuntimeException("Password doesn't match"));
         } else {
-            UserDetails details = new UserDetails(username, user.getUser_id(), user.getDefault_lang());
+            UserDetails details = new UserDetails(username, user.getUser_id(), user.getDefault_lang(), user.getContacts());
             return new LoginResponse(details, data, true, null);
         }
     }

@@ -6,9 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import user_send_message.SendMessageResponse;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,12 +21,12 @@ public class SendMessageResponseTest {
                 new User("John", "en", "john@gmail.com", "4567", 10),
                 new User("Jacques", "fr", "jacques@gmail.com", "12345",1),
                 new Date(126374853));
-        this.response = new SendMessageResponse(message, true, null);
+        this.response = new SendMessageResponse(message.getId(), true, null);
     }
 
     @Test
     void getMessage() {
-        assertEquals(message, response.getMessage());
+        assertEquals(message.getId(), response.getMessageID());
     }
 
     @Test

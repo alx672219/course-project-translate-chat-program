@@ -33,6 +33,10 @@ public class HomeScreen extends JPanel implements ActionListener{
 //        JLabel label = new JLabel(String.valueOf(currUser.getUser_id()));
 //        this.add(label);
         //TODO: Add all the screens (ChatScreen, ProfileScreen, ContactScreen)
+
+    }
+
+    public void finalizeScreen() {
         BorderLayout borderLayout = new BorderLayout();
         this.setLayout(borderLayout);
         addLeftPanel();
@@ -78,7 +82,7 @@ public class HomeScreen extends JPanel implements ActionListener{
         try {
             ContactScreen contactScreen =  new ContactScreen(currUser.getUserId(),
                     (DeleteContactController) controllers.get("delete_contact"),
-                    (AddContactController) controllers.get("add_contact"));
+                    (AddContactController) controllers.get("add_contact"), currUser.getContacts());
             panel.add(contactScreen, BorderLayout.SOUTH);
             panel.putClientProperty("contact", contactScreen);
         } catch (ExecutionException | InterruptedException e) {

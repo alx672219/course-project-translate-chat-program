@@ -1,23 +1,22 @@
 package user_send_message;
 
-import entities.Message;
 import shared.Response;
 
 /**
  * Class that models the response received from send message request
  */
 public class SendMessageResponse extends Response {
-    public Message getMessage() {
-        return message;
+    public int getMessageID() {
+        return message_id;
     }
 
-    public SendMessageResponse(Message message, boolean success, Exception e) {
-        this.message = message;
+    public SendMessageResponse(int message_id, boolean success, Exception e) {
+        this.message_id = message_id;
         this.success = success;
         this.e = e;
     }
 
-    Message message;
+    int message_id;
 
 
     @Override

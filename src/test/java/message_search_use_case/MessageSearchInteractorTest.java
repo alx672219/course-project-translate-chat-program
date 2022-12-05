@@ -44,8 +44,7 @@ class MessageSearchInteractorTest {
     void searchSuccess() {
         MessageSearchResponse actualResponse = interactor.search(new MessageSearchData("Hello!", 0));
         assertEquals(1, actualResponse.getMessages().size());
-        assertEquals("Hello!", actualResponse.getMessages().get(0).getMessage());
-        assertEquals(0, actualResponse.getMessages().get(0).getId());
+        assertEquals("Hello!", actualResponse.getMessages().get(0).get("message"));
     }
 
 

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -84,7 +85,7 @@ public class ProfileScreen extends JPanel implements ActionListener{
                     CustomizationResponse resp = controller.changeName(name, default_lang, password, user);
                     JOptionPane.showMessageDialog(this, "Updated name!");
                     HomeScreen home = (HomeScreen) nav.getScreen("home");
-                    home.setState( new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage()));
+                    home.setState(new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage(), new ArrayList<>()));
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(this, exception.getMessage());
                 }
@@ -95,7 +96,7 @@ public class ProfileScreen extends JPanel implements ActionListener{
                     CustomizationResponse resp = controller.changePassword(name, default_lang, password, user);
                     JOptionPane.showMessageDialog(this, "Updated password!");
                     HomeScreen home = (HomeScreen) nav.getScreen("home");
-                    home.setState( new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage()));
+                    home.setState(new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage(), new ArrayList<>()));
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(this, exception.getMessage());
                 }
@@ -105,7 +106,7 @@ public class ProfileScreen extends JPanel implements ActionListener{
                     CustomizationResponse resp = controller.changeLanguage(name, default_lang, password, user);
                     JOptionPane.showMessageDialog(this, "Updated default language!");
                     HomeScreen home = (HomeScreen) nav.getScreen("home");
-                    home.setState( new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage()));
+                    home.setState(new UserDetails(resp.getName(), resp.getUid(), resp.getDefaultLanguage(), new ArrayList<>()));
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(this, exception.getMessage());
                 }

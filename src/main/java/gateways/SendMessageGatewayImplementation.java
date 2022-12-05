@@ -24,10 +24,10 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
 
     /**
      * Fetches the user instance corresponding to a user id from the database
-     * @param userID
+     * @param userID ID of the user
      * @return the user instance corresponding to the given user id
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @throws ExecutionException if data cannot be retrieved from database
+     * @throws InterruptedException if the process of getting data is interrupted
      */
     public User getUserDetails(int userID) throws ExecutionException, InterruptedException {
         return dbService.getUserDetails(userID);
@@ -51,7 +51,7 @@ public class SendMessageGatewayImplementation implements SendMessageGateway {
 
     /**
      * Fetches all the messages in a chat from the database
-     * @param chatID
+     * @param chatID ID of the chat
      * @return A list of all the messages in the given chat
      */
     @Override

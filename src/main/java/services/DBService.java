@@ -50,6 +50,36 @@ public class DBService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
+    /**
+     * Returns the given User object corresponding to the given user id if
+     * one exists, otherwise returns null.
+     *
+     * @param messageID The message id which corresponds to the message.
+     * @return The Message object corresponding to the given message id
+     * @throws ExecutionException If execution is interrupted
+     * @throws InterruptedException If execution is interrupted
+     */
+    public Message getMessageDetails(int messageID) throws ExecutionException, InterruptedException {
+        // First get document reference from specified collection and document
+        // Then get the APIFuture of that document
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        String documentName = "id" + messageID;
+        DocumentReference documentReference = dbFirestore.collection("messages").document(documentName);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        // Extract DocumentSnapShot from ApiFuture object
+        DocumentSnapshot document = future.get();
+
+        Message message;
+        if (document.exists()) {
+            message = document.toObject(Message.class);
+            return message;
+        } else {
+            return null;
+        }
+
+    }
+
 
     /**
      * Returns the given User object corresponding to the given user id if
@@ -178,11 +208,11 @@ public class DBService {
 
     /**
      * Gets the chat instance corresponding to the given chat ID
-     * @param chatID
+     * @param chatID ID of the chat
      * @return The chat instance of the specific chatID
-     * @throws ExecutionException
-     * @throws InterruptedException
-     * @throws ParseException
+     * @throws ExecutionException if link with the database cannot be established
+     * @throws InterruptedException if process of corresponding with the database is interrupted
+     * @throws ParseException if timestamp cannot be parsed
      */
     public Chat getChatDetails(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -250,11 +280,11 @@ public class DBService {
 
     /**
      * Gets all the messages in a chat
-     * @param chatID
+     * @param chatID ID of the chat
      * @return List of all messages in the given chatID
-     * @throws ExecutionException
-     * @throws InterruptedException
-     * @throws ParseException
+     * @throws ExecutionException if link with the database cannot be established
+     * @throws InterruptedException if process of corresponding with the database is interrupted
+     * @throws ParseException if timestamp cannot be parsed
      */
     public ArrayList<Message> getAllMessages(int chatID) throws ExecutionException, InterruptedException, ParseException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
@@ -298,9 +328,9 @@ public class DBService {
 
     /**
      * Adds a chat to the database
-     * @param chat
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @param chat the chat to be added
+     * @throws ExecutionException if link with the database cannot be established
+     * @throws InterruptedException if process of corresponding with the database is interrupted
      */
     public void addChat(Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFireStore = FirestoreClient.getFirestore();
@@ -333,10 +363,10 @@ public class DBService {
 
     /**
      * Adds a message to a chat in the database
-     * @param message
-     * @param chat
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @param message the message to be added to the chat
+     * @param chat the chat the message needs to be added to
+     * @throws ExecutionException if link with the database cannot be established
+     * @throws InterruptedException if process of corresponding with the database is interrupted
      */
     public void addMessage(Message message, Chat chat) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

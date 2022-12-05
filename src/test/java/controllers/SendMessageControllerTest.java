@@ -1,9 +1,8 @@
-package views;
+package controllers;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
-import controllers.SendMessageController;
 import gateways.SendMessageGatewayImplementation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

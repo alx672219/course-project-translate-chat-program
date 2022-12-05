@@ -4,7 +4,6 @@ import contact_usecases.add_contact_use_case.AddContactData;
 import contact_usecases.delete_contact_use_case.DeleteContactData;
 import controllers.AddContactController;
 import controllers.DeleteContactController;
-import entities.User;
 import services.DBService;
 
 import java.awt.BorderLayout;
@@ -12,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class ContactScreen extends JPanel implements ActionListener {
     JTable table;
     DefaultTableModel model;
     JTextField tfUserid;
-    public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController) throws ExecutionException, InterruptedException {
+    public ContactScreen(int userID, DeleteContactController dcController, AddContactController acController, List<Long> contacts) throws ExecutionException, InterruptedException {
         this.userID = userID;
         this.dbService = DBService.getInstance();
         this.dcController = dcController;
@@ -43,6 +43,7 @@ public class ContactScreen extends JPanel implements ActionListener {
 
         this.table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
+        this.table.setDefaultEditor(Object.class, null);
         this.add(scrollPane, BorderLayout.CENTER);
 
 
@@ -67,11 +68,6 @@ public class ContactScreen extends JPanel implements ActionListener {
         bottomPanel.add(panel2);
 
         String[] rows = new String[2];
-
-        // Fetch list of all users from database
-        User targetUser = dbService.getUserDetails(userID);
-        ArrayList<Long> contacts = targetUser.getContacts();
-        System.out.println(contacts);
 
         for (Long contact : contacts) {
             rows[0] = String.valueOf(contact);
