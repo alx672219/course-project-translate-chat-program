@@ -25,8 +25,8 @@ public class AddContactControllerTest {
     }
 
     @Test
-    void addContactYourself() throws FileNotFoundException {
-        initializer.init();
+    void addContactYourself() {
+
         Exception e = assertThrows(AddContactFailed.class, () -> controller.addContact(new AddContactData(1, 1)));
         assertEquals("You can't add yourself as a contact!", e.getMessage());
     }
@@ -38,7 +38,8 @@ public class AddContactControllerTest {
     }
 
     @Test
-    void addContactAlreadyExist() {
+    void addContactAlreadyExist() throws FileNotFoundException {
+        initializer.init();
         Exception e = assertThrows(AddContactFailed.class, () -> controller.addContact(new AddContactData(1, 2)));
         assertEquals("You already have a contact with this ID.", e.getMessage());
     }
